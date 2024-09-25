@@ -39,6 +39,8 @@ public partial class User
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
     public virtual Role Role { get; set; } = null!;
 
     public virtual Storage? Storage { get; set; }
