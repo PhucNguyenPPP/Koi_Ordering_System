@@ -16,6 +16,8 @@ namespace DAL.UnitOfWork
         {
             _context = new KoiDbContext();
             Breed = new BreedRepository(_context);
+            Role = new RoleRepository(_context);
+            User = new UserRepository(_context);
         }
 
 
@@ -30,5 +32,7 @@ namespace DAL.UnitOfWork
         }
 
         public IBreedRepository Breed { get; private set; }
+        public IRoleRepository Role {  get; private set; }
+        public IUserRepository User { get; private set; }
     }
 }

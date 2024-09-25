@@ -12,5 +12,7 @@ namespace DAL.UnitOfWork
         public void Dispose();
         public Task<bool> SaveChangeAsync();
         IBreedRepository Breed { get; }
+        IRoleRepository Role { get; }
+        IUserRepository User { get; }
     }
 }

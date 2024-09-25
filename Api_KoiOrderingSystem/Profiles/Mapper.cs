@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.DTO.Auth;
 using DAL.Entities;
 
 namespace Api_KoiOrderingSystem.Profiles
@@ -8,6 +9,7 @@ namespace Api_KoiOrderingSystem.Profiles
         public Mapper()
         {
             #region
+            CreateMap<SignUpCustomerRequestDTO, User>().ReverseMap();
             #endregion
         }
     }
