@@ -43,5 +43,20 @@ namespace Api_KoiOrderingSystem.Controllers
             }
         }
 
+        [HttpPost("sign-in")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseDTO(ModelState.ToString() ?? "Unknown error", 400, false, ModelState));
+            }
+            var result = await _authService.CheckLogin(loginRequestDTO);
+            if (result != null)
+            {
+                return Ok(new ResponseDTO("Đăng nhập thành công", 200, true, result));
+            }
+            return BadRequest(new ResponseDTO("Đăng nhập thất bại", 400, false));
+        }
+
     }
 }

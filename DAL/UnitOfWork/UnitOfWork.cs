@@ -18,6 +18,7 @@ namespace DAL.UnitOfWork
             Breed = new BreedRepository(_context);
             Role = new RoleRepository(_context);
             User = new UserRepository(_context);
+            RefreshToken = new RefreshTokenRepository(_context);
         }
 
 
@@ -34,5 +35,6 @@ namespace DAL.UnitOfWork
         public IBreedRepository Breed { get; private set; }
         public IRoleRepository Role {  get; private set; }
         public IUserRepository User { get; private set; }
+        public IRefreshTokenRepository RefreshToken { get; private set; }
     }
 }

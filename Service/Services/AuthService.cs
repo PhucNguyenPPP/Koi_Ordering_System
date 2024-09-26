@@ -5,10 +5,15 @@ using Common.DTO.General;
 using Common.Enum;
 using DAL.Entities;
 using DAL.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,15 +26,17 @@ namespace Service.Services
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IImageService _imageService;
+        private readonly IConfiguration _config;
 
         public AuthService(IMapper mapper, IUserService userService,
-            IUnitOfWork unitOfWork, IImageService imageService)
+            IUnitOfWork unitOfWork, IImageService imageService,
+            IConfiguration config)
         {
             _mapper = mapper;
             _userService = userService;
             _unitOfWork = unitOfWork;
             _imageService = imageService;
-
+            _config = config;
         }
 
         public async Task<bool> SignUpCustomer(SignUpCustomerRequestDTO model)
@@ -117,6 +124,101 @@ namespace Service.Services
             }
 
             return new ResponseDTO("Check successfully", 200, true);
+        }
+
+        public async Task<LoginResponseDTO?> CheckLogin(LoginRequestDTO loginRequestDTO)
+        {
+            var user = _unitOfWork.User.GetAllByCondition(x => x.UserName == loginRequestDTO.UserName)
+                .Include(u => u.Role).FirstOrDefault();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (VerifyPasswordHash(loginRequestDTO.Password, user.PasswordHash, user.Salt))
+            {
+                string jwtTokenId = $"JTI{Guid.NewGuid()}";
+
+                string refreshToken = await CreateNewRefreshToken(user.UserId, jwtTokenId);
+
+                var refreshTokenValid = _unitOfWork.RefreshToken
+                    .GetAllByCondition(a => a.UserId == user.UserId
+                    && a.RefreshToken1 != refreshToken)
+                    .ToList();
+
+                foreach (var token in refreshTokenValid)
+                {
+                    token.IsValid = false;
+                }
+
+                _unitOfWork.RefreshToken.UpdateRange(refreshTokenValid);
+                await _unitOfWork.SaveChangeAsync();
+
+                var accessToken = CreateToken(user, jwtTokenId);
+
+                return new LoginResponseDTO
+                {
+                    AccessToken = accessToken,
+                    User = _mapper.Map<LocalUserDTO>(user),
+                    RefreshToken = refreshToken
+                };
+            };
+            return null;
+        }
+
+        private bool VerifyPasswordHash(string password, byte[] passwordHashDb, byte[] salt)
+        {
+            var passwordHash = GenerateHashedPassword(password, salt);
+            bool areEqual = passwordHashDb.SequenceEqual(passwordHash);
+            return areEqual;
+        }
+
+        private string CreateRandomToken()
+        {
+            return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+        }
+
+        private async Task<string> CreateNewRefreshToken(Guid userId, string jwtId)
+        {
+            RefreshToken refreshAccessToken = new()
+            {
+                RefreshTokenId = Guid.NewGuid(),
+                UserId = userId,
+                JwtId = jwtId,
+                ExpiredAt = DateTime.Now.AddHours(24),
+                IsValid = true,
+                RefreshToken1 = CreateRandomToken(),
+            };
+            await _unitOfWork.RefreshToken.AddAsync(refreshAccessToken);
+            await _unitOfWork.SaveChangeAsync();
+            return refreshAccessToken.RefreshToken1;
+        }
+
+        private string CreateToken(User user, string jwtId)
+        {
+            var roleName = user.Role.RoleName;
+
+
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.FullName.ToString()),
+                new Claim(ClaimTypes.Role, roleName.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, jwtId),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Exp, DateTime.Now.AddSeconds(15).ToString(), ClaimValueTypes.Integer64)
+            };
+
+            var key = _config.GetSection("ApiSetting")["Secret"];
+            var securityKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(key ?? ""));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+               claims: claims,
+               expires: DateTime.Now.AddMinutes(15),
+               signingCredentials: credentials
+           );
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
