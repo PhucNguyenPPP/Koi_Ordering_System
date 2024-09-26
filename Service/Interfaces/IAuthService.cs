@@ -17,5 +17,6 @@ namespace Service.Interfaces
         byte[] GenerateHashedPassword(string password, byte[] saltBytes);
         Task<LoginResponseDTO?> CheckLogin(LoginRequestDTO loginRequestDTO);
         Task<TokenDTO> RefreshAccessToken(RequestTokenDTO model);
+        Task<ResponseDTO> GetUserByAccessToken(string token);
     }
 }

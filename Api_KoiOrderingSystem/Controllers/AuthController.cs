@@ -53,9 +53,9 @@ namespace Api_KoiOrderingSystem.Controllers
             var result = await _authService.CheckLogin(loginRequestDTO);
             if (result != null)
             {
-                return Ok(new ResponseDTO("Đăng nhập thành công", 200, true, result));
+                return Ok(new ResponseDTO("Sign in successfully", 200, true, result));
             }
-            return BadRequest(new ResponseDTO("Đăng nhập thất bại", 400, false));
+            return BadRequest(new ResponseDTO("Sign in unsuccessfully", 400, false));
         }
 
         [HttpPost("refresh-token")]
@@ -73,6 +73,20 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Created("Create refresh token successfully", 
                 new ResponseDTO("Create refresh token successfully", 201, true, result));
+        }
+
+        [HttpGet("/user/access-token/{accessToken}")]
+        public async Task<IActionResult> GetUserByToken(string accessToken)
+        {
+            var result = await _authService.GetUserByAccessToken(accessToken);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
         }
 
     }

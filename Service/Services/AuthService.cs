@@ -360,5 +360,56 @@ namespace Service.Services
             await _unitOfWork.SaveChangeAsync();
             return refreshAccessToken.RefreshToken1;
         }
+
+        public async Task<ResponseDTO> GetUserByAccessToken(string accessToken)
+        {
+            if (string.IsNullOrWhiteSpace(accessToken))
+            {
+                return new ResponseDTO("Token is empty", 400, false);
+            }
+            var userId = ExtractUserIdFromToken(accessToken);
+            if (userId == "Token is expired")
+            {
+                return new ResponseDTO("Token is expired", 400, false);
+            }
+            if (userId == "Token is invalid")
+            {
+                return new ResponseDTO("Token is invalid", 400, false);
+            }
+            var user = await _unitOfWork.User.GetAllByCondition(c => c.UserId.ToString() == userId
+            && c.Status == true).Include(c => c.Role).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return new ResponseDTO("User not found", 400, false);
+            }
+            var mapUser = _mapper.Map<LocalUserDTO>(user);
+            return new ResponseDTO("Get user by token successfully", 200, true, mapUser);
+        }
+
+        private string ExtractUserIdFromToken(string accessToken)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(accessToken);
+
+                //token expired
+                var expiration = jwtToken.ValidTo;
+
+                if (expiration < DateTime.UtcNow)
+                {
+                    return "Token is expired";
+                }
+                else
+                {
+                    string userId = jwtToken.Subject;
+                    return userId;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Token is invalid";
+            }
+        }
     }
 }
