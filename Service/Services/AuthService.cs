@@ -206,7 +206,7 @@ namespace Service.Services
                 new Claim(ClaimTypes.Role, roleName.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, jwtId),
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Exp, DateTime.Now.AddSeconds(15).ToString(), ClaimValueTypes.Integer64)
+                new Claim(JwtRegisteredClaimNames.Exp, DateTime.Now.AddMinutes(30).ToString(), ClaimValueTypes.Integer64)
             };
 
             var key = _config.GetSection("ApiSetting")["Secret"];
@@ -215,10 +215,150 @@ namespace Service.Services
 
             var token = new JwtSecurityToken(
                claims: claims,
-               expires: DateTime.Now.AddMinutes(15),
+               expires: DateTime.Now.AddMinutes(30),
                signingCredentials: credentials
            );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<TokenDTO> RefreshAccessToken(RequestTokenDTO model)
+        {
+            // Find an existing refresh token
+            var existingRefreshToken = _unitOfWork.RefreshToken
+                .GetAllByCondition(r => r.RefreshToken1 == model.RefreshToken)
+                .FirstOrDefault();
+
+            if (existingRefreshToken == null)
+            {
+                return new TokenDTO()
+                {
+                    Message = "Token is not exists"
+                };
+            }
+
+            // Compare data from exixsting refresh and access token provided and if there is any missmatch then consider it as fraud
+            var isTokenValid = GetAccessTokenData(model.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtId);
+            if (!isTokenValid)
+            {
+                existingRefreshToken.IsValid = false;
+                await _unitOfWork.SaveChangeAsync();
+                return new TokenDTO()
+                {
+                    Message = "Token is invalid"
+                };
+            }
+
+            // Check accessToken expire ?
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var test = tokenHandler.ReadJwtToken(model.AccessToken);
+            if (test == null) return new TokenDTO()
+            {
+                Message = "Error when creating token"
+            };
+
+            var accessExpiredDateTime = test.ValidTo;
+            // Sử dụng accessExpiredDateTime làm giá trị thời gian hết hạn
+
+            if (accessExpiredDateTime > DateTime.UtcNow)
+            {
+                return new TokenDTO()
+                {
+                    Message = "Token is not expired"
+                };
+            }
+            // When someone tries to use not valid refresh token, fraud possible
+
+            if (!existingRefreshToken.IsValid)
+            {
+                var chainRecords = _unitOfWork.RefreshToken
+                    .GetAllByCondition(u => u.UserId == existingRefreshToken.UserId
+                    && u.JwtId == existingRefreshToken.JwtId)
+                    .ToList();
+
+                foreach (var item in chainRecords)
+                {
+                    item.IsValid = false;
+                }
+                _unitOfWork.RefreshToken.UpdateRange(chainRecords);
+                await _unitOfWork.SaveChangeAsync();
+                return new TokenDTO
+                {
+                    Message = "Token is invalid"
+                };
+            }
+
+            // If it just expired then mark as invalid and return empty
+
+            if (existingRefreshToken.ExpiredAt < DateTime.Now)
+            {
+                existingRefreshToken.IsValid = false;
+                await _unitOfWork.SaveChangeAsync();
+                return new TokenDTO()
+                {
+                    Message = "Token is expired"
+                };
+            }
+
+            // Replace old refresh with a new one with updated expired date
+            var newRefreshToken = await ReNewRefreshToken(existingRefreshToken.UserId,
+                existingRefreshToken.JwtId);
+
+            // Revoke existing refresh token
+            existingRefreshToken.IsValid = false;
+            await _unitOfWork.SaveChangeAsync();
+            // Generate new access token
+            var user = _unitOfWork.User.GetAllByCondition(a => a.UserId == existingRefreshToken.UserId)
+                .Include(u => u.Role)
+                .FirstOrDefault();
+
+            if (user == null)
+            {
+                return new TokenDTO();
+            }
+
+            var newAccessToken = CreateToken(user, existingRefreshToken.JwtId);
+
+            return new TokenDTO()
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+                Message = "Create token successfully"
+            };
+        }
+
+        private bool GetAccessTokenData(string accessToken, Guid expectedUserId, string expectedTokenId)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwt = tokenHandler.ReadJwtToken(accessToken);
+                var jwtId = jwt.Claims.FirstOrDefault(a => a.Type == JwtRegisteredClaimNames.Jti)?.Value;
+                var userId = jwt.Claims.FirstOrDefault(a => a.Type == JwtRegisteredClaimNames.Sub)?.Value;
+                userId = userId ?? string.Empty;
+                return Guid.Parse(userId) == expectedUserId && jwtId == expectedTokenId;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private async Task<string> ReNewRefreshToken(Guid userId, string jwtId)
+        {
+            var time = _unitOfWork.RefreshToken.GetAllByCondition(a => a.JwtId == jwtId)
+                .FirstOrDefault();
+            RefreshToken refreshAccessToken = new()
+            {
+                RefreshTokenId = Guid.NewGuid(),
+                UserId = userId,
+                JwtId = jwtId,
+                ExpiredAt = time?.ExpiredAt != null ? time.ExpiredAt : DateTime.Now.AddHours(24),
+                IsValid = true,
+                RefreshToken1 = CreateRandomToken(),
+            };
+            await _unitOfWork.RefreshToken.AddAsync(refreshAccessToken);
+            await _unitOfWork.SaveChangeAsync();
+            return refreshAccessToken.RefreshToken1;
         }
     }
 }

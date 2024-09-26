@@ -58,5 +58,22 @@ namespace Api_KoiOrderingSystem.Controllers
             return BadRequest(new ResponseDTO("Đăng nhập thất bại", 400, false));
         }
 
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> GetNewTokenFromRefreshToken([FromBody] RequestTokenDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseDTO(ModelState.ToString() ?? "Unknown error", 400, false));
+            }
+
+            var result = await _authService.RefreshAccessToken(model);
+            if (result == null || string.IsNullOrEmpty(result.AccessToken))
+            {
+                return BadRequest(new ResponseDTO("Create refresh token unsuccessfully", 400, false, result));
+            }
+            return Created("Create refresh token successfully", 
+                new ResponseDTO("Create refresh token successfully", 201, true, result));
+        }
+
     }
 }
