@@ -43,5 +43,51 @@ namespace Api_KoiOrderingSystem.Controllers
             }
         }
 
+        [HttpPost("sign-in")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseDTO(ModelState.ToString() ?? "Unknown error", 400, false, ModelState));
+            }
+            var result = await _authService.CheckLogin(loginRequestDTO);
+            if (result != null)
+            {
+                return Ok(new ResponseDTO("Sign in successfully", 200, true, result));
+            }
+            return BadRequest(new ResponseDTO("Sign in unsuccessfully", 400, false));
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> GetNewTokenFromRefreshToken([FromBody] RequestTokenDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseDTO(ModelState.ToString() ?? "Unknown error", 400, false));
+            }
+
+            var result = await _authService.RefreshAccessToken(model);
+            if (result == null || string.IsNullOrEmpty(result.AccessToken))
+            {
+                return BadRequest(new ResponseDTO("Create refresh token unsuccessfully", 400, false, result));
+            }
+            return Created("Create refresh token successfully", 
+                new ResponseDTO("Create refresh token successfully", 201, true, result));
+        }
+
+        [HttpGet("/user/access-token/{accessToken}")]
+        public async Task<IActionResult> GetUserByToken(string accessToken)
+        {
+            var result = await _authService.GetUserByAccessToken(accessToken);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+
     }
 }

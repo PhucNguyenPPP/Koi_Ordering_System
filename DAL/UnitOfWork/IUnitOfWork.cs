@@ -14,5 +14,6 @@ namespace DAL.UnitOfWork
         IBreedRepository Breed { get; }
         IRoleRepository Role { get; }
         IUserRepository User { get; }
+        IRefreshTokenRepository RefreshToken { get; }
     }
 }

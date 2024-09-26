@@ -10,6 +10,7 @@ namespace Api_KoiOrderingSystem.Profiles
         {
             #region
             CreateMap<SignUpCustomerRequestDTO, User>().ReverseMap();
+            CreateMap<User, LocalUserDTO>();
             #endregion
         }
     }

@@ -10,41 +10,41 @@ namespace Common.DTO.Auth
 {
     public class SignUpCustomerRequestDTO
     {
-            [Required(ErrorMessage = "Vui lòng nhập tên tài khoản")]
-            [MinLength(5, ErrorMessage = "Tên tài khoản phải có ít nhất 5 ký tự")]
+            [Required(ErrorMessage = "Please input username")]
+            [MinLength(5, ErrorMessage = "Username must have at least 5 characters")]
             public string UserName { get; set; } = null!;
 
-            [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
-            [MinLength(8, ErrorMessage = "Mật khẩu phải có ít nhất 8 ký tự")]
+            [Required(ErrorMessage = "Please input password")]
+            [MinLength(8, ErrorMessage = "Password must have at least 8 characters")]
             [RegularExpression("^(?=.*[!@#$%^&*(),.?\":{}|<>]).+$",
-                ErrorMessage = "Mật khẩu phải có ít nhất 1 ký tự đặc biệt")]
+                ErrorMessage = "Password must have at least 1 special character")]
             public string Password { get; set; } = null!;
 
-            [Required(ErrorMessage = "Vui lòng nhập họ và tên")]
-            [MinLength(8, ErrorMessage = "Họ và tên phải có ít nhất 8 ký tự")]
+            [Required(ErrorMessage = "Please input full name")]
+            [MinLength(8, ErrorMessage = "Full name must have at least 8 characters")]
             [RegularExpression("^[\\p{L}]+([\\s\\p{L}]+)*$",
-                ErrorMessage = "Họ và tên không hợp lệ")]
+                ErrorMessage = "Full name is invalid")]
             public string FullName { get; set; } = null!;
 
-            [Required(ErrorMessage = "Vui lòng chọn ảnh đại diện")]
+            [Required(ErrorMessage = "Please choose avatar")]
             public IFormFile AvatarLink { get; set; } = null!;
 
-            [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
+            [Required(ErrorMessage = "Please input phone number")]
             [RegularExpression("^0\\d{9}$",
-                ErrorMessage = "Số điện thoại không hợp lệ")]
+                ErrorMessage = "Phone number is invalid")]
             public string Phone { get; set; } = null!;
 
-            [Required(ErrorMessage = "Vui lòng nhập địa chỉ")]
+            [Required(ErrorMessage = "Please input address")]
             public string Address { get; set; } = null!;
 
-            [Required(ErrorMessage = "Vui lòng nhập email")]
+            [Required(ErrorMessage = "Please input email")]
             [EmailAddress]
             public string Email { get; set; } = null!;
 
-            [Required(ErrorMessage = "Vui lòng nhập ngày sinh")]
+            [Required(ErrorMessage = "Please input date of birth")]
             public DateTime DateOfBirth { get; set; }
 
-            [Required(ErrorMessage = "Vui lòng chọn giới tính")]
+            [Required(ErrorMessage = "Please input gender")]
             public string Gender { get; set; } = null!;
     }
 }
