@@ -17,6 +17,7 @@ builder.Services.AddScoped<IBreedService, BreedService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IKoiService, KoiService>();
 
 builder.Services.AddSwaggerGen(options =>
 {

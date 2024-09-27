@@ -15,5 +15,8 @@ namespace DAL.UnitOfWork
         IRoleRepository Role { get; }
         IUserRepository User { get; }
         IRefreshTokenRepository RefreshToken { get; }
+        IKoiRepository Koi { get; }
+        IOrderRepository Order { get; }
+        IFarmRepository Farm { get; }
     }
 }
