@@ -14,6 +14,8 @@ namespace Service.Interfaces
         Task<ResponseDTO> GetAll();
         Task<bool> AddKoi(KoiDTO koiDTO);
         Task<ResponseDTO> CheckValidationCreateKoi(KoiDTO koiDTO);
-        Task<ResponseDTO> deleteKoi(Guid koiId);
+        Task<ResponseDTO> DeleteKoi(Guid koiId);
+        Task<ResponseDTO> UpdateKoi(UpdateKoiDTO updateKoiDTO);
+        Task<ResponseDTO> CheckValidationUpdateKoi(UpdateKoiDTO koiDTO);
     }
 }

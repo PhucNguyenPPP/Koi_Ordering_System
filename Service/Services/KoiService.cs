@@ -13,6 +13,7 @@ using DAL.Interfaces;
 using DAL.UnitOfWork;
 using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Service.Services
 {
@@ -67,13 +68,21 @@ namespace Service.Services
                 }
             }
 
-
+            if (koiDTO.Gender != GenderEnum.Male.ToString() && koiDTO.Gender != GenderEnum.Female.ToString())
+            {
+                return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
+            }
             var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
             if (farm.IsNullOrEmpty())
             {
                 return new ResponseDTO("Farm không hợp lệ", 400, false);
             }
 
+            var existedName = _unitOfWork.Koi.GetAll().FirstOrDefault();
+            if (existedName.Name == koiDTO.Name)
+            {
+                return new ResponseDTO("Tên koi đã tồn tại!", 400, false);
+            }
             /*if(!koiDTO.Gender.Equals(GenderEnum.Female)|| !koiDTO.Gender.Equals(GenderEnum.Male))
             {
                 return new ResponseDTO("Vui lòng điền giới tính hợp lệ", 400, false);
@@ -82,9 +91,9 @@ namespace Service.Services
             return new ResponseDTO("Check thành công", 200, true);
         }
 
-        public async Task<ResponseDTO> deleteKoi(Guid koiId)
+        public async Task<ResponseDTO> DeleteKoi(Guid koiId)
         {
-            var koi = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId == koiId).FirstOrDefault();
+            var koi = await _unitOfWork.Koi.GetByCondition(c => c.KoiId == koiId);
             if(koi == null)
             {
                 return new ResponseDTO("Koi không tồn tại!", 400, false);
@@ -98,8 +107,69 @@ namespace Service.Services
             }
             else
             {
-                return new ResponseDTO("Xóa koi không thành công", 400, false, null);
+                return new ResponseDTO("Xóa koi không thành công", 500, false, null);
             }
+        }
+
+        public async Task<ResponseDTO> UpdateKoi(UpdateKoiDTO updateKoiDTO)
+        {
+            var koi = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId == updateKoiDTO.KoiId).FirstOrDefault();
+            if(koi == null)
+            {
+                return new ResponseDTO("Koi không tồn tại!", 400, false);
+            }
+            var certificationLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.CertificationLink, "koiCertificate_img");
+            koi.Name = updateKoiDTO.Name;
+            koi.CertificationLink = certificationLink;
+            koi.Description = updateKoiDTO.Description;
+            koi.Dob=updateKoiDTO.Dob;
+            koi.Gender = updateKoiDTO.Gender;
+            koi.BreedId = updateKoiDTO.BreedId;
+            koi.FarmId = updateKoiDTO.FarmId;
+
+            _unitOfWork.Koi.Update(koi);
+            var update = await _unitOfWork.SaveChangeAsync();
+            if (update)
+            {
+                return new ResponseDTO("Chỉnh sửa thông tin thành công", 200, true);
+            }
+            return new ResponseDTO("Chỉnh sửa thông tin thất bại", 500, true);
+
+        }
+
+        public async Task<ResponseDTO> CheckValidationUpdateKoi(UpdateKoiDTO koiDTO)
+        {
+            var breed = _unitOfWork.Breed.GetAllByCondition(c => c.BreedId == koiDTO.BreedId);
+            if (breed.IsNullOrEmpty())
+            {
+                return new ResponseDTO("Giống cá không hợp lệ", 400, false);
+            }
+            if (koiDTO.OrderId != null)
+            {
+                var order = _unitOfWork.Order.GetAllByCondition(c => c.OrderId == koiDTO.OrderId);
+                if (order.IsNullOrEmpty())
+                {
+                    return new ResponseDTO("Mã đơn hàng không hợp lệ", 400, false);
+                }
+            }
+
+            if (koiDTO.Gender != GenderEnum.Male.ToString() && koiDTO.Gender != GenderEnum.Female.ToString())
+            {
+                return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
+            }
+            var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
+            if (farm.IsNullOrEmpty())
+            {
+                return new ResponseDTO("Farm không hợp lệ", 400, false);
+            }
+
+            var existedName = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId != koiDTO.KoiId).FirstOrDefault();
+            if (existedName.Name == koiDTO.Name)
+            {
+                return new ResponseDTO("Tên koi đã tồn tại!", 400, false);
+            }
+
+            return new ResponseDTO("Check thành công", 200, true);
         }
     }
 }

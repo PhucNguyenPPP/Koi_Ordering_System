@@ -62,7 +62,8 @@ namespace Api_KoiOrderingSystem.Controllers
         [HttpDelete("delete-koi")]
         public async Task<IActionResult> DeleteKoi([FromBody] Guid koiId)
         {
-            ResponseDTO responseDTO = await _koiService.deleteKoi(koiId);
+
+            ResponseDTO responseDTO = await _koiService.DeleteKoi(koiId);
             if (responseDTO.IsSuccess == false)
             {
                 if (responseDTO.StatusCode == 404)
@@ -75,5 +76,28 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(responseDTO);
         }
 
+        [HttpPut("update-koi")]
+        public async Task<IActionResult> UpdateKoi([FromForm] UpdateKoiDTO updateKoiDTO)
+        {
+            var checkValid = await _koiService.CheckValidationUpdateKoi(updateKoiDTO);
+            if (!checkValid.IsSuccess)
+            {
+                return BadRequest(checkValid);
+            }
+            ResponseDTO responseDTO = await _koiService.UpdateKoi(updateKoiDTO);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 400)
+                {
+                    return NotFound(responseDTO);
+                }
+                if (responseDTO.StatusCode == 500)
+                {
+                    return BadRequest(responseDTO);
+                }
+            }
+
+            return Ok(responseDTO);
+        }
     }
 }
