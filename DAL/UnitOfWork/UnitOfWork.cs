@@ -19,6 +19,9 @@ namespace DAL.UnitOfWork
             Role = new RoleRepository(_context);
             User = new UserRepository(_context);
             RefreshToken = new RefreshTokenRepository(_context);
+            Koi = new KoiRepository(_context);
+            Order = new OrderRepository(_context);
+            Farm = new FarmRepository(_context);
         }
 
 
@@ -33,8 +36,11 @@ namespace DAL.UnitOfWork
         }
 
         public IBreedRepository Breed { get; private set; }
-        public IRoleRepository Role {  get; private set; }
+        public IRoleRepository Role { get; private set; }
         public IUserRepository User { get; private set; }
         public IRefreshTokenRepository RefreshToken { get; private set; }
+        public IKoiRepository Koi { get; private set; }
+        public IOrderRepository Order { get; private set; }
+        public IFarmRepository Farm { get; private set; }
     }
 }
