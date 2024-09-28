@@ -16,7 +16,6 @@ namespace DAL.UnitOfWork
             RefreshToken = new RefreshTokenRepository(_context);
             Koi = new KoiRepository(_context);
             Order = new OrderRepository(_context);
-            Farm = new FarmRepository(_context);
             Policy = new PolicyRepository(_context);
         }
 
@@ -37,7 +36,6 @@ namespace DAL.UnitOfWork
         public IRefreshTokenRepository RefreshToken { get; private set; }
         public IKoiRepository Koi { get; private set; }
         public IOrderRepository Order { get; private set; }
-        public IFarmRepository Farm { get; private set; }
         public IPolicyRepository Policy { get; private set; }
     }
 }
