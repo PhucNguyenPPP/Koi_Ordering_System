@@ -17,6 +17,10 @@ public partial class Policy
 
     public Guid PaymentMethodId { get; set; }
 
+    public Guid FarmId { get; set; }
+
+    public virtual User Farm { get; set; } = null!;
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual PaymentMethod PaymentMethod { get; set; } = null!;

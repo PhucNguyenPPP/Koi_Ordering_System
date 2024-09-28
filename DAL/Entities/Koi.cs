@@ -27,7 +27,7 @@ public partial class Koi
 
     public virtual Breed Breed { get; set; } = null!;
 
-    public virtual Farm Farm { get; set; } = null!;
+    public virtual User Farm { get; set; } = null!;
 
     public virtual ICollection<KoiImage> KoiImages { get; set; } = new List<KoiImage>();
 
