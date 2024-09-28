@@ -78,8 +78,8 @@ namespace Service.Services
                 return new ResponseDTO("Farm không hợp lệ", 400, false);
             }
 
-            var existedName = _unitOfWork.Koi.GetAll().FirstOrDefault();
-            if (existedName.Name == koiDTO.Name)
+            var existedName = _unitOfWork.Koi.GetAll();
+            if (existedName.Any(c=> c.Name == koiDTO.Name))
             {
                 return new ResponseDTO("Tên koi đã tồn tại!", 400, false);
             }
@@ -163,8 +163,8 @@ namespace Service.Services
                 return new ResponseDTO("Farm không hợp lệ", 400, false);
             }
 
-            var existedName = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId != koiDTO.KoiId).FirstOrDefault();
-            if (existedName.Name == koiDTO.Name)
+            var existedName = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId != koiDTO.KoiId);
+            if (existedName.Any(c=> c.Name == koiDTO.Name))
             {
                 return new ResponseDTO("Tên koi đã tồn tại!", 400, false);
             }

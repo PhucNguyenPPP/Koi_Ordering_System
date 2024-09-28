@@ -51,7 +51,7 @@ namespace Api_KoiOrderingSystem.Controllers
             var signUpResult = await _koiService.AddKoi(model);
             if (signUpResult)
             {
-                return Ok(new ResponseDTO("Đăng kí thành công", 200, true, null));
+                return Created("Đăng kí thành công", new ResponseDTO("Đăng kí thành công", 201, true, null));
             }
             else
             {
@@ -60,7 +60,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpDelete("delete-koi")]
-        public async Task<IActionResult> DeleteKoi([FromBody] Guid koiId)
+        public async Task<IActionResult> DeleteKoi( Guid koiId)
         {
 
             ResponseDTO responseDTO = await _koiService.DeleteKoi(koiId);
@@ -87,7 +87,7 @@ namespace Api_KoiOrderingSystem.Controllers
             ResponseDTO responseDTO = await _koiService.UpdateKoi(updateKoiDTO);
             if (responseDTO.IsSuccess == false)
             {
-                if (responseDTO.StatusCode == 400)
+                if (responseDTO.StatusCode == 404)
                 {
                     return NotFound(responseDTO);
                 }
