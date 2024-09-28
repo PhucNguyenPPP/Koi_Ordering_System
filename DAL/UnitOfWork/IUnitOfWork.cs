@@ -18,5 +18,6 @@ namespace DAL.UnitOfWork
         IKoiRepository Koi { get; }
         IOrderRepository Order { get; }
         IFarmRepository Farm { get; }
+        IPolicyRepository Policy { get; }
     }
 }
