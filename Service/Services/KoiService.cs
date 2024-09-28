@@ -72,11 +72,11 @@ namespace Service.Services
             {
                 return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
             }
-            var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
-            if (farm.IsNullOrEmpty())
-            {
-                return new ResponseDTO("Farm không hợp lệ", 400, false);
-            }
+            //var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
+            //if (farm.IsNullOrEmpty())
+            //{
+            //    return new ResponseDTO("Farm không hợp lệ", 400, false);
+            //}
 
             var existedName = _unitOfWork.Koi.GetAll();
             if (existedName.Any(c=> c.Name == koiDTO.Name))
@@ -157,11 +157,11 @@ namespace Service.Services
             {
                 return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
             }
-            var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
-            if (farm.IsNullOrEmpty())
-            {
-                return new ResponseDTO("Farm không hợp lệ", 400, false);
-            }
+            //var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
+            //if (farm.IsNullOrEmpty())
+            //{
+            //    return new ResponseDTO("Farm không hợp lệ", 400, false);
+            //}
 
             var existedName = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId != koiDTO.KoiId);
             if (existedName.Any(c=> c.Name == koiDTO.Name))
