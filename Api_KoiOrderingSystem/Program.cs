@@ -19,7 +19,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IKoiService, KoiService>();
 builder.Services.AddScoped<IPolicyService, PolicyService>();
-
+builder.Services.AddScoped<IFarmService, FarmService>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
