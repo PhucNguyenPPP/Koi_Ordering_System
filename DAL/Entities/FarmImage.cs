@@ -11,5 +11,5 @@ public partial class FarmImage
 
     public Guid FarmId { get; set; }
 
-    public virtual Farm Farm { get; set; } = null!;
+    public virtual User Farm { get; set; } = null!;
 }

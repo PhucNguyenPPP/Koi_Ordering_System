@@ -17,7 +17,6 @@ namespace DAL.UnitOfWork
         IRefreshTokenRepository RefreshToken { get; }
         IKoiRepository Koi { get; }
         IOrderRepository Order { get; }
-        IFarmRepository Farm { get; }
         IPolicyRepository Policy { get; }
     }
 }
