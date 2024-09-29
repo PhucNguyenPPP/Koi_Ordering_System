@@ -42,8 +42,33 @@ namespace Api_KoiOrderingSystem.Controllers
                 return BadRequest(new ResponseDTO("Sign up customer unsuccessfully", 400, true, null));
             }
         }
+		[HttpPost("new-farm")]
+		public async Task<IActionResult> SignUpFarm ([FromForm] SignUpFarmRequestDTO model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(new ResponseDTO(ModelState.ToString() ?? "Unknow error", 400, false, null));
+			}
 
-        [HttpPost("sign-in")]
+			var checkValid = await _authService.CheckValidationSignUpFarm(model);
+			if (!checkValid.IsSuccess)
+			{
+				return BadRequest(checkValid);
+			}
+
+			var signUpResult = await _authService.SignUpFarm(model);
+			if (signUpResult)
+			{
+				return Created("Sign up farm successfully",
+					new ResponseDTO("Sign up farm successfully", 201, true, null));
+			}
+			else
+			{
+				return BadRequest(new ResponseDTO("Sign up farm unsuccessfully", 400, true, null));
+			}
+		}
+
+		[HttpPost("sign-in")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
             if (!ModelState.IsValid)

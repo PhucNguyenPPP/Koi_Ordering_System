@@ -1,4 +1,5 @@
-﻿using DAL.Entities;
+﻿using Common.DTO.General;
+using DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,12 @@ namespace Service.Interfaces
     public interface IUserService
     {
         Task<Role?> GetCustomerRole();
-        bool CheckUserNameExist(string userName);
+		Task<Role?> GetFarmRole();
+
+		bool CheckUserNameExist(string userName);
         bool CheckEmailExist(string email);
         bool CheckPhoneExist(string phone);
-    }
+		Task<ResponseDTO> GetFarmDetail(Guid userId);
+		bool CheckFarmExist(string? farmName);
+	}
 }
