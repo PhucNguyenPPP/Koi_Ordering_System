@@ -11,11 +11,11 @@ public partial class OrderStorage
 
     public bool Status { get; set; }
 
-    public Guid StorageId { get; set; }
+    public Guid StorageProvinceId { get; set; }
 
     public Guid OrderId { get; set; }
 
     public virtual Order Order { get; set; } = null!;
 
-    public virtual Storage Storage { get; set; } = null!;
+    public virtual StorageProvince StorageProvince { get; set; } = null!;
 }

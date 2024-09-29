@@ -37,6 +37,8 @@ public partial class Order
 
     public Guid? FlightId { get; set; }
 
+    public Guid StorageProvinceVnId { get; set; }
+
     public virtual User Customer { get; set; } = null!;
 
     public virtual Flight? Flight { get; set; }
@@ -48,6 +50,8 @@ public partial class Order
     public virtual Policy Policy { get; set; } = null!;
 
     public virtual ICollection<RefundRequest> RefundRequests { get; set; } = new List<RefundRequest>();
+
+    public virtual StorageProvince StorageProvinceVn { get; set; } = null!;
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }
