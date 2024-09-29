@@ -59,14 +59,6 @@ namespace Service.Services
             {
                 return new ResponseDTO("Giống cá không hợp lệ", 400, false);
             }
-            if (koiDTO.OrderId != null)
-            {
-                var order = _unitOfWork.Order.GetAllByCondition(c => c.OrderId == koiDTO.OrderId);
-                if (order.IsNullOrEmpty())
-                {
-                    return new ResponseDTO("Mã đơn hàng không hợp lệ", 400, false);
-                }
-            }
 
             if (koiDTO.Gender != GenderEnum.Male.ToString() && koiDTO.Gender != GenderEnum.Female.ToString())
             {
@@ -125,7 +117,6 @@ namespace Service.Services
             koi.Dob=updateKoiDTO.Dob;
             koi.Gender = updateKoiDTO.Gender;
             koi.BreedId = updateKoiDTO.BreedId;
-            koi.FarmId = updateKoiDTO.FarmId;
 
             _unitOfWork.Koi.Update(koi);
             var update = await _unitOfWork.SaveChangeAsync();
@@ -143,14 +134,6 @@ namespace Service.Services
             if (breed.IsNullOrEmpty())
             {
                 return new ResponseDTO("Giống cá không hợp lệ", 400, false);
-            }
-            if (koiDTO.OrderId != null)
-            {
-                var order = _unitOfWork.Order.GetAllByCondition(c => c.OrderId == koiDTO.OrderId);
-                if (order.IsNullOrEmpty())
-                {
-                    return new ResponseDTO("Mã đơn hàng không hợp lệ", 400, false);
-                }
             }
 
             if (koiDTO.Gender != GenderEnum.Male.ToString() && koiDTO.Gender != GenderEnum.Female.ToString())

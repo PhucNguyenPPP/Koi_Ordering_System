@@ -28,7 +28,6 @@ namespace Common.DTO.KoiFish
         [Required(ErrorMessage = "Vui lòng nhập giống")]
         public Guid BreedId { get; set; }
 
-        public Guid? OrderId { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập Farm")]
         public Guid FarmId { get; set; }
