@@ -17,5 +17,6 @@ namespace Service.Interfaces
         Task<ResponseDTO> DeleteKoi(Guid koiId);
         Task<ResponseDTO> UpdateKoi(UpdateKoiDTO updateKoiDTO);
         Task<ResponseDTO> CheckValidationUpdateKoi(UpdateKoiDTO koiDTO);
+        Task<bool> CheckKoiExist (Guid koiId);
     }
 }

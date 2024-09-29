@@ -18,5 +18,6 @@ namespace Service.Interfaces
         bool CheckPhoneExist(string phone);
 		Task<ResponseDTO> GetFarmDetail(Guid userId);
 		bool CheckFarmExist(string? farmName);
+        Task<bool> CheckUserExist (Guid userId);
 	}
 }

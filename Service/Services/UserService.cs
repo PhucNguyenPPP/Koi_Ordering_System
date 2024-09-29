@@ -92,5 +92,15 @@ namespace Service.Services
 			}
 			return false;
 		}
-	}
+
+        public async Task<bool> CheckUserExist(Guid userId)
+        {
+            var user = await _unitOfWork.User.GetByCondition(c => c.UserId == userId);
+            if(user != null)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
 }

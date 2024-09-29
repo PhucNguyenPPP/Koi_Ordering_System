@@ -13,6 +13,8 @@ public partial class Koi
 
     public string CertificationLink { get; set; } = null!;
 
+    public decimal Price { get; set; }
+
     public string Description { get; set; } = null!;
 
     public DateTime Dob { get; set; }
@@ -28,6 +30,8 @@ public partial class Koi
     public Guid FarmId { get; set; }
 
     public virtual Breed Breed { get; set; } = null!;
+
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual User Farm { get; set; } = null!;
 
