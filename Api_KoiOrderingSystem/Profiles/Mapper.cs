@@ -17,10 +17,13 @@ namespace Api_KoiOrderingSystem.Profiles
             CreateMap<User, LocalUserDTO>()
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
                 .ReverseMap();
-            CreateMap<Koi, KoiDTO>().ReverseMap();
+            CreateMap<Koi, KoiDTO>()
+                //.ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Farm.UserId))
+                .ReverseMap();
 			CreateMap<User, FarmDetailDTO>().ReverseMap();
 			CreateMap<FarmImage, FarmImageDTO>().ReverseMap();
 			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
+            CreateMap<GetAllKoiDTO, Koi>().ReverseMap();
             CreateMap<Cart, GetCartDTO>()
             .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Koi.Name))
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Koi.Price));

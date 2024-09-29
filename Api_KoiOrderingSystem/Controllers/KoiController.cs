@@ -1,6 +1,6 @@
 ﻿using Common.DTO.General;
 using System;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;    
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Service.Services;
@@ -51,7 +51,7 @@ namespace Api_KoiOrderingSystem.Controllers
             var signUpResult = await _koiService.AddKoi(model);
             if (signUpResult)
             {
-                return Created("Đăng kí thành công", new ResponseDTO("Đăng kí thành công", 201, true, null));
+                return Created("Success", new ResponseDTO("Đăng kí thành công", 201, true, null));
             }
             else
             {
