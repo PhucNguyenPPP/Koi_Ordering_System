@@ -44,8 +44,11 @@ namespace Service.Services
         {
             var koi = _mapper.Map<Koi>(koiDTO);
             var certificationLink = await _imageService.StoreImageAndGetLink(koiDTO.CertificationLink, "koiCertificate_img");
+            var avatarLink = await _imageService.StoreImageAndGetLink(koiDTO.AvatarLink, "koiAvatar_img");
             koi.KoiId = Guid.NewGuid();
             koi.CertificationLink = certificationLink;
+            koi.AvatarLink = avatarLink;
+            koi.FarmId = koiDTO.FarmId;
             koi.Status = true;
 
             await _unitOfWork.Koi.AddAsync(koi);
@@ -64,11 +67,11 @@ namespace Service.Services
             {
                 return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
             }
-            //var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
-            //if (farm.IsNullOrEmpty())
-            //{
-            //    return new ResponseDTO("Farm không hợp lệ", 400, false);
-            //}
+            var farm = _unitOfWork.User.GetAllByCondition(c => c.UserId == koiDTO.FarmId);
+            if (farm.IsNullOrEmpty())
+            {
+                return new ResponseDTO("Farm không hợp lệ", 400, false);
+            }
 
             var existedName = _unitOfWork.Koi.GetAll();
             if (existedName.Any(c=> c.Name == koiDTO.Name))
@@ -111,8 +114,10 @@ namespace Service.Services
                 return new ResponseDTO("Koi không tồn tại!", 400, false);
             }
             var certificationLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.CertificationLink, "koiCertificate_img");
+            var avatarLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.AvatarLink, "koiAvatar_img");
             koi.Name = updateKoiDTO.Name;
             koi.CertificationLink = certificationLink;
+            koi.AvatarLink = avatarLink;
             koi.Description = updateKoiDTO.Description;
             koi.Dob=updateKoiDTO.Dob;
             koi.Gender = updateKoiDTO.Gender;
@@ -140,11 +145,7 @@ namespace Service.Services
             {
                 return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
             }
-            //var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
-            //if (farm.IsNullOrEmpty())
-            //{
-            //    return new ResponseDTO("Farm không hợp lệ", 400, false);
-            //}
+           
 
             var existedName = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId != koiDTO.KoiId);
             if (existedName.Any(c=> c.Name == koiDTO.Name))
