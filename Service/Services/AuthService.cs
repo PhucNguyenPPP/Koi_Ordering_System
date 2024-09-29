@@ -27,15 +27,18 @@ namespace Service.Services
         private readonly IUserService _userService;
         private readonly IImageService _imageService;
         private readonly IConfiguration _config;
+		private readonly IStorageProvinceService _storageProvinceService;
 
-        public AuthService(IMapper mapper, IUserService userService,
-            IUnitOfWork unitOfWork, IImageService imageService,
+		public AuthService(IMapper mapper, IUserService userService,
+            IUnitOfWork unitOfWork, IImageService imageService, 
+            IStorageProvinceService storageProvinceService, 
             IConfiguration config)
         {
             _mapper = mapper;
             _userService = userService;
             _unitOfWork = unitOfWork;
             _imageService = imageService;
+            _storageProvinceService = storageProvinceService;
             _config = config;
         }
 
@@ -122,7 +125,6 @@ namespace Service.Services
             {
                 return new ResponseDTO("Phone already exists", 400, false);
             }
-
             return new ResponseDTO("Check successfully", 200, true);
         }
 
@@ -425,7 +427,6 @@ namespace Service.Services
 			{
 				return new ResponseDTO("Gender is invalid", 400, false);
 			}
-
 			var checkUserNameExist = _userService.CheckUserNameExist(model.UserName);
 			if (checkUserNameExist)
 			{
@@ -447,6 +448,11 @@ namespace Service.Services
 			if (checkFarmExist)
 			{
 				return new ResponseDTO("Farm already exists", 400, false);
+			}
+            var checkValidJapanStorageProvince = await _storageProvinceService.CheckJapanStorageProvince(model.StorageProvinceId);
+            if (!checkValidJapanStorageProvince.IsSuccess)
+			{
+				return checkValidJapanStorageProvince;
 			}
 			return new ResponseDTO("Check successfully", 200, true);
 		}

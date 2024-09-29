@@ -19,5 +19,6 @@ namespace DAL.UnitOfWork
         IOrderRepository Order { get; }
         IPolicyRepository Policy { get; }
 		IFarmImageRepository FarmImage { get; }
+        IStorageProvinceRepository StorageProvince { get; }
 	}
 }

@@ -57,6 +57,8 @@ namespace Common.DTO.Auth
 
 		[Required(ErrorMessage = "Please input address")]
 		public string? FarmAddress { get; set; }
+		[Required(ErrorMessage = "Please input storage province")]
+		public Guid? StorageProvinceId { get; set; }
 
 	}
 }
