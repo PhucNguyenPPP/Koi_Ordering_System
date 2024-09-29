@@ -41,7 +41,7 @@ public partial class User
 
     public Guid RoleId { get; set; }
 
-    public Guid? StorageId { get; set; }
+    public Guid? StorageProvinceId { get; set; }
 
     public virtual ICollection<FarmImage> FarmImages { get; set; } = new List<FarmImage>();
 
@@ -55,5 +55,5 @@ public partial class User
 
     public virtual Role Role { get; set; } = null!;
 
-    public virtual Storage? Storage { get; set; }
+    public virtual StorageProvince? StorageProvince { get; set; }
 }
