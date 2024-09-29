@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Common.DTO.Auth;
+using Common.DTO.Cart;
 using Common.DTO.FarmImage;
 using Common.DTO.KoiFish;
 using Common.DTO.User;
@@ -24,7 +25,11 @@ namespace Api_KoiOrderingSystem.Profiles
 			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
             CreateMap<GetAllKoiDTO, Koi>().ReverseMap();
             CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
-			#endregion
-		}
+			
+            CreateMap<Cart, GetCartDTO>()
+            .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Koi.Name))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Koi.Price));
+            #endregion
+        }
     }
 }

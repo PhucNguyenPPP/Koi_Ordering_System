@@ -43,6 +43,8 @@ public partial class User
 
     public Guid? StorageProvinceId { get; set; }
 
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+
     public virtual ICollection<FarmImage> FarmImages { get; set; } = new List<FarmImage>();
 
     public virtual ICollection<Koi> Kois { get; set; } = new List<Koi>();
