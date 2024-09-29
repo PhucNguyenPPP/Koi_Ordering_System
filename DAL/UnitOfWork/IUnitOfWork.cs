@@ -18,5 +18,7 @@ namespace DAL.UnitOfWork
         IKoiRepository Koi { get; }
         IOrderRepository Order { get; }
         IPolicyRepository Policy { get; }
-    }
+		IFarmImageRepository FarmImage { get; }
+        IStorageProvinceRepository StorageProvince { get; }
+	}
 }
