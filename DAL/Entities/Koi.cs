@@ -9,6 +9,8 @@ public partial class Koi
 
     public string Name { get; set; } = null!;
 
+    public string AvatarLink { get; set; } = null!;
+
     public string CertificationLink { get; set; } = null!;
 
     public string Description { get; set; } = null!;
