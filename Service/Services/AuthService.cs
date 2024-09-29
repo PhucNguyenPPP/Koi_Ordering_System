@@ -411,5 +411,67 @@ namespace Service.Services
                 return "Token is invalid";
             }
         }
-    }
+
+		public async Task<ResponseDTO> CheckValidationSignUpFarm(SignUpFarmRequestDTO model)
+		{
+			if (model.DateOfBirth >= DateTime.Now)
+			{
+				return new ResponseDTO("Date of birth is invalid", 400, false);
+			}
+
+			if (model.Gender != GenderEnum.Male.ToString()
+				&& model.Gender != GenderEnum.Female.ToString()
+				&& model.Gender != GenderEnum.Other.ToString())
+			{
+				return new ResponseDTO("Gender is invalid", 400, false);
+			}
+
+			var checkUserNameExist = _userService.CheckUserNameExist(model.UserName);
+			if (checkUserNameExist)
+			{
+				return new ResponseDTO("Username already exists", 400, false);
+			}
+
+			var checkEmailExist = _userService.CheckEmailExist(model.Email);
+			if (checkEmailExist)
+			{
+				return new ResponseDTO("Email already exists", 400, false);
+			}
+
+			var checkPhoneExist = _userService.CheckPhoneExist(model.Phone);
+			if (checkPhoneExist)
+			{
+				return new ResponseDTO("Phone already exists", 400, false);
+			}
+            var checkFarmExist = _userService.CheckFarmExist(model.FarmName);
+			if (checkFarmExist)
+			{
+				return new ResponseDTO("Farm already exists", 400, false);
+			}
+			return new ResponseDTO("Check successfully", 200, true);
+		}
+
+		public async Task<bool> SignUpFarm(SignUpFarmRequestDTO model)
+		{
+			var farm = _mapper.Map<User>(model);
+			var role = await _userService.GetFarmRole();
+			if (role == null)
+			{
+				return false;
+			}
+			var salt = GenerateSalt();
+			var passwordHash = GenerateHashedPassword(model.Password, salt);
+			var avatarLink = await _imageService.StoreImageAndGetLink(model.AvatarLink, FileNameFirebaseStorage.UserImage);
+
+			farm.UserId = Guid.NewGuid();
+			farm.RoleId = role.RoleId;
+			farm.Salt = salt;
+			farm.PasswordHash = passwordHash;
+			farm.AvatarLink = avatarLink;
+			farm.Status = true;
+
+			await _unitOfWork.User.AddAsync(farm);
+			return await _unitOfWork.SaveChangeAsync();
+		}
+	}
 }

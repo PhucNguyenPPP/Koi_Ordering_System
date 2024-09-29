@@ -18,5 +18,7 @@ namespace Service.Interfaces
         Task<LoginResponseDTO?> CheckLogin(LoginRequestDTO loginRequestDTO);
         Task<TokenDTO> RefreshAccessToken(RequestTokenDTO model);
         Task<ResponseDTO> GetUserByAccessToken(string token);
-    }
+		Task<ResponseDTO> CheckValidationSignUpFarm(SignUpFarmRequestDTO model);
+		Task<bool> SignUpFarm(SignUpFarmRequestDTO model);
+	}
 }

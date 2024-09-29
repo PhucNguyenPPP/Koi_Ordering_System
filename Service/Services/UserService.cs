@@ -8,6 +8,7 @@ using Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,6 +81,16 @@ namespace Service.Services
 			}
 			return new ResponseDTO("Get farm information failed", 500, false);
 
+		}
+
+		public bool CheckFarmExist(string? farmName)
+		{
+			var userList = _unitOfWork.User.GetAll();
+			if (userList.Any(c => c.FarmName == farmName))
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }
