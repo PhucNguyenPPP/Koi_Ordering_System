@@ -16,6 +16,9 @@ namespace Common.DTO.KoiFish
         [Required(ErrorMessage = "Vui lòng nhập tên")]
         public string Name { get; set; } = null!;
 
+        [Required(ErrorMessage = "Vui lòng chọn hình cá")]
+        public IFormFile AvatarLink { get; set; } = null!;
+
         [Required(ErrorMessage = "Vui lòng chọn giấy khai sinh cá")]
         public IFormFile CertificationLink { get; set; } = null!;
 
@@ -31,9 +34,5 @@ namespace Common.DTO.KoiFish
         [Required(ErrorMessage = "Vui lòng nhập giống")]
         public Guid BreedId { get; set; }
 
-        public Guid? OrderId { get; set; }
-
-        [Required(ErrorMessage = "Vui lòng nhập Farm")]
-        public Guid FarmId { get; set; }
     }
 }
