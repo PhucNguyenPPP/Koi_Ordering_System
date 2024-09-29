@@ -155,5 +155,15 @@ namespace Service.Services
 
             return new ResponseDTO("Check thành công", 200, true);
         }
+
+        public async Task<bool> CheckKoiExist(Guid koiId)
+        {
+            var koi = await _unitOfWork.Koi.GetByCondition(c => c.KoiId == koiId);
+            if (koi != null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
