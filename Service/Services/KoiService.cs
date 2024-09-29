@@ -36,7 +36,7 @@ namespace Service.Services
                 return new ResponseDTO("Danh sách trống!", 400, false);
             }
 
-            var list = _mapper.Map<List<Koi>>(koi);
+            var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
             return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
         }
 
