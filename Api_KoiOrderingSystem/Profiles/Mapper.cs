@@ -23,6 +23,7 @@ namespace Api_KoiOrderingSystem.Profiles
 			CreateMap<FarmImage, FarmImageDTO>().ReverseMap();
 			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
             CreateMap<GetAllKoiDTO, Koi>().ReverseMap();
+            CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
 			#endregion
 		}
     }

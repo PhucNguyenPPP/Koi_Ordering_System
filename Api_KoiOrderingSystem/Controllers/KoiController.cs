@@ -1,9 +1,7 @@
 ﻿using Common.DTO.General;
-using System;
 using Microsoft.AspNetCore.Http;    
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
-using Service.Services;
 using Common.DTO.KoiFish;
 
 namespace Api_KoiOrderingSystem.Controllers
@@ -18,7 +16,7 @@ namespace Api_KoiOrderingSystem.Controllers
             _koiService = koiService;
         }
 
-        [HttpGet("Koi")]
+        [HttpGet("all-koi")]
         public async Task<IActionResult> GetAllKoi()
         {
             ResponseDTO responseDTO = await _koiService.GetAll();
