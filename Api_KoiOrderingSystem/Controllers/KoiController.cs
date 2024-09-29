@@ -49,11 +49,11 @@ namespace Api_KoiOrderingSystem.Controllers
             var signUpResult = await _koiService.AddKoi(model);
             if (signUpResult)
             {
-                return Created("Success", new ResponseDTO("Đăng kí thành công", 201, true, null));
+                return Created("Success", new ResponseDTO("Thêm koi thành công", 201, true, null));
             }
             else
             {
-                return BadRequest(new ResponseDTO("Đăng kí không thành công", 400, true, null));
+                return BadRequest(new ResponseDTO("Thêm koi không thành công", 400, true, null));
             }
         }
 

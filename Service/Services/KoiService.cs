@@ -115,12 +115,14 @@ namespace Service.Services
             }
             var certificationLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.CertificationLink, "koiCertificate_img");
             var avatarLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.AvatarLink, "koiAvatar_img");
+
             koi.Name = updateKoiDTO.Name;
             koi.CertificationLink = certificationLink;
             koi.AvatarLink = avatarLink;
             koi.Description = updateKoiDTO.Description;
             koi.Dob=updateKoiDTO.Dob;
             koi.Gender = updateKoiDTO.Gender;
+            koi.Price = updateKoiDTO.Price;
             koi.BreedId = updateKoiDTO.BreedId;
 
             _unitOfWork.Koi.Update(koi);
