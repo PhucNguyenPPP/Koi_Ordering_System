@@ -13,7 +13,9 @@ namespace Service.Interfaces
         Task<Role?> GetCustomerRole();
 		Task<Role?> GetFarmRole();
 
-		bool CheckUserNameExist(string userName);
+        Task<Role?> GetShipperRole();
+
+        bool CheckUserNameExist(string userName);
         bool CheckEmailExist(string email);
         bool CheckPhoneExist(string phone);
 		Task<ResponseDTO> GetFarmDetail(Guid userId);

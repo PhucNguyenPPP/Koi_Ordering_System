@@ -1,9 +1,7 @@
 ﻿using Common.DTO.General;
-using System;
 using Microsoft.AspNetCore.Http;    
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
-using Service.Services;
 using Common.DTO.KoiFish;
 
 namespace Api_KoiOrderingSystem.Controllers
@@ -18,7 +16,7 @@ namespace Api_KoiOrderingSystem.Controllers
             _koiService = koiService;
         }
 
-        [HttpGet("Koi")]
+        [HttpGet("all-koi")]
         public async Task<IActionResult> GetAllKoi()
         {
             ResponseDTO responseDTO = await _koiService.GetAll();
@@ -51,11 +49,11 @@ namespace Api_KoiOrderingSystem.Controllers
             var signUpResult = await _koiService.AddKoi(model);
             if (signUpResult)
             {
-                return Created("Success", new ResponseDTO("Đăng kí thành công", 201, true, null));
+                return Created("Success", new ResponseDTO("Thêm koi thành công", 201, true, null));
             }
             else
             {
-                return BadRequest(new ResponseDTO("Đăng kí không thành công", 400, true, null));
+                return BadRequest(new ResponseDTO("Thêm koi không thành công", 400, true, null));
             }
         }
 

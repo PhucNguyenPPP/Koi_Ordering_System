@@ -31,6 +31,10 @@ namespace Common.DTO.KoiFish
         [Required(ErrorMessage = "Vui lòng nhập giới tính")]
         public string Gender { get; set; } = null!;
 
+        [Required(ErrorMessage = "Vui lòng nhập giới tính")]
+        [Range(1, int.MaxValue, ErrorMessage = "Giá không hợp lệ")]
+        public decimal Price { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập giống")]
         public Guid BreedId { get; set; }
 
