@@ -1,4 +1,5 @@
-﻿using DAL.Entities;
+﻿using Common.DTO.General;
+using DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace Service.Interfaces
         bool CheckUserNameExist(string userName);
         bool CheckEmailExist(string email);
         bool CheckPhoneExist(string phone);
-    }
+		Task<ResponseDTO> GetFarmDetail(Guid userId);
+	}
 }
