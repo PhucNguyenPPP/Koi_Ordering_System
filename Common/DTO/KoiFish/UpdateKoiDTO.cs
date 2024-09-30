@@ -17,10 +17,10 @@ namespace Common.DTO.KoiFish
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Vui lòng chọn hình cá")]
-        public IFormFile AvatarLink { get; set; } = null!;
+        public IFormFile? AvatarLink { get; set; } = null!;
 
         [Required(ErrorMessage = "Vui lòng chọn giấy khai sinh cá")]
-        public IFormFile CertificationLink { get; set; } = null!;
+        public IFormFile? CertificationLink { get; set; } = null!;
 
         [Required(ErrorMessage = "Vui lòng nhập mô tả")]
         public string Description { get; set; } = null!;
