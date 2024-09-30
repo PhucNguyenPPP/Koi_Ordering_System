@@ -70,7 +70,7 @@ namespace Service.Services
 		{
             var role = await GetFarmRole();
             if (role != null) {
-                var user = await _unitOfWork.User.GetByCondition(u => u.UserId == userId && u.Role.Equals(role.RoleId)&&u.Status==true);
+                var user = await _unitOfWork.User.GetByCondition(u => u.UserId == userId && u.RoleId.Equals(role.RoleId)&&u.Status==true);
                 if (user != null)
                 {
                     FarmDetailDTO farmDetailDTO = _mapper.Map<FarmDetailDTO>(user);
