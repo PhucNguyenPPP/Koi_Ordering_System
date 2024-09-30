@@ -9,7 +9,7 @@ namespace Common.DTO.KoiFish
 {
     public class GetAllKoiDTO
     {
-        Guid KoiId { get; set; }
+        public Guid KoiId { get; set; }
 
         public string Name { get; set; } = null!;
 
@@ -23,7 +23,15 @@ namespace Common.DTO.KoiFish
 
         public string Gender { get; set; } = null!;
 
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } 
+
+        public Guid BreedId { get; set; }
+
+        public string BreedName { get; set; } = null!;
+
+        public Guid FarmId { get; set; }
+
+        public string FarmName { get; set; } = null!;
 
         public bool Status { get; set; }
     }

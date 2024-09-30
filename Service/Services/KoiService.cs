@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Common.DTO.General;
 using Common.DTO.KoiFish;
 using Common.Enum;
 using DAL.Entities;
-using DAL.Interfaces;
 using DAL.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Service.Services
 {
@@ -30,11 +23,16 @@ namespace Service.Services
         }
         public async Task<ResponseDTO> GetAll()
         {
-            var koi = _unitOfWork.Koi.GetAllByCondition(c=> c.Status == true);
-            if (koi.IsNullOrEmpty())
+            var koi = _unitOfWork.Koi
+                .GetAllByCondition(c => c.Status == true)
+                .Include(c=> c.Breed)
+                .Include(c=> c.Farm)
+                .ToList();
+            if (koi== null)
             {
                 return new ResponseDTO("Danh sách trống!", 400, false);
             }
+            
 
             var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
             return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
