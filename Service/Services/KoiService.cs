@@ -36,7 +36,7 @@ namespace Service.Services
                 return new ResponseDTO("Danh sách trống!", 400, false);
             }
 
-            var list = _mapper.Map<List<Koi>>(koi);
+            var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
             return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
         }
 
@@ -44,8 +44,11 @@ namespace Service.Services
         {
             var koi = _mapper.Map<Koi>(koiDTO);
             var certificationLink = await _imageService.StoreImageAndGetLink(koiDTO.CertificationLink, "koiCertificate_img");
+            var avatarLink = await _imageService.StoreImageAndGetLink(koiDTO.AvatarLink, "koiAvatar_img");
             koi.KoiId = Guid.NewGuid();
             koi.CertificationLink = certificationLink;
+            koi.AvatarLink = avatarLink;
+            koi.FarmId = koiDTO.FarmId;
             koi.Status = true;
 
             await _unitOfWork.Koi.AddAsync(koi);
@@ -59,24 +62,16 @@ namespace Service.Services
             {
                 return new ResponseDTO("Giống cá không hợp lệ", 400, false);
             }
-            if (koiDTO.OrderId != null)
-            {
-                var order = _unitOfWork.Order.GetAllByCondition(c => c.OrderId == koiDTO.OrderId);
-                if (order.IsNullOrEmpty())
-                {
-                    return new ResponseDTO("Mã đơn hàng không hợp lệ", 400, false);
-                }
-            }
 
             if (koiDTO.Gender != GenderEnum.Male.ToString() && koiDTO.Gender != GenderEnum.Female.ToString())
             {
                 return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
             }
-            //var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
-            //if (farm.IsNullOrEmpty())
-            //{
-            //    return new ResponseDTO("Farm không hợp lệ", 400, false);
-            //}
+            var farm = _unitOfWork.User.GetAllByCondition(c => c.UserId == koiDTO.FarmId);
+            if (farm.IsNullOrEmpty())
+            {
+                return new ResponseDTO("Farm không hợp lệ", 400, false);
+            }
 
             var existedName = _unitOfWork.Koi.GetAll();
             if (existedName.Any(c=> c.Name == koiDTO.Name))
@@ -119,13 +114,16 @@ namespace Service.Services
                 return new ResponseDTO("Koi không tồn tại!", 400, false);
             }
             var certificationLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.CertificationLink, "koiCertificate_img");
+            var avatarLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.AvatarLink, "koiAvatar_img");
+
             koi.Name = updateKoiDTO.Name;
             koi.CertificationLink = certificationLink;
+            koi.AvatarLink = avatarLink;
             koi.Description = updateKoiDTO.Description;
             koi.Dob=updateKoiDTO.Dob;
             koi.Gender = updateKoiDTO.Gender;
+            koi.Price = updateKoiDTO.Price;
             koi.BreedId = updateKoiDTO.BreedId;
-            koi.FarmId = updateKoiDTO.FarmId;
 
             _unitOfWork.Koi.Update(koi);
             var update = await _unitOfWork.SaveChangeAsync();
@@ -144,24 +142,12 @@ namespace Service.Services
             {
                 return new ResponseDTO("Giống cá không hợp lệ", 400, false);
             }
-            if (koiDTO.OrderId != null)
-            {
-                var order = _unitOfWork.Order.GetAllByCondition(c => c.OrderId == koiDTO.OrderId);
-                if (order.IsNullOrEmpty())
-                {
-                    return new ResponseDTO("Mã đơn hàng không hợp lệ", 400, false);
-                }
-            }
 
             if (koiDTO.Gender != GenderEnum.Male.ToString() && koiDTO.Gender != GenderEnum.Female.ToString())
             {
                 return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
             }
-            //var farm = _unitOfWork.Farm.GetAllByCondition(c => c.FarmId == koiDTO.FarmId);
-            //if (farm.IsNullOrEmpty())
-            //{
-            //    return new ResponseDTO("Farm không hợp lệ", 400, false);
-            //}
+           
 
             var existedName = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId != koiDTO.KoiId);
             if (existedName.Any(c=> c.Name == koiDTO.Name))
@@ -170,6 +156,16 @@ namespace Service.Services
             }
 
             return new ResponseDTO("Check thành công", 200, true);
+        }
+
+        public async Task<bool> CheckKoiExist(Guid koiId)
+        {
+            var koi = await _unitOfWork.Koi.GetByCondition(c => c.KoiId == koiId);
+            if (koi != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

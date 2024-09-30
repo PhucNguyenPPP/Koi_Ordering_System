@@ -19,6 +19,7 @@ namespace DAL.UnitOfWork
             Policy = new PolicyRepository(_context);
             FarmImage = new FarmImageRepository(_context);
             StorageProvince = new StorageProvinceRepository(_context);
+            Cart = new CartRepository(_context);
         }
 
 
@@ -41,5 +42,6 @@ namespace DAL.UnitOfWork
         public IPolicyRepository Policy { get; private set; }
         public IFarmImageRepository FarmImage { get; private set; }
 		public IStorageProvinceRepository StorageProvince { get; private set; }
+        public ICartRepository Cart { get; private set; }
 	}
 }

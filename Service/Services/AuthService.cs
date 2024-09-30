@@ -27,11 +27,11 @@ namespace Service.Services
         private readonly IUserService _userService;
         private readonly IImageService _imageService;
         private readonly IConfiguration _config;
-		private readonly IStorageProvinceService _storageProvinceService;
+        private readonly IStorageProvinceService _storageProvinceService;
 
-		public AuthService(IMapper mapper, IUserService userService,
-            IUnitOfWork unitOfWork, IImageService imageService, 
-            IStorageProvinceService storageProvinceService, 
+        public AuthService(IMapper mapper, IUserService userService,
+            IUnitOfWork unitOfWork, IImageService imageService,
+            IStorageProvinceService storageProvinceService,
             IConfiguration config)
         {
             _mapper = mapper;
@@ -101,7 +101,7 @@ namespace Service.Services
                 return new ResponseDTO("Date of birth is invalid", 400, false);
             }
 
-            if (model.Gender != GenderEnum.Male.ToString() 
+            if (model.Gender != GenderEnum.Male.ToString()
                 && model.Gender != GenderEnum.Female.ToString()
                 && model.Gender != GenderEnum.Other.ToString())
             {
@@ -414,70 +414,127 @@ namespace Service.Services
             }
         }
 
-		public async Task<ResponseDTO> CheckValidationSignUpFarm(SignUpFarmRequestDTO model)
-		{
-			if (model.DateOfBirth >= DateTime.Now)
-			{
-				return new ResponseDTO("Date of birth is invalid", 400, false);
-			}
+        public async Task<ResponseDTO> CheckValidationSignUpFarm(SignUpFarmRequestDTO model)
+        {
+            if (model.DateOfBirth >= DateTime.Now)
+            {
+                return new ResponseDTO("Date of birth is invalid", 400, false);
+            }
 
-			if (model.Gender != GenderEnum.Male.ToString()
-				&& model.Gender != GenderEnum.Female.ToString()
-				&& model.Gender != GenderEnum.Other.ToString())
-			{
-				return new ResponseDTO("Gender is invalid", 400, false);
-			}
-			var checkUserNameExist = _userService.CheckUserNameExist(model.UserName);
-			if (checkUserNameExist)
-			{
-				return new ResponseDTO("Username already exists", 400, false);
-			}
+            if (model.Gender != GenderEnum.Male.ToString()
+                && model.Gender != GenderEnum.Female.ToString()
+                && model.Gender != GenderEnum.Other.ToString())
+            {
+                return new ResponseDTO("Gender is invalid", 400, false);
+            }
+            var checkUserNameExist = _userService.CheckUserNameExist(model.UserName);
+            if (checkUserNameExist)
+            {
+                return new ResponseDTO("Username already exists", 400, false);
+            }
 
-			var checkEmailExist = _userService.CheckEmailExist(model.Email);
-			if (checkEmailExist)
-			{
-				return new ResponseDTO("Email already exists", 400, false);
-			}
+            var checkEmailExist = _userService.CheckEmailExist(model.Email);
+            if (checkEmailExist)
+            {
+                return new ResponseDTO("Email already exists", 400, false);
+            }
 
-			var checkPhoneExist = _userService.CheckPhoneExist(model.Phone);
-			if (checkPhoneExist)
-			{
-				return new ResponseDTO("Phone already exists", 400, false);
-			}
+            var checkPhoneExist = _userService.CheckPhoneExist(model.Phone);
+            if (checkPhoneExist)
+            {
+                return new ResponseDTO("Phone already exists", 400, false);
+            }
             var checkFarmExist = _userService.CheckFarmExist(model.FarmName);
-			if (checkFarmExist)
-			{
-				return new ResponseDTO("Farm already exists", 400, false);
-			}
+            if (checkFarmExist)
+            {
+                return new ResponseDTO("Farm already exists", 400, false);
+            }
             var checkValidJapanStorageProvince = await _storageProvinceService.CheckJapanStorageProvince(model.StorageProvinceId);
             if (!checkValidJapanStorageProvince.IsSuccess)
-			{
-				return checkValidJapanStorageProvince;
-			}
-			return new ResponseDTO("Check successfully", 200, true);
-		}
+            {
+                return checkValidJapanStorageProvince;
+            }
+            return new ResponseDTO("Check successfully", 200, true);
+        }
 
-		public async Task<bool> SignUpFarm(SignUpFarmRequestDTO model)
-		{
-			var farm = _mapper.Map<User>(model);
-			var role = await _userService.GetFarmRole();
-			if (role == null)
-			{
-				return false;
-			}
-			var salt = GenerateSalt();
-			var passwordHash = GenerateHashedPassword(model.Password, salt);
-			var avatarLink = await _imageService.StoreImageAndGetLink(model.AvatarLink, FileNameFirebaseStorage.UserImage);
+        public async Task<bool> SignUpFarm(SignUpFarmRequestDTO model)
+        {
+            var farm = _mapper.Map<User>(model);
+            var role = await _userService.GetFarmRole();
+            if (role == null)
+            {
+                return false;
+            }
+            var salt = GenerateSalt();
+            var passwordHash = GenerateHashedPassword(model.Password, salt);
+            var avatarLink = await _imageService.StoreImageAndGetLink(model.AvatarLink, FileNameFirebaseStorage.UserImage);
 
-			farm.UserId = Guid.NewGuid();
-			farm.RoleId = role.RoleId;
-			farm.Salt = salt;
-			farm.PasswordHash = passwordHash;
-			farm.AvatarLink = avatarLink;
-			farm.Status = true;
+            farm.UserId = Guid.NewGuid();
+            farm.RoleId = role.RoleId;
+            farm.Salt = salt;
+            farm.PasswordHash = passwordHash;
+            farm.AvatarLink = avatarLink;
+            farm.Status = true;
 
-			await _unitOfWork.User.AddAsync(farm);
-			return await _unitOfWork.SaveChangeAsync();
-		}
-	}
+            await _unitOfWork.User.AddAsync(farm);
+            return await _unitOfWork.SaveChangeAsync();
+        }
+
+        public async Task<ResponseDTO> CheckValidationSignUpShipper(SignUpShipperRequestDTO model)
+        {
+            if (model.DateOfBirth >= DateTime.Now)
+            {
+                return new ResponseDTO("Date of birth is invalid", 400, false);
+            }
+
+            if (model.Gender != GenderEnum.Male.ToString()
+                && model.Gender != GenderEnum.Female.ToString()
+                && model.Gender != GenderEnum.Other.ToString())
+            {
+                return new ResponseDTO("Gender is invalid", 400, false);
+            }
+
+            var checkUserNameExist = _userService.CheckUserNameExist(model.UserName);
+            if (checkUserNameExist)
+            {
+                return new ResponseDTO("Username already exists", 400, false);
+            }
+
+            var checkEmailExist = _userService.CheckEmailExist(model.Email);
+            if (checkEmailExist)
+            {
+                return new ResponseDTO("Email already exists", 400, false);
+            }
+
+            var checkPhoneExist = _userService.CheckPhoneExist(model.Phone);
+            if (checkPhoneExist)
+            {
+                return new ResponseDTO("Phone already exists", 400, false);
+            }
+            return new ResponseDTO("Check successfully", 200, true);
+        }
+
+        public async Task<bool> SignUpShipper(SignUpShipperRequestDTO model)
+        {
+            var shipper = _mapper.Map<User>(model);
+            var role = await _userService.GetShipperRole();
+            if (role == null)
+            {
+                return false;
+            }
+            var salt = GenerateSalt();
+            var passwordHash = GenerateHashedPassword(model.Password, salt);
+            var avatarLink = await _imageService.StoreImageAndGetLink(model.AvatarLink, FileNameFirebaseStorage.UserImage);
+
+            shipper.UserId = Guid.NewGuid();
+            shipper.RoleId = role.RoleId;
+            shipper.Salt = salt;
+            shipper.PasswordHash = passwordHash;
+            shipper.AvatarLink = avatarLink;
+            shipper.Status = true;
+
+            await _unitOfWork.User.AddAsync(shipper);
+            return await _unitOfWork.SaveChangeAsync();
+        }
+    }
 }

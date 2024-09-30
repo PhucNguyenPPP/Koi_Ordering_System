@@ -36,7 +36,13 @@ namespace Service.Services
 			return result;
 		}
 
-		public bool CheckUserNameExist(string userName)
+        public async Task<Role?> GetShipperRole()
+        {
+            var result = await _unitOfWork.Role.GetByCondition(c => c.RoleName == RoleEnum.Shipper.ToString());
+            return result;
+        }
+
+        public bool CheckUserNameExist(string userName)
         {
             var userList = _unitOfWork.User.GetAll();
             if (userList.Any(c => c.UserName == userName))
@@ -92,5 +98,15 @@ namespace Service.Services
 			}
 			return false;
 		}
-	}
+
+        public async Task<bool> CheckUserExist(Guid userId)
+        {
+            var user = await _unitOfWork.User.GetByCondition(c => c.UserId == userId);
+            if(user != null)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
 }
