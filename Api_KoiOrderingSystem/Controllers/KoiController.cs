@@ -32,7 +32,7 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(responseDTO);
         }
 
-        [HttpPost("new-koi")]
+        [HttpPost("koi")]
         public async Task<IActionResult> AddKoi([FromForm] KoiDTO model)
         {
             if (!ModelState.IsValid)
@@ -57,7 +57,7 @@ namespace Api_KoiOrderingSystem.Controllers
             }
         }
 
-        [HttpDelete("delete-koi")]
+        [HttpDelete("koi")]
         public async Task<IActionResult> DeleteKoi( Guid koiId)
         {
 
@@ -74,7 +74,7 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(responseDTO);
         }
 
-        [HttpPut("update-koi")]
+        [HttpPut("koi")]
         public async Task<IActionResult> UpdateKoi([FromForm] UpdateKoiDTO updateKoiDTO)
         {
             var checkValid = await _koiService.CheckValidationUpdateKoi(updateKoiDTO);
