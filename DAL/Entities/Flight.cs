@@ -11,8 +11,6 @@ public partial class Flight
 
     public string Status { get; set; } = null!;
 
-    public decimal ShippingFee { get; set; }
-
     public Guid DepartureAirportId { get; set; }
 
     public Guid ArrivalAirportId { get; set; }

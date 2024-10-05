@@ -3,6 +3,7 @@ using Common.DTO.Cart;
 using Common.DTO.General;
 using DAL.Entities;
 using DAL.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -43,16 +44,16 @@ namespace Service.Services
         public async Task<ResponseDTO> CheckValidationCart(CartDTO cartDTO)
         {
             var userExist = await _userService.CheckUserExist(cartDTO.UserId);
-            if (userExist)
+            if (!userExist)
             {
                 return new ResponseDTO("User does not exist", 404, false);
             }
 
-            var koiExist = await _koiService.CheckKoiExist(cartDTO.KoiId);
-            if (koiExist)
-            {
-                return new ResponseDTO("Koi does not exist", 404, false);
-            }
+            //var koiExist = await _koiService.CheckKoiExist(cartDTO.KoiId);
+            //if (!koiExist)
+            //{
+            //    return new ResponseDTO("Koi does not exist", 404, false);
+            //}
 
             var koiCartExist = await _unitOfWork.Cart.GetByCondition(a => a.KoiId == cartDTO.KoiId && a.UserId == cartDTO.UserId);
             if(koiCartExist != null)
@@ -85,6 +86,8 @@ namespace Service.Services
         public List<GetCartDTO>? GetCartByUser(Guid userId)
         {
             var cartList = _unitOfWork.Cart.GetAllByCondition(a => a.UserId == userId)
+                .Include(c => c.Koi)
+                .ThenInclude(c => c.Farm)
                 .OrderByDescending(c => c.CreatedDate);
             if (cartList == null)
             {

@@ -444,11 +444,11 @@ namespace Service.Services
             {
                 return new ResponseDTO("Phone already exists", 400, false);
             }
-            var checkFarmExist = _userService.CheckFarmExist(model.FarmName);
-            if (checkFarmExist)
-            {
-                return new ResponseDTO("Farm already exists", 400, false);
-            }
+            //var checkFarmExist = _userService.CheckFarmExist(model.FarmName);
+            //if (checkFarmExist)
+            //{
+            //    return new ResponseDTO("Farm already exists", 400, false);
+            //}
             var checkValidJapanStorageProvince = await _storageProvinceService.CheckJapanStorageProvince(model.StorageProvinceId);
             if (!checkValidJapanStorageProvince.IsSuccess)
             {

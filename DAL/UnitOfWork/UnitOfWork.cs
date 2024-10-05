@@ -17,7 +17,6 @@ namespace DAL.UnitOfWork
             Koi = new KoiRepository(_context);
             Order = new OrderRepository(_context);
             Policy = new PolicyRepository(_context);
-            FarmImage = new FarmImageRepository(_context);
             StorageProvince = new StorageProvinceRepository(_context);
             Cart = new CartRepository(_context);
         }
@@ -40,7 +39,6 @@ namespace DAL.UnitOfWork
         public IKoiRepository Koi { get; private set; }
         public IOrderRepository Order { get; private set; }
         public IPolicyRepository Policy { get; private set; }
-        public IFarmImageRepository FarmImage { get; private set; }
 		public IStorageProvinceRepository StorageProvince { get; private set; }
         public ICartRepository Cart { get; private set; }
 	}

@@ -21,9 +21,13 @@ public partial class StorageProvince
 
     public virtual Airport Airport { get; set; } = null!;
 
+    public virtual ICollection<KoiFarm> KoiFarms { get; set; } = new List<KoiFarm>();
+
     public virtual ICollection<OrderStorage> OrderStorages { get; set; } = new List<OrderStorage>();
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<ShippingFee> ShippingFeeStorageProvinceJps { get; set; } = new List<ShippingFee>();
+
+    public virtual ICollection<ShippingFee> ShippingFeeStorageProvinceVns { get; set; } = new List<ShippingFee>();
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

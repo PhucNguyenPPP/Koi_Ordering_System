@@ -21,10 +21,7 @@ public class PolicyService : IPolicyService
         {
             PolicyId = p.PolicyId,
             Description = p.Description,
-            PercentageRefund = p.PercentageRefund,
-            PercentagePrepay = p.PercentagePrepay,
-            ReturnDateLimited = p.ReturnDateLimited,
-            PaymentMethodId = p.PaymentMethodId
+            PercentageRefund = p.PercentageRefund
         }).ToList();
     }
 
@@ -42,10 +39,7 @@ public class PolicyService : IPolicyService
         {
             PolicyId = policy.PolicyId,
             Description = policy.Description,
-            PercentageRefund = policy.PercentageRefund,
-            PercentagePrepay = policy.PercentagePrepay,
-            ReturnDateLimited = policy.ReturnDateLimited,
-            PaymentMethodId = policy.PaymentMethodId
+            PercentageRefund = policy.PercentageRefund
         };
     }
 
@@ -62,9 +56,6 @@ public class PolicyService : IPolicyService
             PolicyId = Guid.NewGuid(),
             Description = policyDTO.Description,
             PercentageRefund = policyDTO.PercentageRefund,
-            PercentagePrepay = policyDTO.PercentagePrepay,
-            ReturnDateLimited = policyDTO.ReturnDateLimited,
-            PaymentMethodId = policyDTO.PaymentMethodId
         };
 
         // Add new policy using UnitOfWork
@@ -91,9 +82,6 @@ public class PolicyService : IPolicyService
         // Update the entity's properties
         policy.Description = policyDTO.Description;
         policy.PercentageRefund = policyDTO.PercentageRefund;
-        policy.PercentagePrepay = policyDTO.PercentagePrepay;
-        policy.ReturnDateLimited = policyDTO.ReturnDateLimited;
-        policy.PaymentMethodId = policyDTO.PaymentMethodId;
 
         // Update policy using UnitOfWork
         _unitOfWork.Policy.Update(policy);

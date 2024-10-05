@@ -23,17 +23,15 @@ public partial class Koi
 
     public bool Status { get; set; }
 
-    public Guid BreedId { get; set; }
+    public Guid FarmId { get; set; }
 
     public Guid? OrderId { get; set; }
 
-    public Guid FarmId { get; set; }
-
-    public virtual Breed Breed { get; set; } = null!;
-
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
-    public virtual User Farm { get; set; } = null!;
+    public virtual KoiFarm Farm { get; set; } = null!;
+
+    public virtual ICollection<KoiBreed> KoiBreeds { get; set; } = new List<KoiBreed>();
 
     public virtual ICollection<KoiImage> KoiImages { get; set; } = new List<KoiImage>();
 

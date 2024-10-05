@@ -9,5 +9,5 @@ public partial class Breed
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<Koi> Kois { get; set; } = new List<Koi>();
+    public virtual ICollection<KoiBreed> KoiBreeds { get; set; } = new List<KoiBreed>();
 }

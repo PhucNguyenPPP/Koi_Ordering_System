@@ -13,6 +13,8 @@ namespace Common.DTO.Cart
         public Guid UserId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string KoiName { get; set; }
+        public string KoiAvatar { get; set; }
         public string Price { get; set;}
+        public string FarmName { get; set; }
     }
 }

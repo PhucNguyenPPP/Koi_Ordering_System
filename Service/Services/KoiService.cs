@@ -21,22 +21,22 @@ namespace Service.Services
             _mapper = mapper;
             _imageService = imageService;
         }
-        public async Task<ResponseDTO> GetAll()
-        {
-            var koi = _unitOfWork.Koi
-                .GetAllByCondition(c => c.Status == true)
-                .Include(c=> c.Breed)
-                .Include(c=> c.Farm)
-                .ToList();
-            if (koi== null)
-            {
-                return new ResponseDTO("Danh sách trống!", 400, false);
-            }
+        //public async Task<ResponseDTO> GetAll()
+        //{
+        //    var koi = _unitOfWork.Koi
+        //        .GetAllByCondition(c => c.Status == true)
+        //        .Include(c=> c.Breed)
+        //        .Include(c=> c.Farm)
+        //        .ToList();
+        //    if (koi== null)
+        //    {
+        //        return new ResponseDTO("Danh sách trống!", 400, false);
+        //    }
             
 
-            var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
-            return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
-        }
+        //    var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
+        //    return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
+        //}
 
         public async Task<bool> AddKoi(KoiDTO koiDTO)
         {
@@ -104,34 +104,34 @@ namespace Service.Services
             }
         }
 
-        public async Task<ResponseDTO> UpdateKoi(UpdateKoiDTO updateKoiDTO)
-        {
-            var koi = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId == updateKoiDTO.KoiId).FirstOrDefault();
-            if(koi == null)
-            {
-                return new ResponseDTO("Koi không tồn tại!", 400, false);
-            }
-            var certificationLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.CertificationLink, "koiCertificate_img");
-            var avatarLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.AvatarLink, "koiAvatar_img");
+        //public async Task<ResponseDTO> UpdateKoi(UpdateKoiDTO updateKoiDTO)
+        //{
+        //    var koi = _unitOfWork.Koi.GetAllByCondition(c => c.KoiId == updateKoiDTO.KoiId).FirstOrDefault();
+        //    if(koi == null)
+        //    {
+        //        return new ResponseDTO("Koi không tồn tại!", 400, false);
+        //    }
+        //    var certificationLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.CertificationLink, "koiCertificate_img");
+        //    var avatarLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.AvatarLink, "koiAvatar_img");
 
-            koi.Name = updateKoiDTO.Name;
-            koi.CertificationLink = certificationLink;
-            koi.AvatarLink = avatarLink;
-            koi.Description = updateKoiDTO.Description;
-            koi.Dob=updateKoiDTO.Dob;
-            koi.Gender = updateKoiDTO.Gender;
-            koi.Price = updateKoiDTO.Price;
-            koi.BreedId = updateKoiDTO.BreedId;
+        //    koi.Name = updateKoiDTO.Name;
+        //    koi.CertificationLink = certificationLink;
+        //    koi.AvatarLink = avatarLink;
+        //    koi.Description = updateKoiDTO.Description;
+        //    koi.Dob=updateKoiDTO.Dob;
+        //    koi.Gender = updateKoiDTO.Gender;
+        //    koi.Price = updateKoiDTO.Price;
+        //    koi.BreedId = updateKoiDTO.BreedId;
 
-            _unitOfWork.Koi.Update(koi);
-            var update = await _unitOfWork.SaveChangeAsync();
-            if (update)
-            {
-                return new ResponseDTO("Chỉnh sửa thông tin thành công", 200, true);
-            }
-            return new ResponseDTO("Chỉnh sửa thông tin thất bại", 500, true);
+        //    _unitOfWork.Koi.Update(koi);
+        //    var update = await _unitOfWork.SaveChangeAsync();
+        //    if (update)
+        //    {
+        //        return new ResponseDTO("Chỉnh sửa thông tin thành công", 200, true);
+        //    }
+        //    return new ResponseDTO("Chỉnh sửa thông tin thất bại", 500, true);
 
-        }
+        //}
 
         public async Task<ResponseDTO> CheckValidationUpdateKoi(UpdateKoiDTO koiDTO)
         {
@@ -165,5 +165,22 @@ namespace Service.Services
             }
             return false;
         }
+
+        //public async Task<ResponseDTO> GetKoiByKoiId(Guid koiId)
+        //{
+        //    var koi = _unitOfWork.Koi
+        //       .GetAllByCondition(c => c.Status == true && c.KoiId == koiId)
+        //       .Include(c => c.Breed)
+        //       .Include(c => c.Farm)
+        //       .FirstOrDefault();
+
+        //    if (koi == null)
+        //    {
+        //        return new ResponseDTO("Koi does not exist!", 404, false);
+        //    }
+
+        //    var mapKoi = _mapper.Map<KoiDetailDTO>(koi);
+        //    return new ResponseDTO("Get koi successfully", 200, true, mapKoi);
+        //}
     }
 }
