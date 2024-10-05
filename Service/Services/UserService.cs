@@ -18,12 +18,10 @@ namespace Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
-		private readonly IFarmImageService _farmImageService;
-		public UserService(IUnitOfWork unitOfWork, IMapper mapper, IFarmImageService farmImageService)
+		public UserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _farmImageService = farmImageService;
         }
         public async Task<Role?> GetCustomerRole()
         {
@@ -80,7 +78,6 @@ namespace Service.Services
                 if (user != null)
                 {
                     FarmDetailDTO farmDetailDTO = _mapper.Map<FarmDetailDTO>(user);
-                    farmDetailDTO.FarmImages =  await  _farmImageService.GetFarmImageByUserId(userId);
                     return new ResponseDTO("Get farm information successfully", 200, true, farmDetailDTO);
                 }
 				return new ResponseDTO("Cannot find the farm", 404, false);
@@ -89,15 +86,15 @@ namespace Service.Services
 
 		}
 
-		public bool CheckFarmExist(string? farmName)
-		{
-			var userList = _unitOfWork.User.GetAll();
-			if (userList.Any(c => c.FarmName == farmName))
-			{
-				return true;
-			}
-			return false;
-		}
+		//public bool CheckFarmExist(string? farmName)
+		//{
+		//	var userList = _unitOfWork.User.GetAll();
+		//	if (userList.Any(c => c.FarmName == farmName))
+		//	{
+		//		return true;
+		//	}
+		//	return false;
+		//}
 
         public async Task<bool> CheckUserExist(Guid userId)
         {

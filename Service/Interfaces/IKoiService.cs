@@ -11,13 +11,13 @@ namespace Service.Interfaces
 {
     public interface IKoiService
     {
-        Task<ResponseDTO> GetAll();
-        Task<bool> AddKoi(KoiDTO koiDTO);
-        Task<ResponseDTO> CheckValidationCreateKoi(KoiDTO koiDTO);
-        Task<ResponseDTO> DeleteKoi(Guid koiId);
-        Task<ResponseDTO> UpdateKoi(UpdateKoiDTO updateKoiDTO);
-        Task<ResponseDTO> CheckValidationUpdateKoi(UpdateKoiDTO koiDTO);
-        Task<bool> CheckKoiExist (Guid koiId);
-        Task<ResponseDTO> GetKoiByKoiId (Guid koiId);
+        //Task<ResponseDTO> GetAll();
+        //Task<bool> AddKoi(KoiDTO koiDTO);
+        //Task<ResponseDTO> CheckValidationCreateKoi(KoiDTO koiDTO);
+        //Task<ResponseDTO> DeleteKoi(Guid koiId);
+        //Task<ResponseDTO> UpdateKoi(UpdateKoiDTO updateKoiDTO);
+        //Task<ResponseDTO> CheckValidationUpdateKoi(UpdateKoiDTO koiDTO);
+        //Task<bool> CheckKoiExist (Guid koiId);
+        //Task<ResponseDTO> GetKoiByKoiId (Guid koiId);
     }
 }

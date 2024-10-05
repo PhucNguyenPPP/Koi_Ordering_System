@@ -31,12 +31,6 @@ public partial class User
 
     public DateTime? OtpExpiredTime { get; set; }
 
-    public string? FarmName { get; set; }
-
-    public string? FarmDescription { get; set; }
-
-    public string? FarmAddress { get; set; }
-
     public bool Status { get; set; }
 
     public Guid RoleId { get; set; }
@@ -45,13 +39,9 @@ public partial class User
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
-    public virtual ICollection<FarmImage> FarmImages { get; set; } = new List<FarmImage>();
-
-    public virtual ICollection<Koi> Kois { get; set; } = new List<Koi>();
+    public virtual ICollection<OrderStorage> OrderStorages { get; set; } = new List<OrderStorage>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
-
-    public virtual ICollection<Policy> Policies { get; set; } = new List<Policy>();
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 

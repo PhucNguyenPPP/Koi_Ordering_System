@@ -15,6 +15,10 @@ public partial class Order
 
     public string Address { get; set; } = null!;
 
+    public string ShippingFee { get; set; } = null!;
+
+    public decimal TotalPrice { get; set; }
+
     public int? Rating { get; set; }
 
     public string? Feedback { get; set; }
@@ -27,8 +31,6 @@ public partial class Order
 
     public int? Length { get; set; }
 
-    public string? PackingMethod { get; set; }
-
     public string Status { get; set; } = null!;
 
     public Guid CustomerId { get; set; }
@@ -36,8 +38,6 @@ public partial class Order
     public Guid PolicyId { get; set; }
 
     public Guid? FlightId { get; set; }
-
-    public Guid StorageProvinceVnId { get; set; }
 
     public virtual User Customer { get; set; } = null!;
 
@@ -50,8 +50,6 @@ public partial class Order
     public virtual Policy Policy { get; set; } = null!;
 
     public virtual ICollection<RefundRequest> RefundRequests { get; set; } = new List<RefundRequest>();
-
-    public virtual StorageProvince StorageProvinceVn { get; set; } = null!;
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

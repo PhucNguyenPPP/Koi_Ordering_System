@@ -49,11 +49,11 @@ namespace Service.Services
                 return new ResponseDTO("User does not exist", 404, false);
             }
 
-            var koiExist = await _koiService.CheckKoiExist(cartDTO.KoiId);
-            if (!koiExist)
-            {
-                return new ResponseDTO("Koi does not exist", 404, false);
-            }
+            //var koiExist = await _koiService.CheckKoiExist(cartDTO.KoiId);
+            //if (!koiExist)
+            //{
+            //    return new ResponseDTO("Koi does not exist", 404, false);
+            //}
 
             var koiCartExist = await _unitOfWork.Cart.GetByCondition(a => a.KoiId == cartDTO.KoiId && a.UserId == cartDTO.UserId);
             if(koiCartExist != null)

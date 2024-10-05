@@ -21,12 +21,11 @@ namespace Api_KoiOrderingSystem.Profiles
                 //.ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Farm.UserId))
                 .ReverseMap();
 			CreateMap<User, FarmDetailDTO>().ReverseMap();
-			CreateMap<FarmImage, FarmImageDTO>().ReverseMap();
 			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
-            CreateMap<Koi, GetAllKoiDTO>()
-                .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src=> src.Breed.Name))
-                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src=> src.Farm.FarmName))
-                .ReverseMap();
+            //CreateMap<Koi, GetAllKoiDTO>()
+            //    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src=> src.Breed.Name))
+            //    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src=> src.Farm.FarmName))
+            //    .ReverseMap();
             CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
 			
             CreateMap<Cart, GetCartDTO>()
@@ -35,11 +34,11 @@ namespace Api_KoiOrderingSystem.Profiles
             .ForMember(dest => dest.KoiAvatar, opt => opt.MapFrom(src => src.Koi.AvatarLink))
             .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Koi.Farm.FarmName))
             .ReverseMap();
-            CreateMap<Koi, KoiDetailDTO>()
-                .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.Breed.Name))
-                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
-                .ForMember(dest => dest.FarmAvatar, opt => opt.MapFrom(src => src.Farm.AvatarLink))
-                .ReverseMap();
+            //CreateMap<Koi, KoiDetailDTO>()
+            //    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.Breed.Name))
+            //    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
+            //    .ForMember(dest => dest.FarmAvatar, opt => opt.MapFrom(src => src.Farm.AvatarLink))
+            //    .ReverseMap();
             #endregion
         }
     }
