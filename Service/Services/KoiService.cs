@@ -165,5 +165,22 @@ namespace Service.Services
             }
             return false;
         }
+
+        public async Task<ResponseDTO> GetKoiByKoiId(Guid koiId)
+        {
+            var koi = _unitOfWork.Koi
+               .GetAllByCondition(c => c.Status == true && c.KoiId == koiId)
+               .Include(c => c.Breed)
+               .Include(c => c.Farm)
+               .FirstOrDefault();
+
+            if (koi == null)
+            {
+                return new ResponseDTO("Koi does not exist!", 404, false);
+            }
+
+            var mapKoi = _mapper.Map<KoiDetailDTO>(koi);
+            return new ResponseDTO("Get koi successfully", 200, true, mapKoi);
+        }
     }
 }

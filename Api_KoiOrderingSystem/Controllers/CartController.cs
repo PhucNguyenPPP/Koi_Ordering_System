@@ -24,7 +24,7 @@ namespace Api_KoiOrderingSystem.Controllers
         public async Task<IActionResult> GetCartOfUser(Guid userId)
         {
             var userExist = await _userService.CheckUserExist(userId);
-            if (userExist)
+            if (!userExist)
             {
                 return NotFound(new ResponseDTO("User does not exist", 404, false));
             }
@@ -52,7 +52,7 @@ namespace Api_KoiOrderingSystem.Controllers
             var result = await _cartService.AddKoiToCart(model);
             if (result)
             {
-                return Ok(new ResponseDTO("Add into cart successfully", 200, true));
+                return Created("Add into cart successfully", new ResponseDTO("Add into cart successfully", 201, true));
             }
             return BadRequest(new ResponseDTO("Add into cart unsuccessfully", 400, false));
         }

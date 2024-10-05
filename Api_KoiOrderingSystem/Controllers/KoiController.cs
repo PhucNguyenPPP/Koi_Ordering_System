@@ -97,5 +97,21 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(responseDTO);
         }
+
+        [HttpGet("koi")]
+        public async Task<IActionResult> GetKoiByKoiId(Guid koiId)
+        {
+            ResponseDTO responseDTO = await _koiService.GetKoiByKoiId(koiId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO);
+        }
     }
 }

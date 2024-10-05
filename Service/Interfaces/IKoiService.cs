@@ -18,5 +18,6 @@ namespace Service.Interfaces
         Task<ResponseDTO> UpdateKoi(UpdateKoiDTO updateKoiDTO);
         Task<ResponseDTO> CheckValidationUpdateKoi(UpdateKoiDTO koiDTO);
         Task<bool> CheckKoiExist (Guid koiId);
+        Task<ResponseDTO> GetKoiByKoiId (Guid koiId);
     }
 }
