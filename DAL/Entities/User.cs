@@ -39,6 +39,8 @@ public partial class User
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
+    public virtual KoiFarm? KoiFarm { get; set; }
+
     public virtual ICollection<OrderStorage> OrderStorages { get; set; } = new List<OrderStorage>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
