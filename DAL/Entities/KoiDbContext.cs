@@ -61,7 +61,7 @@ public partial class KoiDbContext : DbContext
     {
         modelBuilder.Entity<Airport>(entity =>
         {
-            entity.HasKey(e => e.AirportId).HasName("PK__Airport__E3DBE0EAFAF3618B");
+            entity.HasKey(e => e.AirportId).HasName("PK__Airport__E3DBE0EA8B570FF6");
 
             entity.ToTable("Airport");
 
@@ -71,7 +71,7 @@ public partial class KoiDbContext : DbContext
 
         modelBuilder.Entity<Breed>(entity =>
         {
-            entity.HasKey(e => e.BreedId).HasName("PK__Breed__D1E9AE9D1C2753BC");
+            entity.HasKey(e => e.BreedId).HasName("PK__Breed__D1E9AE9D68DB35AA");
 
             entity.ToTable("Breed");
 
@@ -81,7 +81,7 @@ public partial class KoiDbContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__Cart__51BCD7B730C0FF69");
+            entity.HasKey(e => e.CartId).HasName("PK__Cart__51BCD7B7A5CB8793");
 
             entity.ToTable("Cart");
 
@@ -91,17 +91,17 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Koi).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.KoiId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__KoiId__59FA5E80");
+                .HasConstraintName("FK__Cart__KoiId__5BE2A6F2");
 
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__UserId__5AEE82B9");
+                .HasConstraintName("FK__Cart__UserId__5CD6CB2B");
         });
 
         modelBuilder.Entity<Flight>(entity =>
         {
-            entity.HasKey(e => e.FlightId).HasName("PK__Flight__8A9E14EE5FFA901E");
+            entity.HasKey(e => e.FlightId).HasName("PK__Flight__8A9E14EEF8F0A430");
 
             entity.ToTable("Flight");
 
@@ -122,7 +122,7 @@ public partial class KoiDbContext : DbContext
 
         modelBuilder.Entity<Koi>(entity =>
         {
-            entity.HasKey(e => e.KoiId).HasName("PK__Koi__E0343598D2AB5DC9");
+            entity.HasKey(e => e.KoiId).HasName("PK__Koi__E0343598DE098030");
 
             entity.ToTable("Koi");
 
@@ -135,16 +135,16 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Farm).WithMany(p => p.Kois)
                 .HasForeignKey(d => d.FarmId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Koi__FarmId__3F466844");
+                .HasConstraintName("FK__Koi__FarmId__412EB0B6");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Kois)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__Koi__OrderId__403A8C7D");
+                .HasConstraintName("FK__Koi__OrderId__4222D4EF");
         });
 
         modelBuilder.Entity<KoiBreed>(entity =>
         {
-            entity.HasKey(e => e.KoiBreedId).HasName("PK__KoiBreed__9C7F085BCB19EB26");
+            entity.HasKey(e => e.KoiBreedId).HasName("PK__KoiBreed__9C7F085B4DA81D02");
 
             entity.ToTable("KoiBreed");
 
@@ -153,33 +153,40 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Breed).WithMany(p => p.KoiBreeds)
                 .HasForeignKey(d => d.BreedId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__KoiBreed__BreedI__4316F928");
+                .HasConstraintName("FK__KoiBreed__BreedI__44FF419A");
 
             entity.HasOne(d => d.Koi).WithMany(p => p.KoiBreeds)
                 .HasForeignKey(d => d.KoiId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__KoiBreed__KoiId__440B1D61");
+                .HasConstraintName("FK__KoiBreed__KoiId__45F365D3");
         });
 
         modelBuilder.Entity<KoiFarm>(entity =>
         {
-            entity.HasKey(e => e.KoiFarmId).HasName("PK__KoiFarm__AC58E69B55F8D58C");
+            entity.HasKey(e => e.KoiFarmId).HasName("PK__KoiFarm__AC58E69B9943A56A");
 
             entity.ToTable("KoiFarm");
+
+            entity.HasIndex(e => e.KoiFarmManagerId, "UQ__KoiFarm__4C18D4CCC7E2C96B").IsUnique();
 
             entity.Property(e => e.KoiFarmId).ValueGeneratedNever();
             entity.Property(e => e.FarmAddress).HasMaxLength(200);
             entity.Property(e => e.FarmDescription).HasMaxLength(50);
             entity.Property(e => e.FarmName).HasMaxLength(50);
 
+            entity.HasOne(d => d.KoiFarmManager).WithOne(p => p.KoiFarm)
+                .HasForeignKey<KoiFarm>(d => d.KoiFarmManagerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__KoiFarm__KoiFarm__36B12243");
+
             entity.HasOne(d => d.StorageProvince).WithMany(p => p.KoiFarms)
                 .HasForeignKey(d => d.StorageProvinceId)
-                .HasConstraintName("FK__KoiFarm__Storage__34C8D9D1");
+                .HasConstraintName("FK__KoiFarm__Storage__35BCFE0A");
         });
 
         modelBuilder.Entity<KoiImage>(entity =>
         {
-            entity.HasKey(e => e.KoiImageId).HasName("PK__KoiImage__11060AD283C78B4E");
+            entity.HasKey(e => e.KoiImageId).HasName("PK__KoiImage__11060AD280C959A3");
 
             entity.ToTable("KoiImage");
 
@@ -188,12 +195,12 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Koi).WithMany(p => p.KoiImages)
                 .HasForeignKey(d => d.KoiId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__KoiImage__KoiId__46E78A0C");
+                .HasConstraintName("FK__KoiImage__KoiId__48CFD27E");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BCF88CAE454");
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BCFCB8F1305");
 
             entity.ToTable("Order");
 
@@ -207,21 +214,21 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.CustomerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Order__CustomerI__3A81B327");
+                .HasConstraintName("FK__Order__CustomerI__3C69FB99");
 
             entity.HasOne(d => d.Flight).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.FlightId)
-                .HasConstraintName("FK__Order__FlightId__3C69FB99");
+                .HasConstraintName("FK__Order__FlightId__3E52440B");
 
             entity.HasOne(d => d.Policy).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.PolicyId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Order__PolicyId__3B75D760");
+                .HasConstraintName("FK__Order__PolicyId__3D5E1FD2");
         });
 
         modelBuilder.Entity<OrderStorage>(entity =>
         {
-            entity.HasKey(e => e.OrderStorageId).HasName("PK__OrderSto__5DEFA466867FD886");
+            entity.HasKey(e => e.OrderStorageId).HasName("PK__OrderSto__5DEFA4665C79884B");
 
             entity.ToTable("OrderStorage");
 
@@ -231,21 +238,21 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.OrderStorages)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderStor__Order__4AB81AF0");
+                .HasConstraintName("FK__OrderStor__Order__4CA06362");
 
             entity.HasOne(d => d.Shipper).WithMany(p => p.OrderStorages)
                 .HasForeignKey(d => d.ShipperId)
-                .HasConstraintName("FK__OrderStor__Shipp__4BAC3F29");
+                .HasConstraintName("FK__OrderStor__Shipp__4D94879B");
 
             entity.HasOne(d => d.StorageProvince).WithMany(p => p.OrderStorages)
                 .HasForeignKey(d => d.StorageProvinceId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderStor__Stora__49C3F6B7");
+                .HasConstraintName("FK__OrderStor__Stora__4BAC3F29");
         });
 
         modelBuilder.Entity<Policy>(entity =>
         {
-            entity.HasKey(e => e.PolicyId).HasName("PK__Policy__2E1339A4BF23AFBE");
+            entity.HasKey(e => e.PolicyId).HasName("PK__Policy__2E1339A40D6B5B46");
 
             entity.ToTable("Policy");
 
@@ -255,12 +262,12 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Farm).WithMany(p => p.Policies)
                 .HasForeignKey(d => d.FarmId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Policy__FarmId__37A5467C");
+                .HasConstraintName("FK__Policy__FarmId__398D8EEE");
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.RefreshTokenId).HasName("PK__RefreshT__F5845E39CB1F1C1D");
+            entity.HasKey(e => e.RefreshTokenId).HasName("PK__RefreshT__F5845E394E794631");
 
             entity.ToTable("RefreshToken");
 
@@ -271,12 +278,12 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.RefreshTokens)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RefreshTo__UserI__571DF1D5");
+                .HasConstraintName("FK__RefreshTo__UserI__59063A47");
         });
 
         modelBuilder.Entity<RefundRequest>(entity =>
         {
-            entity.HasKey(e => e.RefundRequestId).HasName("PK__RefundRe__A67BF229CC03EC7C");
+            entity.HasKey(e => e.RefundRequestId).HasName("PK__RefundRe__A67BF229ED7442AF");
 
             entity.ToTable("RefundRequest");
 
@@ -287,24 +294,24 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.RefundRequests)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RefundReq__Order__4E88ABD4");
+                .HasConstraintName("FK__RefundReq__Order__5070F446");
         });
 
         modelBuilder.Entity<RefundRequestMedium>(entity =>
         {
-            entity.HasKey(e => e.RefundRequestMediaId).HasName("PK__RefundRe__D856E8F8C5027F41");
+            entity.HasKey(e => e.RefundRequestMediaId).HasName("PK__RefundRe__D856E8F85CACE7CD");
 
             entity.Property(e => e.RefundRequestMediaId).ValueGeneratedNever();
 
             entity.HasOne(d => d.RefundRequest).WithMany(p => p.RefundRequestMedia)
                 .HasForeignKey(d => d.RefundRequestId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RefundReq__Refun__5165187F");
+                .HasConstraintName("FK__RefundReq__Refun__534D60F1");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE1A4CD9FBAC");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE1ABDA1AB25");
 
             entity.ToTable("Role");
 
@@ -314,7 +321,7 @@ public partial class KoiDbContext : DbContext
 
         modelBuilder.Entity<ShippingFee>(entity =>
         {
-            entity.HasKey(e => e.ShippingFeeId).HasName("PK__Shipping__5463E6E6ECFFCDA3");
+            entity.HasKey(e => e.ShippingFeeId).HasName("PK__Shipping__5463E6E6AF8A0A40");
 
             entity.ToTable("ShippingFee");
 
@@ -324,17 +331,17 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.StorageProvinceJp).WithMany(p => p.ShippingFeeStorageProvinceJps)
                 .HasForeignKey(d => d.StorageProvinceJpId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ShippingF__Stora__5DCAEF64");
+                .HasConstraintName("FK__ShippingF__Stora__5FB337D6");
 
             entity.HasOne(d => d.StorageProvinceVn).WithMany(p => p.ShippingFeeStorageProvinceVns)
                 .HasForeignKey(d => d.StorageProvinceVnId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ShippingF__Stora__5EBF139D");
+                .HasConstraintName("FK__ShippingF__Stora__60A75C0F");
         });
 
         modelBuilder.Entity<StorageProvince>(entity =>
         {
-            entity.HasKey(e => e.StorageProvinceId).HasName("PK__StorageP__D5625B68FBC8133A");
+            entity.HasKey(e => e.StorageProvinceId).HasName("PK__StorageP__D5625B68FB369196");
 
             entity.ToTable("StorageProvince");
 
@@ -351,7 +358,7 @@ public partial class KoiDbContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6BE4D04A04");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A6BC76868AA");
 
             entity.ToTable("Transaction");
 
@@ -365,12 +372,12 @@ public partial class KoiDbContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Transacti__Order__5441852A");
+                .HasConstraintName("FK__Transacti__Order__5629CD9C");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4C46C610C2");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4C13BAD8FF");
 
             entity.ToTable("User");
 
