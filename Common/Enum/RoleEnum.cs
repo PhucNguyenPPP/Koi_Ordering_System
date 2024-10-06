@@ -9,7 +9,7 @@ namespace Common.Enum
     public enum RoleEnum
     {
         Customer,
-        KoiFarm,
+        KoiFarmManager,
         Shipper,
         Staff,
         Admin

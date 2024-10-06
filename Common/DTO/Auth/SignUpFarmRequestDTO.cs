@@ -47,6 +47,9 @@ namespace Common.DTO.Auth
 		[Required(ErrorMessage = "Please input gender")]
 		public string Gender { get; set; } = null!;
 
+
+		//Farm
+
 		[Required(ErrorMessage = "Please input farm name")]
 		[MinLength(8, ErrorMessage = "Farm name must have at least 8 characters")]
 		[RegularExpression("^[\\p{L}]+([\\s\\p{L}]+)*$",

@@ -22,11 +22,12 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ReverseMap();
 			CreateMap<User, FarmDetailDTO>().ReverseMap();
 			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
-            //CreateMap<Koi, GetAllKoiDTO>()
-            //    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src=> src.Breed.Name))
-            //    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src=> src.Farm.FarmName))
-            //    .ReverseMap();
-            CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
+			CreateMap<SignUpFarmRequestDTO, KoiFarm>().ReverseMap();
+			//CreateMap<Koi, GetAllKoiDTO>()
+			//    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src=> src.Breed.Name))
+			//    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src=> src.Farm.FarmName))
+			//    .ReverseMap();
+			CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
 			
             CreateMap<Cart, GetCartDTO>()
             .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Koi.Name))

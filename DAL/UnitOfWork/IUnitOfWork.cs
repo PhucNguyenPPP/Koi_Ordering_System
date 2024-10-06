@@ -20,5 +20,6 @@ namespace DAL.UnitOfWork
         IPolicyRepository Policy { get; }
         IStorageProvinceRepository StorageProvince { get; }
         ICartRepository Cart { get; }
+        IKoiFarmRepository KoiFarm { get; } 
 	}
 }
