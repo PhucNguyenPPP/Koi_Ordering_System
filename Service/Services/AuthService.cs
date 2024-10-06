@@ -4,6 +4,7 @@ using Common.DTO.Auth;
 using Common.DTO.General;
 using Common.Enum;
 using DAL.Entities;
+using DAL.Interfaces;
 using DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,17 +29,19 @@ namespace Service.Services
         private readonly IImageService _imageService;
         private readonly IConfiguration _config;
         private readonly IStorageProvinceService _storageProvinceService;
+		private readonly IKoiFarmService _koiFarmService;
 
-        public AuthService(IMapper mapper, IUserService userService,
+		public AuthService(IMapper mapper, IUserService userService,
             IUnitOfWork unitOfWork, IImageService imageService,
             IStorageProvinceService storageProvinceService,
-            IConfiguration config)
+            IKoiFarmService koiFarmService,IConfiguration config)
         {
             _mapper = mapper;
             _userService = userService;
             _unitOfWork = unitOfWork;
             _imageService = imageService;
             _storageProvinceService = storageProvinceService;
+            _koiFarmService = koiFarmService;
             _config = config;
         }
 
@@ -444,11 +447,11 @@ namespace Service.Services
             {
                 return new ResponseDTO("Phone already exists", 400, false);
             }
-            //var checkFarmExist = _userService.CheckFarmExist(model.FarmName);
-            //if (checkFarmExist)
-            //{
-            //    return new ResponseDTO("Farm already exists", 400, false);
-            //}
+            var checkFarmExist = _koiFarmService.CheckFarmExist(model.FarmName);
+            if (checkFarmExist)
+            {
+                return new ResponseDTO("Farm already exists", 400, false);
+            }
             var checkValidJapanStorageProvince = await _storageProvinceService.CheckJapanStorageProvince(model.StorageProvinceId);
             if (!checkValidJapanStorageProvince.IsSuccess)
             {
@@ -459,7 +462,8 @@ namespace Service.Services
 
         public async Task<bool> SignUpFarm(SignUpFarmRequestDTO model)
         {
-            var farm = _mapper.Map<User>(model);
+            var user = _mapper.Map<User>(model);
+            var farm = _mapper.Map<KoiFarm>(model); 
             var role = await _userService.GetFarmRole();
             if (role == null)
             {
@@ -468,15 +472,17 @@ namespace Service.Services
             var salt = GenerateSalt();
             var passwordHash = GenerateHashedPassword(model.Password, salt);
             var avatarLink = await _imageService.StoreImageAndGetLink(model.AvatarLink, FileNameFirebaseStorage.UserImage);
-
-            farm.UserId = Guid.NewGuid();
-            farm.RoleId = role.RoleId;
-            farm.Salt = salt;
-            farm.PasswordHash = passwordHash;
-            farm.AvatarLink = avatarLink;
-            farm.Status = true;
-
-            await _unitOfWork.User.AddAsync(farm);
+            user.UserId = Guid.NewGuid();
+			user.RoleId = role.RoleId;
+			user.Salt = salt;
+			user.PasswordHash = passwordHash;
+			user.AvatarLink = avatarLink;
+			user.Status = true;
+            farm.KoiFarmId= Guid.NewGuid();
+            farm.KoiFarmManagerId = user.UserId;
+            farm.FarmAvatar=user.AvatarLink;
+			await _unitOfWork.User.AddAsync(user);
+            await _unitOfWork.KoiFarm.AddAsync(farm);
             return await _unitOfWork.SaveChangeAsync();
         }
 
