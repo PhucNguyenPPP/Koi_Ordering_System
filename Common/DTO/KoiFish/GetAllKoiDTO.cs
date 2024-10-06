@@ -25,9 +25,9 @@ namespace Common.DTO.KoiFish
 
         public decimal Price { get; set; } 
 
-        public Guid BreedId { get; set; }
+        public  List<Guid> BreedId { get; set; }
 
-        public string BreedName { get; set; } = null!;
+        public List<string> BreedName { get; set; } = null!;
 
         public Guid FarmId { get; set; }
 

@@ -7,7 +7,7 @@ using DAL.Entities;
 
 namespace DAL.Interfaces
 {
-    public interface IKoiFarmRepository : IGenericRepository<KoiFarm>
+    public interface IKoiBreedRepository : IGenericRepository<KoiBreed>
     {
     }
 }

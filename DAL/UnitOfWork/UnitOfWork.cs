@@ -19,7 +19,8 @@ namespace DAL.UnitOfWork
             Policy = new PolicyRepository(_context);
             StorageProvince = new StorageProvinceRepository(_context);
             Cart = new CartRepository(_context);
-            KoiFarm = new KoiFarmRepository(_context);  
+            KoiBreed = new KoiBreedRepository(_context);
+            KoiFarm = new KoiFarmRepository(_context);
         }
 
 
@@ -42,6 +43,7 @@ namespace DAL.UnitOfWork
         public IPolicyRepository Policy { get; private set; }
 		public IStorageProvinceRepository StorageProvince { get; private set; }
         public ICartRepository Cart { get; private set; }
+        public IKoiBreedRepository KoiBreed { get; private set; }
         public IKoiFarmRepository KoiFarm { get; private set; }
 	}
 }

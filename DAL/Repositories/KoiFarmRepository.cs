@@ -8,10 +8,11 @@ using DAL.Interfaces;
 
 namespace DAL.Repositories
 {
-	public class KoiFarmRepository : GenericRepository<KoiFarm>, IKoiFarmRepository
-	{
-		public KoiFarmRepository(KoiDbContext context) : base(context)
-		{
-		}
-	}
+    public class KoiFarmRepository : GenericRepository<KoiFarm>, IKoiFarmRepository
+    {
+        public KoiFarmRepository(KoiDbContext context) : base(context)
+        {
+            
+        }
+    }
 }
