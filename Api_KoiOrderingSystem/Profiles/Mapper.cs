@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Common.DTO.Auth;
-using Common.DTO.Cart;
-using Common.DTO.FarmImage;
 using Common.DTO.KoiFish;
 using Common.DTO.User;
 using DAL.Entities;
@@ -20,20 +18,22 @@ namespace Api_KoiOrderingSystem.Profiles
             CreateMap<Koi, KoiDTO>()
                 //.ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Farm.UserId))
                 .ReverseMap();
-			CreateMap<User, FarmDetailDTO>().ReverseMap();
-			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
+            CreateMap<User, FarmDetailDTO>().ReverseMap();
+            CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
             //CreateMap<Koi, GetAllKoiDTO>()
             //    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src=> src.Breed.Name))
             //    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src=> src.Farm.FarmName))
             //    .ReverseMap();
             CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
-			
-            CreateMap<Cart, GetCartDTO>()
-            .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Koi.Name))
-            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Koi.Price))
-            .ForMember(dest => dest.KoiAvatar, opt => opt.MapFrom(src => src.Koi.AvatarLink))
-            .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Koi.Farm.FarmName))
-            .ReverseMap();
+
+            CreateMap<PolicyDTO, Policy>().ReverseMap();
+
+            // CreateMap<Cart, GetCartDTO>()
+            // .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Koi.Name))
+            // .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Koi.Price))
+            // .ForMember(dest => dest.KoiAvatar, opt => opt.MapFrom(src => src.Koi.AvatarLink))
+            // .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Koi.Farm.FarmName))
+            // .ReverseMap();
             //CreateMap<Koi, KoiDetailDTO>()
             //    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.Breed.Name))
             //    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))

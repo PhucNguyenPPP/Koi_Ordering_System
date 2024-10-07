@@ -1,30 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Entities;
 
 public partial class User
 {
+    [Key]
     public Guid UserId { get; set; }
 
+    [Required]
+    [MaxLength(100)]
     public string UserName { get; set; } = null!;
 
+    [Required]
     public byte[] Salt { get; set; } = null!;
 
+    [Required]
     public byte[] PasswordHash { get; set; } = null!;
 
+    [MaxLength(100)]
     public string FullName { get; set; } = null!;
 
+    [MaxLength(200)]
     public string AvatarLink { get; set; } = null!;
 
+    [MaxLength(20)]
     public string Phone { get; set; } = null!;
 
+    [MaxLength(200)]
     public string Address { get; set; } = null!;
 
+    [Required]
+    [MaxLength(100)]
     public string Email { get; set; } = null!;
 
     public DateTime DateOfBirth { get; set; }
 
+    [Required]
+    [MaxLength(10)]
     public string Gender { get; set; } = null!;
 
     public int? OtpCode { get; set; }
@@ -33,8 +48,10 @@ public partial class User
 
     public bool Status { get; set; }
 
+    [ForeignKey("Role")]
     public Guid RoleId { get; set; }
 
+    [ForeignKey("StorageProvince")]
     public Guid? StorageProvinceId { get; set; }
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
