@@ -16,29 +16,13 @@ namespace Common.DTO.Order
         [Required(ErrorMessage = "Please input address")]
         public string Address { get; set; } = null!;
 
-        public int? Rating { get; set; }
-
-        public string? Feedback { get; set; }
-
-        [Required(ErrorMessage = "Please input customer ID")]
-        public int? Weight { get; set; }
-
-        [Required(ErrorMessage = "Please input customer ID")]
-        public int? Width { get; set; }
-
-        [Required(ErrorMessage = "Please input customer ID")]
-        public int? Height { get; set; }
-
-        [Required(ErrorMessage = "Please input customer ID")]
-        public int? Length { get; set; }
-
         [Required(ErrorMessage = "Please input customer ID")]
         public Guid CustomerId { get; set; }
 
-        [Required(ErrorMessage = "Please input policy ID")]
-        public Guid PolicyId { get; set; }
+        [Required(ErrorMessage = "Please input Viet Nam storage province ID")]
+        public Guid StorageVietNamId { get; set; }
 
-        [Required(ErrorMessage = "Please input koi ID")]
-        public List<Guid> KoiId { get; set; }
+        [Required(ErrorMessage = "Please input cart ID")]
+        public List<Guid> CartId { get; set; }
     }
 }

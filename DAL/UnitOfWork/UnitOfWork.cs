@@ -21,6 +21,8 @@ namespace DAL.UnitOfWork
             Cart = new CartRepository(_context);
             KoiBreed = new KoiBreedRepository(_context);
             KoiFarm = new KoiFarmRepository(_context);
+            ShippingFee = new ShippingFeeRepository(_context);
+            OrderStorage = new OrderStorageRepository(_context);
         }
 
 
@@ -45,5 +47,7 @@ namespace DAL.UnitOfWork
         public ICartRepository Cart { get; private set; }
         public IKoiBreedRepository KoiBreed { get; private set; }
         public IKoiFarmRepository KoiFarm { get; private set; }
+        public IShippingFeeRepository ShippingFee { get; private set; }
+        public IOrderStorageRepository OrderStorage { get; private set; }
 	}
 }
