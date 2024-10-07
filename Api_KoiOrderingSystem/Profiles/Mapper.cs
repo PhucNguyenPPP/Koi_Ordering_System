@@ -2,8 +2,8 @@
 using Common.DTO.Auth;
 using Common.DTO.Cart;
 using Common.DTO.FarmImage;
+using Common.DTO.KoiFarm;
 using Common.DTO.KoiFish;
-using Common.DTO.User;
 using DAL.Entities;
 
 namespace Api_KoiOrderingSystem.Profiles
@@ -20,7 +20,7 @@ namespace Api_KoiOrderingSystem.Profiles
             CreateMap<Koi, KoiDTO>()
                 
                 .ReverseMap();
-			CreateMap<User, FarmDetailDTO>().ReverseMap();
+			CreateMap<KoiFarm, FarmDetailDTO>().ReverseMap();
 			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
 			CreateMap<SignUpFarmRequestDTO, KoiFarm>().ReverseMap();
 			//CreateMap<Koi, GetAllKoiDTO>()

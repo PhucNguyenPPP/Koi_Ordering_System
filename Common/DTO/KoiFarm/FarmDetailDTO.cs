@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Common.DTO.FarmImage;
 
 
-namespace Common.DTO.User
+namespace Common.DTO.KoiFarm
 {
 	public class FarmDetailDTO
 	{
@@ -15,9 +15,5 @@ namespace Common.DTO.User
 		public string? FarmDescription { get; set; }
 
 		public string? FarmAddress { get; set; }
-
-		public bool Status { get; set; }
-		public string AvatarLink { get; set; } = null!;
-		public List<FarmImageDTO>? FarmImages { get; set; } 
-	}
+		public string FarmAvatar { get; set; } = null!;	}
 }
