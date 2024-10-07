@@ -15,21 +15,7 @@ namespace Api_KoiOrderingSystem.Controllers
 		{
 			_userService = userService;
 		}
-		[HttpGet("farm")]
-		public async Task<IActionResult> GetFarmDetail(Guid userId)
-		{
-			ResponseDTO responseDTO = await _userService.GetFarmDetail(userId);
-			if (responseDTO.IsSuccess == false)
-			{
-				if (responseDTO.StatusCode == 404)
-				{
-					return NotFound(responseDTO);
-				}
-				return BadRequest(responseDTO);
-
-			}
-			return Ok(responseDTO);
-		}
+		
 
 	}
 }

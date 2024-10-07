@@ -22,6 +22,10 @@ namespace Common.DTO.KoiFish
         [Required(ErrorMessage = "Vui lòng chọn giấy khai sinh cá")]
         public IFormFile? CertificationLink { get; set; } = null!;
 
+        [Required(ErrorMessage = "Vui lòng nhập giá")]
+        [Range(1, int.MaxValue, ErrorMessage = "Giá không hợp lệ")]
+        public decimal Price { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập mô tả")]
         public string Description { get; set; } = null!;
 
@@ -30,13 +34,12 @@ namespace Common.DTO.KoiFish
 
         [Required(ErrorMessage = "Vui lòng nhập giới tính")]
         public string Gender { get; set; } = null!;
-
-        [Required(ErrorMessage = "Vui lòng nhập giới tính")]
-        [Range(1, int.MaxValue, ErrorMessage = "Giá không hợp lệ")]
-        public decimal Price { get; set; }
-
+        
         [Required(ErrorMessage = "Vui lòng nhập giống")]
-        public Guid BreedId { get; set; }
+        public List<Guid> BreedId { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập trang trại")]
+        public Guid FarmId { get; set; }
 
     }
 }

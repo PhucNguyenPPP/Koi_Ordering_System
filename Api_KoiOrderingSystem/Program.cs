@@ -1,4 +1,5 @@
 using Api_KoiOrderingSystem.MiddleWares;
+using DAL.Interfaces;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -21,7 +22,7 @@ builder.Services.AddScoped<IKoiService, KoiService>();
 builder.Services.AddScoped<IPolicyService, PolicyService>();
 builder.Services.AddScoped<IStorageProvinceService, StorageProvinceService>();
 builder.Services.AddScoped<ICartService, CartService>();
-
+builder.Services.AddScoped<IKoiFarmService, KoiFarmService>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
