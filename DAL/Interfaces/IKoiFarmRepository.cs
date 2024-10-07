@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Entities;
 
-namespace Common.Enum
+namespace DAL.Interfaces
 {
-    public enum RoleEnum
+    public interface IKoiFarmRepository : IGenericRepository<KoiFarm>
     {
-        Customer,
-        KoiFarmManager,
-        Shipper,
-        Staff,
-        Admin
     }
 }

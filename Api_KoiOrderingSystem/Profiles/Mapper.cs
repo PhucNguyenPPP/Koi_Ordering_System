@@ -2,8 +2,8 @@
 using Common.DTO.Auth;
 using Common.DTO.Cart;
 using Common.DTO.FarmImage;
+using Common.DTO.KoiFarm;
 using Common.DTO.KoiFish;
-using Common.DTO.User;
 using DAL.Entities;
 
 namespace Api_KoiOrderingSystem.Profiles
@@ -18,14 +18,22 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
                 .ReverseMap();
             CreateMap<Koi, KoiDTO>()
-                //.ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Farm.UserId))
+                
                 .ReverseMap();
-			CreateMap<User, FarmDetailDTO>().ReverseMap();
+			CreateMap<KoiFarm, FarmDetailDTO>().ReverseMap();
 			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
-            //CreateMap<Koi, GetAllKoiDTO>()
-            //    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src=> src.Breed.Name))
-            //    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src=> src.Farm.FarmName))
-            //    .ReverseMap();
+			CreateMap<SignUpFarmRequestDTO, KoiFarm>().ReverseMap();
+			//CreateMap<Koi, GetAllKoiDTO>()
+			//    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src=> src.Breed.Name))
+			//    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src=> src.Farm.FarmName))
+			//    .ReverseMap();
+			CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
+            CreateMap<Koi, GetAllKoiDTO>()
+                .ForMember(dest => dest.BreedId, opt => opt.MapFrom(src=> src.KoiBreeds.Select(c=> c.BreedId).ToList()))
+                .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c=> c.Breed.Name).ToList()))
+                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
+                .ReverseMap();
+
             CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
 			
             CreateMap<Cart, GetCartDTO>()
