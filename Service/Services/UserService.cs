@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Common.DTO.General;
-using Common.DTO.User;
+using Common.DTO.KoiFarm;
 using Common.Enum;
 using DAL.Entities;
 using DAL.UnitOfWork;
@@ -30,7 +30,7 @@ namespace Service.Services
         }
 		public async Task<Role?> GetFarmRole()
 		{
-			var result = await _unitOfWork.Role.GetByCondition(c => c.RoleName == RoleEnum.KoiFarm.ToString());
+			var result = await _unitOfWork.Role.GetByCondition(c => c.RoleName == RoleEnum.KoiFarmManager.ToString());
 			return result;
 		}
 
@@ -70,21 +70,7 @@ namespace Service.Services
             return false;
         }
 
-		public async Task<ResponseDTO> GetFarmDetail(Guid userId)
-		{
-            var role = await GetFarmRole();
-            if (role != null) {
-                var user = await _unitOfWork.User.GetByCondition(u => u.UserId == userId && u.RoleId.Equals(role.RoleId)&&u.Status==true);
-                if (user != null)
-                {
-                    FarmDetailDTO farmDetailDTO = _mapper.Map<FarmDetailDTO>(user);
-                    return new ResponseDTO("Get farm information successfully", 200, true, farmDetailDTO);
-                }
-				return new ResponseDTO("Cannot find the farm", 404, false);
-			}
-			return new ResponseDTO("Get farm information failed", 500, false);
 
-		}
 
 		//public bool CheckFarmExist(string? farmName)
 		//{

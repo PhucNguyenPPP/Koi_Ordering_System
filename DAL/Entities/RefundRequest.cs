@@ -17,7 +17,11 @@ public partial class RefundRequest
 
     public Guid OrderId { get; set; }
 
+    public Guid PolicyId { get; set; }
+
     public virtual Order Order { get; set; } = null!;
+
+    public virtual Policy Policy { get; set; } = null!;
 
     public virtual ICollection<RefundRequestMedium> RefundRequestMedia { get; set; } = new List<RefundRequestMedium>();
 }

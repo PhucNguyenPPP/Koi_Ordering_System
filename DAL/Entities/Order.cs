@@ -35,8 +35,6 @@ public partial class Order
 
     public Guid CustomerId { get; set; }
 
-    public Guid PolicyId { get; set; }
-
     public Guid? FlightId { get; set; }
 
     public virtual User Customer { get; set; } = null!;
@@ -46,8 +44,6 @@ public partial class Order
     public virtual ICollection<Koi> Kois { get; set; } = new List<Koi>();
 
     public virtual ICollection<OrderStorage> OrderStorages { get; set; } = new List<OrderStorage>();
-
-    public virtual Policy Policy { get; set; } = null!;
 
     public virtual ICollection<RefundRequest> RefundRequests { get; set; } = new List<RefundRequest>();
 

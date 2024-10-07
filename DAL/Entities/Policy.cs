@@ -17,5 +17,5 @@ public partial class Policy
 
     public virtual KoiFarm Farm { get; set; } = null!;
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<RefundRequest> RefundRequests { get; set; } = new List<RefundRequest>();
 }
