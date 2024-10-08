@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Common.DTO.KoiFish;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("odata")]
     [ApiController]
     public class KoiController : ControllerBase
     {
@@ -17,6 +18,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-koi")]
+        [EnableQuery]
         public async Task<IActionResult> GetAllKoi()
         {
             ResponseDTO responseDTO = await _koiService.GetAll();
@@ -29,7 +31,7 @@ namespace Api_KoiOrderingSystem.Controllers
                 return BadRequest(responseDTO);
 
             }
-            return Ok(responseDTO);
+            return Ok(responseDTO.Result);
         }
 
         [HttpPost("koi")]

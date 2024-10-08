@@ -1,8 +1,11 @@
 using Api_KoiOrderingSystem.MiddleWares;
+using Common.DTO.KoiFish;
 using DAL.Interfaces;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.OData;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
 using Service.Interfaces;
 using Service.Services;
@@ -60,11 +63,19 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
-});
+    })
+    .AddOData(options =>
+    {
+        ODataConventionModelBuilder odataBuilder = new ODataConventionModelBuilder();
+        odataBuilder.EntitySet<GetAllKoiDTO>("all-koi");
+        options.AddRouteComponents("odata", odataBuilder.GetEdmModel());
+        options.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100);
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

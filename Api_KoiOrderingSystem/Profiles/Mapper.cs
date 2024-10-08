@@ -29,6 +29,7 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.BreedId, opt => opt.MapFrom(src=> src.KoiBreeds.Select(c=> c.BreedId).ToList()))
                 .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c=> c.Breed.Name).ToList()))
                 .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Dob)))
                 .ReverseMap();
 
             CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
@@ -39,17 +40,26 @@ namespace Api_KoiOrderingSystem.Profiles
             .ForMember(dest => dest.KoiAvatar, opt => opt.MapFrom(src => src.Koi.AvatarLink))
             .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Koi.Farm.FarmName))
             .ReverseMap();
-            //CreateMap<Koi, KoiDetailDTO>()
-            //    .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.Breed.Name))
-            //    .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
-            //    .ForMember(dest => dest.FarmAvatar, opt => opt.MapFrom(src => src.Farm.AvatarLink))
-            //    .ReverseMap();
+            CreateMap<Koi, KoiDetailDTO>()
+                .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c => c.Breed.Name).ToList()))
+                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
+                .ForMember(dest => dest.FarmAvatar, opt => opt.MapFrom(src => src.Farm.FarmAvatar))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Dob)))
+                .ReverseMap();
             CreateMap<CreateOrderDTO, Order>()
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Phone))
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId));
             CreateMap<StorageProvince, ProvinceResponseDTO>().ReverseMap();
             #endregion
+        }
+
+        private int CalculateAge(DateTime dob)
+        {
+            var today = DateTime.Today;
+            var age = today.Year - dob.Year;
+            if (dob.Date > today.AddYears(-age)) age--;
+            return age;
         }
     }
 }

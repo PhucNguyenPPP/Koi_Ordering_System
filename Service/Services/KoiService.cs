@@ -224,8 +224,9 @@ namespace Service.Services
         {
             var koi = _unitOfWork.Koi
                .GetAllByCondition(c => c.Status == true && c.KoiId == koiId)
-               .Include(c => c.KoiBreeds.FirstOrDefault().Breed)
                .Include(c => c.Farm)
+               .Include(c => c.KoiBreeds)
+               .ThenInclude(c => c.Breed)
                .FirstOrDefault();
 
             if (koi == null)

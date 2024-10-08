@@ -18,15 +18,13 @@ namespace Common.DTO.KoiFish
 
         public string Description { get; set; } = null!;
 
-        public DateTime Dob { get; set; }
+        public int Age { get; set; }
 
         public string Gender { get; set; } = null!;
 
         public decimal Price { get; set; }
 
-        public Guid BreedId { get; set; }
-
-        public string BreedName { get; set; } = null!;
+        public List<string> BreedName { get; set; }
 
         public Guid FarmId { get; set; }
 
