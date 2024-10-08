@@ -5,6 +5,7 @@ using Common.DTO.FarmImage;
 using Common.DTO.KoiFarm;
 using Common.DTO.KoiFish;
 using Common.DTO.Order;
+using Common.DTO.StorageProvince;
 using DAL.Entities;
 
 namespace Api_KoiOrderingSystem.Profiles
@@ -47,6 +48,7 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Phone))
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId));
+            CreateMap<StorageProvince, ProvinceResponseDTO>().ReverseMap();
             #endregion
         }
     }
