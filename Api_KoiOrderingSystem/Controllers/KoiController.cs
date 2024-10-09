@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Common.DTO.KoiFish;
 using Microsoft.AspNetCore.OData.Query;
+using System.ComponentModel.DataAnnotations;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
@@ -114,6 +115,23 @@ namespace Api_KoiOrderingSystem.Controllers
 
             }
             return Ok(responseDTO);
+        }
+
+        [HttpGet("all-koi-koifarm")]
+        [EnableQuery]
+        public async Task<IActionResult> GetAllKoiOfFarm([Required] Guid farmId)
+        {
+            ResponseDTO responseDTO = await _koiService.GetAllKoiOfFarm(farmId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO.Result);
         }
     }
 }

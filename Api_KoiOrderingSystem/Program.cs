@@ -73,6 +73,7 @@ builder.Services.AddControllers()
     {
         ODataConventionModelBuilder odataBuilder = new ODataConventionModelBuilder();
         odataBuilder.EntitySet<GetAllKoiDTO>("all-koi");
+        odataBuilder.EntitySet<GetAllKoiDTO>("all-koi-koifarm");
         options.AddRouteComponents("odata", odataBuilder.GetEdmModel());
         options.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100);
     });
