@@ -27,6 +27,7 @@ namespace Service.Services
                 .GetAllByCondition(c => c.Status == true)
                 .Include(c => c.KoiBreeds).ThenInclude(c=> c.Breed)
                 .Include(c => c.Farm)
+                .Include(c => c.Order)
                 .ToList();
             if (koi == null)
             {
@@ -143,12 +144,20 @@ namespace Service.Services
             {
                 return new ResponseDTO("Koi không tồn tại!", 400, false);
             }
-            var certificationLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.CertificationLink, "koiCertificate_img");
-            var avatarLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.AvatarLink, "koiAvatar_img");
+
+            if (updateKoiDTO.CertificationLink != null)
+            {
+                var certificationLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.CertificationLink, "koiCertificate_img");
+                koi.CertificationLink = certificationLink;
+            }
+
+            if(updateKoiDTO.AvatarLink != null)
+            {
+                var avatarLink = await _imageService.StoreImageAndGetLink(updateKoiDTO.AvatarLink, "koiAvatar_img");
+                koi.AvatarLink = avatarLink;
+            }
 
             koi.Name = updateKoiDTO.Name;
-            koi.CertificationLink = certificationLink;
-            koi.AvatarLink = avatarLink;
             koi.Description = updateKoiDTO.Description;
             koi.Dob = updateKoiDTO.Dob;
             koi.Gender = updateKoiDTO.Gender;
@@ -236,6 +245,22 @@ namespace Service.Services
 
             var mapKoi = _mapper.Map<KoiDetailDTO>(koi);
             return new ResponseDTO("Get koi successfully", 200, true, mapKoi);
+        }
+
+        public async Task<ResponseDTO> GetAllKoiOfFarm(Guid farmId)
+        {
+            var koi = _unitOfWork.Koi
+                .GetAllByCondition(c => c.FarmId == farmId && (c.Status == true || c.OrderId != null))
+                .Include(c => c.KoiBreeds).ThenInclude(c => c.Breed)
+                .Include(c => c.Farm)
+                .Include(c => c.Order)
+                .ToList();
+            if (koi == null)
+            {
+                return new ResponseDTO("Danh sách trống!", 400, false);
+            }
+            var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
+            return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
         }
     }
 }

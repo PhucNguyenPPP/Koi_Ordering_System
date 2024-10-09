@@ -18,6 +18,7 @@ namespace Api_KoiOrderingSystem.Profiles
             CreateMap<SignUpCustomerRequestDTO, User>().ReverseMap();
             CreateMap<User, LocalUserDTO>()
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
+                .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.KoiFarm.KoiFarmId.ToString()))
                 .ReverseMap();
             CreateMap<Koi, KoiDTO>()
                 .ReverseMap();
@@ -30,6 +31,7 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c=> c.Breed.Name).ToList()))
                 .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Dob)))
+                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Order.OrderId.ToString()))
                 .ReverseMap();
 
             CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
