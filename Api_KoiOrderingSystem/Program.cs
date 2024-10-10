@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
+using Service.Interface;
 using Service.Interfaces;
 using Service.Services;
 using Swashbuckle.AspNetCore.Filters;
@@ -27,6 +28,9 @@ builder.Services.AddScoped<IStorageProvinceService, StorageProvinceService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IKoiFarmService, KoiFarmService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
