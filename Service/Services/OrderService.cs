@@ -147,5 +147,15 @@ namespace Service.Services
 
             return await _unitOfWork.SaveChangeAsync();
         }
+
+        public async Task<bool> CheckOrderExist(Guid orderId)
+        {
+            var order = await _unitOfWork.Order.GetByCondition(c => c.OrderId == orderId);
+            if(order == null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

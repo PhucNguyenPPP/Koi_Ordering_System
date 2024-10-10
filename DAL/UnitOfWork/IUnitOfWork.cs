@@ -24,5 +24,6 @@ namespace DAL.UnitOfWork
         IKoiFarmRepository KoiFarm { get; }
         IShippingFeeRepository ShippingFee { get; }
         IOrderStorageRepository OrderStorage { get; }
+        ITransactionRepository Transaction {  get; }
 	}
 }
