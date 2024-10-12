@@ -42,5 +42,18 @@ namespace Api_KoiOrderingSystem.Controllers
                 return BadRequest(new ResponseDTO("Create order failed!", 400, true, null));
             }
         }
+
+        [HttpPut("packaging/{orderId}")]
+        public async Task<IActionResult> UpdateOrderPackaging(Guid orderId, [FromBody] UpdateOrderPackagingRequest request)
+        {
+            var result = await _orderService.UpdateOrderPackaging(orderId, request);
+            
+            if (!result)
+            {
+                return NotFound("Order not found.");
+            }
+
+            return Ok("Order updated successfully.");
+        }
     }
 }

@@ -61,6 +61,11 @@ namespace Api_KoiOrderingSystem.Profiles
             CreateMap<Policy, PolicyDTO>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<UpdateOrderPackagingRequest, Order>()
+                .ForMember(dest => dest.OrderId, opt => opt.Ignore())
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => OrderStatusConstant.ToShip))
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
         }
 
