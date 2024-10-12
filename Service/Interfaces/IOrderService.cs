@@ -14,5 +14,6 @@ namespace Service.Interfaces
         Task<ResponseDTO> CheckValidationCreateOrder(CreateOrderDTO createOrderDTO);
         Task<bool> CreateOrder(CreateOrderDTO createOrderDTO);
         Task<bool> CheckOrderExist(Guid orderId);
+        Task<bool> UpdateOrderPackaging(Guid orderId, UpdateOrderPackagingRequest request);
     }
 }

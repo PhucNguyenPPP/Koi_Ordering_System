@@ -55,30 +55,23 @@ public class PolicyService : IPolicyService
 
     public async Task<bool> UpdatePolicyAsync(Guid policyId, PolicyDTO policyDTO)
     {
-        try
+        // Retrieve the existing policy
+        var policy = await _unitOfWork.Policy.GetByCondition(p => p.PolicyId == policyId);
+        if (policy == null)
         {
-            // Retrieve the existing policy
-            var policy = await _unitOfWork.Policy.GetByCondition(p => p.PolicyId == policyId);
-            if (policy == null)
-            {
-                throw new Exception();
-            }
-
-            // Map non-null properties from DTO to Entity using AutoMapper
-            _mapper.Map(policyDTO, policy);
-
-            // Update policy using UnitOfWork
-            _unitOfWork.Policy.Update(policy);
-
-            // Save changes
-            bool saveResult = await _unitOfWork.SaveChangeAsync();
-
-            return saveResult;
+            throw new Exception();
         }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+
+        // Map non-null properties from DTO to Entity using AutoMapper
+        _mapper.Map(policyDTO, policy);
+
+        // Update policy using UnitOfWork
+        _unitOfWork.Policy.Update(policy);
+
+        // Save changes
+        bool saveResult = await _unitOfWork.SaveChangeAsync();
+
+        return saveResult;
     }
 
     public async Task<bool> DeletePolicyAsync(Guid policyId)
