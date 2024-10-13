@@ -55,6 +55,19 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId));
             CreateMap<StorageProvince, ProvinceResponseDTO>().ReverseMap();
+            
+            CreateMap<PolicyDTO, Policy>()
+                .ForMember(dest => dest.PolicyId, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Policy, PolicyDTO>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<UpdateOrderPackagingRequest, Order>()
+                .ForMember(dest => dest.OrderId, opt => opt.Ignore())
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => OrderStatusConstant.ToShip))
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
         }
 

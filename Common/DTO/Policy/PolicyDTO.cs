@@ -1,9 +1,8 @@
 public class PolicyDTO
 {
     public Guid PolicyId { get; set; }
-    public string Description { get; set; }
+    public string PolicyName { get; set; } = null!;
+    public string Description { get; set; } = null!;
     public int PercentageRefund { get; set; }
-    public int PercentagePrepay { get; set; }
-    public int ReturnDateLimited { get; set; }
-    public Guid PaymentMethodId { get; set; }
+    public Guid FarmId { get; set; }
 }

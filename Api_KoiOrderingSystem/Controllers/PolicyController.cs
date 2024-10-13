@@ -53,12 +53,7 @@ public class PolicyController : ControllerBase
     [HttpPut("{policyId}")]
     public async Task<IActionResult> UpdatePolicy(Guid policyId, [FromBody] PolicyDTO policyDTO)
     {
-        if (!ModelState.IsValid || policyId != policyDTO.PolicyId)
-        {
-            return BadRequest(new ResponseDTO("Invalid input", 400, false, ModelState));
-        }
-
-        var result = await _policyService.UpdatePolicyAsync(policyDTO);
+        var result = await _policyService.UpdatePolicyAsync(policyId, policyDTO);
         if (result)
         {
             return Ok(new ResponseDTO("Policy updated successfully", 200, true, null));

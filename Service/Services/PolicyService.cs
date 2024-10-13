@@ -1,3 +1,4 @@
+using AutoMapper;
 using DAL.Entities;
 using DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
@@ -5,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 public class PolicyService : IPolicyService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public PolicyService(IUnitOfWork unitOfWork)
+    public PolicyService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     public async Task<List<PolicyDTO>> GetAllPoliciesAsync()
@@ -17,12 +20,7 @@ public class PolicyService : IPolicyService
         var policies = await _unitOfWork.Policy.GetAll().ToListAsync();
 
         // Map the entities to DTOs
-        return policies.Select(p => new PolicyDTO
-        {
-            PolicyId = p.PolicyId,
-            Description = p.Description,
-            PercentageRefund = p.PercentageRefund
-        }).ToList();
+        return _mapper.Map<List<PolicyDTO>>(policies);
     }
 
     public async Task<PolicyDTO> GetPolicyByIdAsync(Guid policyId)
@@ -35,12 +33,7 @@ public class PolicyService : IPolicyService
         }
 
         // Map the entity to DTO
-        return new PolicyDTO
-        {
-            PolicyId = policy.PolicyId,
-            Description = policy.Description,
-            PercentageRefund = policy.PercentageRefund
-        };
+        return _mapper.Map<PolicyDTO>(policy);
     }
 
     public async Task<bool> AddPolicyAsync(PolicyDTO policyDTO)
@@ -51,43 +44,34 @@ public class PolicyService : IPolicyService
         }
 
         // Map DTO to entity
-        var policy = new Policy
-        {
-            PolicyId = Guid.NewGuid(),
-            Description = policyDTO.Description,
-            PercentageRefund = policyDTO.PercentageRefund,
-        };
+        Policy policy = _mapper.Map<Policy>(policyDTO);
 
         // Add new policy using UnitOfWork
         await _unitOfWork.Policy.AddAsync(policy);
-        
+
         // Save changes
         return await _unitOfWork.SaveChangeAsync();
     }
 
-    public async Task<bool> UpdatePolicyAsync(PolicyDTO policyDTO)
+    public async Task<bool> UpdatePolicyAsync(Guid policyId, PolicyDTO policyDTO)
     {
-        if (policyDTO == null)
-        {
-            throw new ArgumentNullException(nameof(policyDTO));
-        }
-
         // Retrieve the existing policy
-        var policy = await _unitOfWork.Policy.GetByCondition(p => p.PolicyId == policyDTO.PolicyId);
+        var policy = await _unitOfWork.Policy.GetByCondition(p => p.PolicyId == policyId);
         if (policy == null)
         {
-            return false;
+            throw new Exception();
         }
 
-        // Update the entity's properties
-        policy.Description = policyDTO.Description;
-        policy.PercentageRefund = policyDTO.PercentageRefund;
+        // Map non-null properties from DTO to Entity using AutoMapper
+        _mapper.Map(policyDTO, policy);
 
         // Update policy using UnitOfWork
         _unitOfWork.Policy.Update(policy);
-        
+
         // Save changes
-        return await _unitOfWork.SaveChangeAsync();
+        bool saveResult = await _unitOfWork.SaveChangeAsync();
+
+        return saveResult;
     }
 
     public async Task<bool> DeletePolicyAsync(Guid policyId)
@@ -101,7 +85,7 @@ public class PolicyService : IPolicyService
 
         // Delete the policy using UnitOfWork
         _unitOfWork.Policy.Delete(policy);
-        
+
         // Save changes
         return await _unitOfWork.SaveChangeAsync();
     }

@@ -164,5 +164,29 @@ namespace Service.Services
             }
             return true;
         }
+
+        public async Task<bool> UpdateOrderPackaging(Guid orderId, UpdateOrderPackagingRequest request) {
+            // Find order
+            Order? order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == orderId);
+            if(order == null) {
+                return false;
+            }
+
+            // Check status order is different processing
+            if(order.Status != OrderStatusConstant.Processing) {
+                return false;
+            }
+
+            // Map non-null properties from request to entity
+            _mapper.Map(request, order);
+
+            // Update order using UnitOfWork
+            _unitOfWork.Order.Update(order);
+
+            // Save changes
+            bool saveResult = await _unitOfWork.SaveChangeAsync();
+
+            return saveResult;
+        }
     }
 }
