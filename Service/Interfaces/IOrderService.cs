@@ -12,7 +12,7 @@ namespace Service.Interfaces
     public interface IOrderService
     {
         Task<ResponseDTO> CheckValidationCreateOrder(CreateOrderDTO createOrderDTO);
-        Task<bool> CreateOrder(CreateOrderDTO createOrderDTO);
+        Task<ResponseDTO> CreateOrder(CreateOrderDTO createOrderDTO);
         Task<bool> CheckOrderExist(Guid orderId);
     }
 }

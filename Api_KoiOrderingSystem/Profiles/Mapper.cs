@@ -41,6 +41,8 @@ namespace Api_KoiOrderingSystem.Profiles
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Koi.Price))
             .ForMember(dest => dest.KoiAvatar, opt => opt.MapFrom(src => src.Koi.AvatarLink))
             .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Koi.Farm.FarmName))
+            .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Koi.Farm.KoiFarmId))
+            .ForMember(dest => dest.StorageProvinceJapanId, opt => opt.MapFrom(src => src.Koi.Farm.StorageProvinceId))
             .ReverseMap();
             CreateMap<Koi, KoiDetailDTO>()
                 .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c => c.Breed.Name).ToList()))
