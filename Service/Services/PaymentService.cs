@@ -90,7 +90,7 @@ namespace Service.Services
 
                 _unitOfWork.Transaction.Update(unpaidTrans);
 
-                order.Status = "Paid"; // nữa add bằng constant
+                order.Status = OrderStatusConstant.Processing;
                 _unitOfWork.Order.Update(order);
                 await _unitOfWork.SaveChangeAsync();
                 return true;

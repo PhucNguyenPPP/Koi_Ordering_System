@@ -91,7 +91,7 @@ namespace Service.Services
             order.CreatedDate = DateTime.Now;
 
             //Order Status
-            order.Status = true.ToString();
+            order.Status = OrderStatusConstant.Unpaid;
             List<Guid> koiId = new List<Guid>();
             decimal totalPrice = 0;
             decimal shippingFee = 0;
