@@ -16,5 +16,7 @@ namespace Common.DTO.Cart
         public string KoiAvatar { get; set; }
         public string Price { get; set;}
         public string FarmName { get; set; }
+        public Guid FarmId {get; set;}
+        public Guid StorageProvinceJapanId { get; set; }
     }
 }

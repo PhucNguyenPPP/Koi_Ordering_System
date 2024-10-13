@@ -33,13 +33,13 @@ namespace Api_KoiOrderingSystem.Controllers
             }
 
             var signUpResult = await _orderService.CreateOrder(model);
-            if (signUpResult)
+            if (signUpResult.IsSuccess)
             {
-                return Created("Success", new ResponseDTO("Create order successfully!", 201, true, null));
+                return Created("Success", signUpResult);
             }
             else
             {
-                return BadRequest(new ResponseDTO("Create order failed!", 400, true, null));
+                return BadRequest(signUpResult);
             }
         }
 

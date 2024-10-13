@@ -61,7 +61,7 @@ namespace Service.Services
             return new ResponseDTO("Check validation successfully!", 200, true);
         } 
 
-        public async Task<bool> CreateOrder(CreateOrderDTO createOrderDTO)
+        public async Task<ResponseDTO> CreateOrder(CreateOrderDTO createOrderDTO)
         {
             var order = _mapper.Map<Order>(createOrderDTO);
             if (createOrderDTO == null)
@@ -145,7 +145,14 @@ namespace Service.Services
             orderStorage2.OrderStorageId = Guid.NewGuid();
             await _unitOfWork.OrderStorage.AddAsync(orderStorage2);
 
-            return await _unitOfWork.SaveChangeAsync();
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result)
+            {
+                return new ResponseDTO("Create order successfully!", 201, true, orderId);
+            } else
+            {
+                return new ResponseDTO("Create order failed!", 400, true, null);
+            }
         }
 
         public async Task<bool> CheckOrderExist(Guid orderId)
