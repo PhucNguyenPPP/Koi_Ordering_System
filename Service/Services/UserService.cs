@@ -30,7 +30,7 @@ namespace Service.Services
         }
 		public async Task<Role?> GetFarmRole()
 		{
-			var result = await _unitOfWork.Role.GetByCondition(c => c.RoleName == RoleEnum.KoiFarmManager.ToString());
+			var result = await _unitOfWork.Role.GetByCondition(c => c.RoleName == RoleEnum.KoiFarm.ToString());
 			return result;
 		}
 
