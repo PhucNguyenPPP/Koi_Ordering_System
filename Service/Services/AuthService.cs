@@ -134,6 +134,7 @@ namespace Service.Services
         public async Task<LoginResponseDTO?> CheckLogin(LoginRequestDTO loginRequestDTO)
         {
             var user = _unitOfWork.User.GetAllByCondition(x => x.UserName == loginRequestDTO.UserName)
+                .Include(c => c.KoiFarm)
                 .Include(u => u.Role).FirstOrDefault();
 
             if (user == null)
@@ -314,6 +315,7 @@ namespace Service.Services
             // Generate new access token
             var user = _unitOfWork.User.GetAllByCondition(a => a.UserId == existingRefreshToken.UserId)
                 .Include(u => u.Role)
+                .Include(c => c.KoiFarm)
                 .FirstOrDefault();
 
             if (user == null)
@@ -382,7 +384,7 @@ namespace Service.Services
                 return new ResponseDTO("Token is invalid", 400, false);
             }
             var user = await _unitOfWork.User.GetAllByCondition(c => c.UserId.ToString() == userId
-            && c.Status == true).Include(c => c.Role).FirstOrDefaultAsync();
+            && c.Status == true).Include(c => c.Role).Include(c => c.KoiFarm).FirstOrDefaultAsync();
             if (user == null)
             {
                 return new ResponseDTO("User not found", 400, false);

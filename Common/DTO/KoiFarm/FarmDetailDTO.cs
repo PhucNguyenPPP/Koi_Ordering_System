@@ -8,12 +8,15 @@ using Common.DTO.FarmImage;
 
 namespace Common.DTO.KoiFarm
 {
-	public class FarmDetailDTO
-	{
-		public string? FarmName { get; set; }
+    public class FarmDetailDTO
+    {
+        public string? FarmName { get; set; }
 
-		public string? FarmDescription { get; set; }
+        public string? FarmDescription { get; set; }
 
-		public string? FarmAddress { get; set; }
-		public string FarmAvatar { get; set; } = null!;	}
+        public string? FarmAddress { get; set; }
+        public string FarmAvatar { get; set; } = null!;
+        public Guid StorageProvinceId { get; set; }
+        public Guid KoiFarmManagerId { get; set; }
+    }
 }

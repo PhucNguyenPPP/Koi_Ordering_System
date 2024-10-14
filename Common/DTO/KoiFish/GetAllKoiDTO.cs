@@ -9,6 +9,7 @@ namespace Common.DTO.KoiFish
 {
     public class GetAllKoiDTO
     {
+        [Key]
         public Guid KoiId { get; set; }
 
         public string Name { get; set; } = null!;
@@ -20,6 +21,7 @@ namespace Common.DTO.KoiFish
         public string Description { get; set; } = null!;
 
         public DateTime Dob { get; set; }
+        public int Age { get; set; }
 
         public string Gender { get; set; } = null!;
 
@@ -34,5 +36,6 @@ namespace Common.DTO.KoiFish
         public string FarmName { get; set; } = null!;
 
         public bool Status { get; set; }
+        public string? OrderId { get; set; }
     }
 }

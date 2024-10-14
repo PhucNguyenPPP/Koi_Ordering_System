@@ -1,9 +1,14 @@
 using Api_KoiOrderingSystem.MiddleWares;
+using Common.DTO.KoiFish;
+using Common.DTO.Order;
 using DAL.Interfaces;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.OData;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
+using Service.Interface;
 using Service.Interfaces;
 using Service.Services;
 using Swashbuckle.AspNetCore.Filters;
@@ -23,6 +28,11 @@ builder.Services.AddScoped<IPolicyService, PolicyService>();
 builder.Services.AddScoped<IStorageProvinceService, StorageProvinceService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IKoiFarmService, KoiFarmService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IShippingFeeService, ShippingFeeService>();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -59,11 +69,21 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
-});
+    })
+    .AddOData(options =>
+    {
+        ODataConventionModelBuilder odataBuilder = new ODataConventionModelBuilder();
+        odataBuilder.EntitySet<GetAllKoiDTO>("all-koi");
+        odataBuilder.EntitySet<GetAllKoiDTO>("all-koi-koifarm");
+        odataBuilder.EntitySet<GetAllHistoryOrderDTO>("all-history-order");
+        options.AddRouteComponents("odata", odataBuilder.GetEdmModel());
+        options.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100);
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

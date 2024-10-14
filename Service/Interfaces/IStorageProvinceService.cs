@@ -10,5 +10,6 @@ namespace Service.Interfaces
 	public interface IStorageProvinceService
 	{
 		Task<ResponseDTO> CheckJapanStorageProvince(Guid? storageProvinceId);
+		ResponseDTO GetStorageProvinceByContry(string? country);
 	}
 }
