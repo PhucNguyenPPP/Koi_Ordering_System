@@ -21,7 +21,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("order")]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO model)
+        public async Task<IActionResult> CreateOrder([FromForm] CreateOrderDTO model)
         {
             if (!ModelState.IsValid)
             {
