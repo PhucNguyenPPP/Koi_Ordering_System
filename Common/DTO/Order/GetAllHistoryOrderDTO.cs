@@ -10,6 +10,7 @@ namespace Common.DTO.Order
     public class GetAllHistoryOrderDTO
     {
         [Key]
+        public Guid OrderId { get; set; }
         public string OrderNumber { get; set; } = null!;
         public List<string> AvatarLink { get; set; } = null!;
         public List<string> KoiName { get; set; } = null!;
