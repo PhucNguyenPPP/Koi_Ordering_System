@@ -1,14 +1,16 @@
-﻿using Common.DTO.General;
+﻿using System.ComponentModel.DataAnnotations;
+using Common.DTO.General;
 using Common.DTO.KoiFish;
 using Common.DTO.Order;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Service.Interfaces;
 using Service.Services;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("odata")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -18,8 +20,8 @@ namespace Api_KoiOrderingSystem.Controllers
             _orderService = order;
         }
 
-        [HttpPost("koi")]
-        public async Task<IActionResult> CreateOrder([FromForm] CreateOrderDTO model)
+        [HttpPost("order")]
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -54,6 +56,23 @@ namespace Api_KoiOrderingSystem.Controllers
             }
 
             return Ok("Order updated successfully.");
+        }
+
+        [HttpGet("all-history-order")]
+        [EnableQuery]
+        public async Task<IActionResult> GetAllHistoryOrder([Required]Guid userId)
+        {
+            ResponseDTO responseDTO = await _orderService.GetAllHistoryOrder(userId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO.Result);
         }
     }
 }

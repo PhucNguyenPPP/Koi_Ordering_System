@@ -68,6 +68,15 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => OrderStatusConstant.ToShip))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<Order, GetAllHistoryOrderDTO>()
+                .ForMember(dest => dest.OrderNumber, opt => opt.MapFrom(src => src.OrderNumber))
+                .ForMember(dest => dest.AvatarLink, opt => opt.MapFrom(src => src.Kois.Select(c => c.AvatarLink).ToList()))
+                .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Kois.Select(c => c.Name).ToList()))
+                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmName))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+                
+
             #endregion
         }
 

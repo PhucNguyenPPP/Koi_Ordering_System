@@ -1,5 +1,6 @@
 using Api_KoiOrderingSystem.MiddleWares;
 using Common.DTO.KoiFish;
+using Common.DTO.Order;
 using DAL.Interfaces;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,6 +80,7 @@ builder.Services.AddControllers()
         ODataConventionModelBuilder odataBuilder = new ODataConventionModelBuilder();
         odataBuilder.EntitySet<GetAllKoiDTO>("all-koi");
         odataBuilder.EntitySet<GetAllKoiDTO>("all-koi-koifarm");
+        odataBuilder.EntitySet<GetAllHistoryOrderDTO>("all-history-order");
         options.AddRouteComponents("odata", odataBuilder.GetEdmModel());
         options.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100);
     });
