@@ -32,6 +32,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IShippingFeeService, ShippingFeeService>();
+builder.Services.AddScoped<IOrderStorageService, OrderStorageService>();
+
 
 builder.Services.AddSwaggerGen(options =>
 {
