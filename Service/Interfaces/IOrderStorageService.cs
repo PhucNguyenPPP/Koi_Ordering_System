@@ -11,5 +11,6 @@ namespace Service.Interfaces
     public interface IOrderStorageService
     {
         Task<ResponseDTO> AssignShipper(AssignShipperDTO assignShipperDTO);
+        Task<ResponseDTO> ConfirmDelivery(ConfirmDeliveryDTO confirmDeliveryDTO);
     }
 }

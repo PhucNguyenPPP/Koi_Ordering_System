@@ -15,7 +15,6 @@ namespace Api_KoiOrderingSystem.Controllers
             _orderStorageService = orderStorageService;
         }
         [HttpPut]
-      
         public async Task<IActionResult> AssignShipper([FromBody] AssignShipperDTO assignShipperDTO)
         {
             var result = await _orderStorageService.AssignShipper(assignShipperDTO);
@@ -25,6 +24,17 @@ namespace Api_KoiOrderingSystem.Controllers
                 return BadRequest(result);
             }
 
+            return Ok(result);
+        }
+        [HttpPut("delivery")]
+        public async Task<IActionResult> ConfirmDelivery([FromBody] ConfirmDeliveryDTO confirmDeliveryDTO)
+        {
+            var result = await _orderStorageService.ConfirmDelivery(confirmDeliveryDTO);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
             return Ok(result);
         }
     }
