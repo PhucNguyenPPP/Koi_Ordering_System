@@ -77,7 +77,6 @@ namespace Service.Services
                 }
             }
             return new ResponseDTO("Check Shipper and Province successfully", 200, true);
-
         }
 
         private async Task<bool> CheckOrderStatusToAssignAsync(Guid orderId)
@@ -89,7 +88,6 @@ namespace Service.Services
             }
             return false;
         }
-
         private Task<OrderStorage>? CheckOrderStorageExist(Guid orderStorageId)
         {
             var orderStorage = _unitOfWork.OrderStorage.GetByCondition(o => o.OrderStorageId == orderStorageId && o.Status == true);
