@@ -150,6 +150,14 @@ namespace Service.Services
                 orderStorage.Status = false;
                 _unitOfWork.OrderStorage.Update(orderStorage);
             }
+            else if (order.Status.Equals(OrderStatusConstant.ToReceive))
+            {
+                order.Status = OrderStatusConstant.Completed;
+                _unitOfWork.Order.Update(order);
+                orderStorage.ArrivalTime = DateTime.Now;
+                orderStorage.Status = false;
+                _unitOfWork.OrderStorage.Update(orderStorage);
+            }
             var saveChanges = await _unitOfWork.SaveChangeAsync();  
             if(saveChanges)
             {
