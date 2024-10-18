@@ -3,6 +3,7 @@ using Common.DTO.General;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
@@ -138,6 +139,20 @@ namespace Api_KoiOrderingSystem.Controllers
             {
                 return BadRequest(result);
             }
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([Required] string rfToken)
+        {
+
+            var response = await _authService.LogOut(rfToken);
+
+            if (response)
+            {
+                return Ok(new ResponseDTO("Log out successfully", 200, true));
+            }
+
+            return BadRequest(new ResponseDTO("Log out failed", 400, false));
         }
 
     }
