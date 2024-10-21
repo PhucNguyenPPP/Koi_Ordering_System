@@ -58,11 +58,45 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok("Order updated successfully.");
         }
 
-        [HttpGet("all-history-order")]
+        [HttpGet("all-customer-history-order")]
         [EnableQuery]
-        public async Task<IActionResult> GetAllHistoryOrder([Required]Guid userId)
+        public async Task<IActionResult> GetAllHistoryOrder([Required]Guid customerId)
         {
-            ResponseDTO responseDTO = await _orderService.GetAllHistoryOrder(userId);
+            ResponseDTO responseDTO = await _orderService.GetAllHistoryOrder(customerId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO.Result);
+        }
+
+        [HttpGet("all-farm-history-order")]
+        [EnableQuery]
+        public async Task<IActionResult> GetAllFarmHistoryOrder([Required] Guid farmId)
+        {
+            ResponseDTO responseDTO = await _orderService.GetAllFarmHistoryOrder(farmId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO.Result);
+        }
+
+        [HttpGet("all-storage-history-order")]
+        [EnableQuery]
+        public async Task<IActionResult> GetAllStorageHistoryOrder([Required] Guid storageProvinceId)
+        {
+            ResponseDTO responseDTO = await _orderService.GetAllStorageHistoryOrder(storageProvinceId);
             if (responseDTO.IsSuccess == false)
             {
                 if (responseDTO.StatusCode == 404)
