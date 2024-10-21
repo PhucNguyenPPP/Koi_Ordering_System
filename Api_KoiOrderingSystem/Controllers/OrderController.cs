@@ -58,11 +58,11 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok("Order updated successfully.");
         }
 
-        [HttpGet("all-history-order")]
+        [HttpGet("all-customer-history-order")]
         [EnableQuery]
-        public async Task<IActionResult> GetAllHistoryOrder([Required]Guid userId)
+        public async Task<IActionResult> GetAllHistoryOrder([Required]Guid customerId)
         {
-            ResponseDTO responseDTO = await _orderService.GetAllHistoryOrder(userId);
+            ResponseDTO responseDTO = await _orderService.GetAllHistoryOrder(customerId);
             if (responseDTO.IsSuccess == false)
             {
                 if (responseDTO.StatusCode == 404)

@@ -194,13 +194,13 @@ namespace Service.Services
             return saveResult;
         }
 
-        public async Task<ResponseDTO> GetAllHistoryOrder(Guid userId)
+        public async Task<ResponseDTO> GetAllHistoryOrder(Guid customerId)
         {
             var order = _unitOfWork.Order
-                .GetAllByCondition(c=> c.CustomerId == userId)
+                .GetAllByCondition(c=> c.CustomerId == customerId)
                 .Include(c=> c.Kois).ThenInclude(c=> c.Farm)
                 .ToList();
-            if (order == null) return new ResponseDTO("Your history order list is empty!", 400, false);
+            if (order == null || !order.Any())  return new ResponseDTO("Your history order list is empty!", 400, false);
             var list = _mapper.Map<List<GetAllHistoryOrderDTO>>(order);
             return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
         }

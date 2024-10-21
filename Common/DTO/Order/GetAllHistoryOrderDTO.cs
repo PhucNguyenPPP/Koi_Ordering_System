@@ -11,10 +11,10 @@ namespace Common.DTO.Order
     {
         [Key]
         public Guid OrderId { get; set; }
-        public string OrderNumber { get; set; } = null!;
-        public List<string> AvatarLink { get; set; } = null!;
-        public List<string> KoiName { get; set; } = null!;
+        public Guid FarmId { get; set; }
         public string FarmName { get; set; } = null!;
+        public string OrderNumber { get; set; } = null!;
+        public List<KoiOrderDTO> Kois { get; set; }
         public decimal TotalPrice { get; set; }
         public string Status { get; set; } = null!;
     }
