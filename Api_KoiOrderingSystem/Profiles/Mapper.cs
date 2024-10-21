@@ -84,6 +84,10 @@ namespace Api_KoiOrderingSystem.Profiles
             CreateMap<Flight, GetAllFlightDTO>()
             .ForMember(dest => dest.DepartureAirportName, opt => opt.MapFrom(src => src.DepartureAirport.AirportName))
             .ForMember(dest => dest.ArrivalAirportName, opt => opt.MapFrom(src => src.ArrivalAirport.AirportName));
+            CreateMap<NewFlightDTO, Flight>()
+            .ForMember(dest => dest.FlightId, opt => opt.Ignore());// Nếu FlightId được tự sin
+            CreateMap<UpdateFlightDTO, NewFlightDTO>();
+            CreateMap<UpdateFlightDTO, Flight>();
             #endregion
         }
 

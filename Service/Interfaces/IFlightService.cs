@@ -12,6 +12,8 @@ namespace Service.Interfaces
     {
         Task<bool> AddFlight(NewFlightDTO model);
         Task<ResponseDTO> CheckValidationCreateFlight(NewFlightDTO model);
+        Task<ResponseDTO> CheckValidationUpdateFlight(UpdateFlightDTO model);
         Task<ResponseDTO> GetAll();
+        Task<bool> UpdateFlight(UpdateFlightDTO model);
     }
 }

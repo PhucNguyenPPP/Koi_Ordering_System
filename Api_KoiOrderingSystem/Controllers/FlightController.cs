@@ -60,5 +60,29 @@ namespace Api_KoiOrderingSystem.Controllers
                 return BadRequest(new ResponseDTO("Add flight failed", 500, false, null));
             }
         }
+
+        [HttpPut("flight")]
+        public async Task<IActionResult> UpdateFlight([FromBody] UpdateFlightDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ResponseDTO(ModelState.ToString() ?? "Unknow error", 400, false, null));
+            }
+            var checkValid = await _flightService.CheckValidationUpdateFlight(model);
+            if (!checkValid.IsSuccess)
+            {
+                return BadRequest(checkValid);
+            }
+
+            var signUpResult = await _flightService.UpdateFlight(model);
+            if (signUpResult)
+            {
+                return Ok(new ResponseDTO("Update flight sucessfully", 201, true));
+            }
+            else
+            {
+                return BadRequest(new ResponseDTO("Update flight failed", 500, false, null));
+            }
+        }
     }
 }

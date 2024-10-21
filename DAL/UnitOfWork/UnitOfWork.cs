@@ -25,6 +25,7 @@ namespace DAL.UnitOfWork
             OrderStorage = new OrderStorageRepository(_context);
             Transaction = new TransactionRepository(_context);
             Flight = new FlightRepository(_context);
+            Airport = new AirportRepository(_context);
         }
 
 
