@@ -91,5 +91,22 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(responseDTO.Result);
         }
+
+        [HttpGet("all-storage-history-order")]
+        [EnableQuery]
+        public async Task<IActionResult> GetAllStorageHistoryOrder([Required] Guid storageProvinceId)
+        {
+            ResponseDTO responseDTO = await _orderService.GetAllStorageHistoryOrder(storageProvinceId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO.Result);
+        }
     }
 }

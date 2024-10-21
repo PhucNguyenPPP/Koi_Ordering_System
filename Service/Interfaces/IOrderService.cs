@@ -17,5 +17,6 @@ namespace Service.Interfaces
         Task<bool> UpdateOrderPackaging(Guid orderId, UpdateOrderPackagingRequest request);
         Task<ResponseDTO> GetAllHistoryOrder(Guid customerId);
         Task<ResponseDTO> GetAllFarmHistoryOrder(Guid farmId);
+        Task<ResponseDTO> GetAllStorageHistoryOrder(Guid storageProvinceId);
     }
 }

@@ -216,5 +216,17 @@ namespace Service.Services
             var list = _mapper.Map<List<GetAllFarmHistoryOrderDTO>>(order);
             return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
         }
+
+        public async Task<ResponseDTO> GetAllStorageHistoryOrder(Guid storageProvinceId)
+        {
+            var order = _unitOfWork.Order
+                .GetAllByCondition(c => c.Kois.FirstOrDefault().Farm.StorageProvinceId == storageProvinceId)
+                .Include(c => c.Customer)
+                .Include(c => c.Kois).ThenInclude(c => c.Farm)
+                .ToList();
+            if (order == null || !order.Any()) return new ResponseDTO("Your history order list is empty!", 400, false);
+            var list = _mapper.Map<List<GetAllFarmHistoryOrderDTO>>(order);
+            return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
+        }
     }
 }
