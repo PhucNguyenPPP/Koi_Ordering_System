@@ -24,6 +24,7 @@ namespace DAL.UnitOfWork
             ShippingFee = new ShippingFeeRepository(_context);
             OrderStorage = new OrderStorageRepository(_context);
             Transaction = new TransactionRepository(_context);
+            Flight = new FlightRepository(_context);
         }
 
 
@@ -44,12 +45,16 @@ namespace DAL.UnitOfWork
         public IKoiRepository Koi { get; private set; }
         public IOrderRepository Order { get; private set; }
         public IPolicyRepository Policy { get; private set; }
-		public IStorageProvinceRepository StorageProvince { get; private set; }
+        public IStorageProvinceRepository StorageProvince { get; private set; }
         public ICartRepository Cart { get; private set; }
         public IKoiBreedRepository KoiBreed { get; private set; }
         public IKoiFarmRepository KoiFarm { get; private set; }
         public IShippingFeeRepository ShippingFee { get; private set; }
         public IOrderStorageRepository OrderStorage { get; private set; }
         public ITransactionRepository Transaction { get; private set; }
-	}
+
+        public IFlightRepository Flight { get; private set; }
+
+        public IAirportRepository Airport { get; private set; }
+    }
 }

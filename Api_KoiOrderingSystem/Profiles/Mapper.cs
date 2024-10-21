@@ -2,6 +2,7 @@
 using Common.DTO.Auth;
 using Common.DTO.Cart;
 using Common.DTO.FarmImage;
+using Common.DTO.Flight;
 using Common.DTO.KoiFarm;
 using Common.DTO.KoiFish;
 using Common.DTO.Order;
@@ -73,8 +74,9 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Kois.Select(c => c.Name).ToList()))
                 .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmName))
                 .ReverseMap();
-                
-
+            CreateMap<Flight, GetAllFlightDTO>()
+            .ForMember(dest => dest.DepartureAirportName, opt => opt.MapFrom(src => src.DepartureAirport.AirportName))
+            .ForMember(dest => dest.ArrivalAirportName, opt => opt.MapFrom(src => src.ArrivalAirport.AirportName));
             #endregion
         }
 
