@@ -11,6 +11,8 @@ public partial class Airport
 
     public string Address { get; set; } = null!;
 
+    public string Country { get; set; } = null!;
+
     public virtual ICollection<Flight> FlightArrivalAirports { get; set; } = new List<Flight>();
 
     public virtual ICollection<Flight> FlightDepartureAirports { get; set; } = new List<Flight>();
