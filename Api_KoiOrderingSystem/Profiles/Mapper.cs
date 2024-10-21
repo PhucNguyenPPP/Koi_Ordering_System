@@ -69,12 +69,17 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Order, GetAllHistoryOrderDTO>()
-                .ForMember(dest => dest.AvatarLink, opt => opt.MapFrom(src => src.Kois.Select(c => c.AvatarLink).ToList()))
-                .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Kois.Select(c => c.Name).ToList()))
+                .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().FarmId))
                 .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmName))
                 .ReverseMap();
-                
 
+            CreateMap<Koi, KoiOrderDTO>()
+                .ReverseMap();
+            CreateMap<Order, GetAllFarmHistoryOrderDTO>()
+                .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().FarmId))
+                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ReverseMap();
             #endregion
         }
 

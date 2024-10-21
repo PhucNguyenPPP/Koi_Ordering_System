@@ -15,6 +15,8 @@ namespace Service.Interfaces
         Task<ResponseDTO> CreateOrder(CreateOrderDTO createOrderDTO);
         Task<bool> CheckOrderExist(Guid orderId);
         Task<bool> UpdateOrderPackaging(Guid orderId, UpdateOrderPackagingRequest request);
-        Task<ResponseDTO> GetAllHistoryOrder(Guid userId);
+        Task<ResponseDTO> GetAllHistoryOrder(Guid customerId);
+        Task<ResponseDTO> GetAllFarmHistoryOrder(Guid farmId);
+        Task<ResponseDTO> GetAllStorageHistoryOrder(Guid storageProvinceId);
     }
 }
