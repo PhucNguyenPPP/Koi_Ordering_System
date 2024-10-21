@@ -10,7 +10,7 @@ namespace Common.DTO.Order
     {
         public Guid KoiId { get; set; }
         public string AvatarLink { get; set; } = null!;
-        public string KoiName { get; set; } = null!;
-        public decimal KoiPrice { get; set; }
+        public string Name { get; set; } = null!;
+        public decimal Price { get; set; }
     }
 }

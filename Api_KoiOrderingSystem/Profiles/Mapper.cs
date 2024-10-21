@@ -74,8 +74,6 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ReverseMap();
 
             CreateMap<Koi, KoiOrderDTO>()
-                .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.KoiPrice, opt => opt.MapFrom(src => src.Price))
                 .ReverseMap();
             CreateMap<Order, GetAllFarmHistoryOrderDTO>()
                 .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().FarmId))
