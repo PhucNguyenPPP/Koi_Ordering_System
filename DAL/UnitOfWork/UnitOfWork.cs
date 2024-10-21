@@ -24,6 +24,7 @@ namespace DAL.UnitOfWork
             ShippingFee = new ShippingFeeRepository(_context);
             OrderStorage = new OrderStorageRepository(_context);
             Transaction = new TransactionRepository(_context);
+            Flight = new FlightRepository(_context);
         }
 
 
@@ -51,5 +52,6 @@ namespace DAL.UnitOfWork
         public IShippingFeeRepository ShippingFee { get; private set; }
         public IOrderStorageRepository OrderStorage { get; private set; }
         public ITransactionRepository Transaction { get; private set; }
+        public IFlightRepository Flight { get; private set; }
 	}
 }

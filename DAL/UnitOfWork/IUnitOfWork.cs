@@ -25,5 +25,6 @@ namespace DAL.UnitOfWork
         IShippingFeeRepository ShippingFee { get; }
         IOrderStorageRepository OrderStorage { get; }
         ITransactionRepository Transaction {  get; }
+        IFlightRepository Flight {  get; }
 	}
 }
