@@ -1,13 +1,12 @@
 using Api_KoiOrderingSystem.MiddleWares;
 using Common.DTO.KoiFish;
 using Common.DTO.Order;
-using DAL.Interfaces;
-using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
+using Service;
 using Service.Interface;
 using Service.Interfaces;
 using Service.Services;
@@ -18,7 +17,6 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBreedService, BreedService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -33,7 +31,9 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IShippingFeeService, ShippingFeeService>();
 builder.Services.AddScoped<IOrderStorageService, OrderStorageService>();
+builder.Services.AddScoped<IFlightService, FlightService>();
 
+builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddSwaggerGen(options =>
 {
