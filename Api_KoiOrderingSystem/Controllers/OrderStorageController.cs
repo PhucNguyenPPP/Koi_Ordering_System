@@ -37,5 +37,19 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("shipper/{shipperId}")]
+        public async Task<IActionResult> GetOrdersByShipper(Guid shipperId)
+        {
+            var orders = await _orderStorageService.GetOrdersForShipper(shipperId);
+
+            if (orders == null || !orders.Any())
+            {
+                return NotFound("No orders found for this shipper.");
+            }
+
+            return Ok(orders);
+        }
     }
 }
