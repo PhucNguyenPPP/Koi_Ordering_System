@@ -12,5 +12,6 @@ namespace Service.Interfaces
     {
         Task<ResponseDTO> AssignShipper(AssignShipperDTO assignShipperDTO);
         Task<ResponseDTO> ConfirmDelivery(ConfirmDeliveryDTO confirmDeliveryDTO);
+        public Task<IEnumerable<OrderShipperDTO>> GetOrdersForShipper(Guid shipperId);
     }
 }

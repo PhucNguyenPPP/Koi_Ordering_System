@@ -10,5 +10,6 @@ namespace DAL.Interfaces
 {
     public interface IOrderStorageRepository : IGenericRepository <OrderStorage>
     {
+        public Task<IEnumerable<OrderShipperDTO>> GetAssignedOrdersByShipper(Guid shipperId);
     }
 }

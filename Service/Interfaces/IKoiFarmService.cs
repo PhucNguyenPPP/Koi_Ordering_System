@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Common.DTO.General;
 
-namespace DAL.Interfaces
+namespace Service.Interfaces
 {
 	public interface IKoiFarmService
 	{

@@ -165,6 +165,10 @@ namespace Service.Services
             }
             return new ResponseDTO("Confirm completed mission fail", 500, false);
         }
+        public async Task<IEnumerable<OrderShipperDTO>> GetOrdersForShipper(Guid shipperId)
+        {
+            return await _unitOfWork.OrderStorage.GetAssignedOrdersByShipper(shipperId);
+        }
     }
 }
  

@@ -9,9 +9,10 @@ using DAL.Interfaces;
 namespace DAL.Repositories
 {
     public class FlightRepository : GenericRepository<Flight>, IFlightRepository
-    { 
+    {
         public FlightRepository(KoiDbContext context) : base(context)
         {
+            
         }
     }
 }
