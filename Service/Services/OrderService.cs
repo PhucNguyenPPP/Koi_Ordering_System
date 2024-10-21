@@ -216,7 +216,7 @@ namespace Service.Services
             var farm = _unitOfWork.KoiFarm.GetAllByCondition(c => c.KoiFarmId == farmId);
             if (farm.IsNullOrEmpty())
             {
-                return new ResponseDTO("Invalid storage province!", 400, false);
+                return new ResponseDTO("Invalid koi farm!", 400, false);
             }
             var order = _unitOfWork.Order
                 .GetAllByCondition(c=> c.Kois.FirstOrDefault().FarmId == farmId)
