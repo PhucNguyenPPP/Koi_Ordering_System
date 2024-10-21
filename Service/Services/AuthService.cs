@@ -544,5 +544,22 @@ namespace Service.Services
             await _unitOfWork.User.AddAsync(shipper);
             return await _unitOfWork.SaveChangeAsync();
         }
+
+        public async Task<bool> LogOut(string refreshToken)
+        {
+            var refreshTokenDb = await _unitOfWork.RefreshToken.GetByCondition(c => c.RefreshToken1 == refreshToken);
+
+            if (refreshTokenDb != null)
+            {
+                refreshTokenDb.IsValid = false;
+
+                _unitOfWork.RefreshToken.Update(refreshTokenDb);
+                return await _unitOfWork.SaveChangeAsync();
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

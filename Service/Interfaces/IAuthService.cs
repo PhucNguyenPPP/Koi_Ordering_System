@@ -22,5 +22,6 @@ namespace Service.Interfaces
 		Task<bool> SignUpFarm(SignUpFarmRequestDTO model);
         Task<bool> SignUpShipper(SignUpShipperRequestDTO model);
         Task<ResponseDTO> CheckValidationSignUpShipper(SignUpShipperRequestDTO model);
+        Task<bool> LogOut(string refreshToken);
     }
 }

@@ -7,7 +7,11 @@ public partial class Flight
 {
     public Guid FlightId { get; set; }
 
-    public string Code { get; set; } = null!;
+    public string Airline { get; set; } = null!;
+
+    public DateTime DepartureDate { get; set; }
+
+    public DateTime ArrivalDate { get; set; }
 
     public string Status { get; set; } = null!;
 
