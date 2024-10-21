@@ -75,35 +75,39 @@ namespace Service.Services
                 var breed = _unitOfWork.Breed.GetAllByCondition(c => c.BreedId == koiDTO.BreedId[i]);
                 if (breed.IsNullOrEmpty())
                 {
-                    return new ResponseDTO("Giống cá không hợp lệ", 400, false);
+                    return new ResponseDTO("Invalid koi breed", 400, false);
                 }
             }
 
             if (koiDTO.Gender.ToUpper() != GenderEnum.Male.ToString().ToUpper() && koiDTO.Gender.ToUpper() != GenderEnum.Female.ToString().ToUpper())
             {
-                return new ResponseDTO("Vui lòng nhập giới tính hợp lệ", 400, false);
+                return new ResponseDTO("Invalid gender", 400, false);
             }
             var farm = _unitOfWork.KoiFarm.GetAllByCondition(c => c.KoiFarmId == koiDTO.FarmId);
             if (farm.IsNullOrEmpty())
             {
-                return new ResponseDTO("Farm không hợp lệ", 400, false);
+                return new ResponseDTO("Invalid Farm", 400, false);
             }
 
             var existedName = _unitOfWork.Koi.GetAll();
             if (existedName.Any(c=> c.Name == koiDTO.Name))
             {
-                return new ResponseDTO("Tên koi đã tồn tại!", 400, false);
+                return new ResponseDTO("Koi's name already existed", 400, false);
             }
 
-            return new ResponseDTO("Check thành công", 200, true);
+            return new ResponseDTO("Check success", 200, true);
         }
 
         public async Task<ResponseDTO> DeleteKoi(Guid koiId)
         {
-            var koi = await _unitOfWork.Koi.GetByCondition(c => c.KoiId == koiId && c.Status == true);
-            if(koi == null)
+            var koi = await _unitOfWork.Koi.GetByCondition(c => c.KoiId == koiId);
+            if(koi.Status == false && koi.OrderId != null )
             {
-                return new ResponseDTO("Koi không tồn tại!", 400, false);
+                return new ResponseDTO("Koi purchased, can not delete", 400, false);
+            }
+            if(koi.Status == false)
+            {
+                return new ResponseDTO("Koi not exist", 400, false);
             }
             koi.Status = false;
             _unitOfWork.Koi.Update(koi);
@@ -117,11 +121,11 @@ namespace Service.Services
                     var result2 = await _unitOfWork.SaveChangeAsync();
                     if (result2)
                     {
-                        return new ResponseDTO("Xóa koi thành công", 200, true, koi.KoiId);
+                        return new ResponseDTO("Delete koi successfully", 200, true, koi.KoiId);
                     }
                     else
                     {
-                        return new ResponseDTO("Xóa koi không thành công", 500, false, null);
+                        return new ResponseDTO("Delete koi unsuccessfully", 500, false, null);
                     }
                 }
             }
@@ -129,11 +133,11 @@ namespace Service.Services
             var result = await _unitOfWork.SaveChangeAsync();
             if (result)
             {
-                return new ResponseDTO("Xóa koi thành công", 200, true, koi.KoiId);
+                return new ResponseDTO("Delete koi successfully", 200, true, koi.KoiId);
             }
             else
             {
-                return new ResponseDTO("Xóa koi không thành công", 500, false, null);
+                return new ResponseDTO("Delete koi unsuccessfully", 500, false, null);
             }
         }
 
