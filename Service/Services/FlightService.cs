@@ -18,8 +18,7 @@ namespace Service.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public FlightService(IMapper mapper, IUnitOfWork unitOfWork)
-        private readonly IMapper _mapper;
+
         public FlightService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -65,36 +64,27 @@ namespace Service.Services
                 return new ResponseDTO("2 airport must be in different country", 400, false);
             }
             return new ResponseDTO("Validate sucessfully", 200, true);
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResponseDTO> CheckValidationUpdateFlight(UpdateFlightDTO model)
         {
             var checkExist = await CheckFlightExist(model.FlightId);
             if (checkExist == false)
-        public async Task<bool> DeleteFlight(Guid flightId)
-        {
+
                 return new ResponseDTO("Flight does not exist", 400, false);
-            }
+
             var validateFlight = _mapper.Map<NewFlightDTO>(model);
             var validate = await CheckValidationCreateFlight(validateFlight);
             return validate;
         }
-            // Check if any orders are using this flight
-            Order order = await _unitOfWork.Order
-                .GetByCondition(o => o.FlightId == flightId);
 
         private async Task<bool> CheckFlightExist(Guid flightId)
         {
             var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(flightId));
             if (flight != null)
-            if (order == null)
             {
-                Flight flight = await _unitOfWork.Flight.GetByCondition(o => o.FlightId == flightId);
-                _unitOfWork.Flight.Delete(flight);
-                await _unitOfWork.SaveChangeAsync();
                 return true;
-            }
+            }    
             return false;
         }
 
@@ -115,8 +105,8 @@ namespace Service.Services
 
         public async Task<bool> UpdateFlight(UpdateFlightDTO model)
         {
-           var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(model.FlightId));
-            flight.ArrivalAirportId = model.ArrivalAirportId;   
+            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(model.FlightId));
+            flight.ArrivalAirportId = model.ArrivalAirportId;
             flight.DepartureAirportId = model.DepartureAirportId;
             flight.Airline = model.Airline;
             flight.ArrivalDate = model.ArrivalDate;
@@ -128,6 +118,22 @@ namespace Service.Services
             {
                 return true;
             }
+            return false;
+        }
+        public async Task<bool> DeleteFlight(Guid flightId)
+        {
+            // Check if any orders are using this flight
+            Order order = await _unitOfWork.Order
+                .GetByCondition(o => o.FlightId == flightId);
+
+            if (order == null)
+            {
+                Flight flight = await _unitOfWork.Flight.GetByCondition(o => o.FlightId == flightId);
+                _unitOfWork.Flight.Delete(flight);
+                await _unitOfWork.SaveChangeAsync();
+                return true;
+            }
+
             return false;
         }
     }

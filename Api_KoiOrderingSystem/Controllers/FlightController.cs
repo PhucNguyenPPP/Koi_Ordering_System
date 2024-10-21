@@ -55,9 +55,7 @@ public class FlightController : ControllerBase
 
             var signUpResult = await _flightService.AddFlight(model);
             if (signUpResult)
-    [HttpDelete("{flightId}")]
-    public async Task<IActionResult> DeleteFlight(Guid flightId)
-    {
+            { 
                 return Created("Success", new ResponseDTO("Add flight sucessfully", 201, true, null));
             }
             else
@@ -65,7 +63,6 @@ public class FlightController : ControllerBase
                 return BadRequest(new ResponseDTO("Add flight failed", 500, false, null));
             }
         }
-        bool success = await _flightService.DeleteFlight(flightId);
 
         [HttpPut("flight")]
         public async Task<IActionResult> UpdateFlight([FromBody] UpdateFlightDTO model)
@@ -76,15 +73,9 @@ public class FlightController : ControllerBase
             }
             var checkValid = await _flightService.CheckValidationUpdateFlight(model);
             if (!checkValid.IsSuccess)
-        if (!success)
-        {
+            {
                 return BadRequest(checkValid);
-            // Return 400 BadRequest if the flight is assigned and cannot be deleted
-            return BadRequest("Flight cannot be deleted because it is assigned to an order.");
-        }
-
-        // Return 200 OK if the flight was successfully deleted
-        return Ok("Flight deleted successfully.");
+            }
             var signUpResult = await _flightService.UpdateFlight(model);
             if (signUpResult)
             {
@@ -94,6 +85,20 @@ public class FlightController : ControllerBase
             {
                 return BadRequest(new ResponseDTO("Update flight failed", 500, false, null));
             }
+        }
+        [HttpDelete("{flightId}")]
+        public async Task<IActionResult> DeleteFlight(Guid flightId)
+        {
+            bool success = await _flightService.DeleteFlight(flightId);
+
+            if (!success)
+            {
+                // Return 400 BadRequest if the flight is assigned and cannot be deleted
+                return BadRequest("Flight cannot be deleted because it is assigned to an order.");
+            }
+
+            // Return 200 OK if the flight was successfully deleted
+            return Ok("Flight deleted successfully.");
         }
     }
 }
