@@ -7,7 +7,7 @@ using DAL.Entities;
 
 namespace DAL.Interfaces
 {
-    public interface IFlightRepository : IGenericRepository<Flight>
+    public interface IAirportRepository : IGenericRepository<Airport>
     {
     }
 }

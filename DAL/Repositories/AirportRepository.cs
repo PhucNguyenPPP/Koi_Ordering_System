@@ -8,11 +8,10 @@ using DAL.Interfaces;
 
 namespace DAL.Repositories
 {
-    public class FlightRepository : GenericRepository<Flight>, IFlightRepository
+    public class AirportRepository : GenericRepository<Airport>, IAirportRepository
     {
-        public FlightRepository(KoiDbContext context) : base(context)
+        public AirportRepository(KoiDbContext context) : base(context)
         {
-            
         }
     }
 }
