@@ -236,7 +236,7 @@ namespace Service.Services
         public async Task<ResponseDTO> GetKoiByKoiId(Guid koiId)
         {
             var koi = _unitOfWork.Koi
-               .GetAllByCondition(c => c.Status == true && c.KoiId == koiId)
+               .GetAllByCondition(c => c.KoiId == koiId)
                .Include(c => c.Farm)
                .Include(c => c.KoiBreeds)
                .ThenInclude(c => c.Breed)

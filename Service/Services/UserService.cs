@@ -1,16 +1,8 @@
 ﻿using AutoMapper;
-using Common.DTO.General;
-using Common.DTO.KoiFarm;
 using Common.Enum;
 using DAL.Entities;
 using DAL.UnitOfWork;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
@@ -90,6 +82,17 @@ namespace Service.Services
                 return true;
             }
             return false;
+        }
+     
+        public async Task<ShipperDto[]> GetAllShipperInStorageProvince(Guid storageProvinceId) {
+            var shipperRole = await _unitOfWork.Role.GetByCondition(r => r.RoleName == RoleEnum.Shipper.ToString());
+            if (shipperRole == null)
+            {
+                return Array.Empty<ShipperDto>();
+            }
+
+            var shippers = await _unitOfWork.User.GetAllShipperInStorageProvinceAsync(storageProvinceId, shipperRole.RoleId);
+            return shippers;
         }
     }
 }

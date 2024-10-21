@@ -16,6 +16,22 @@ namespace Api_KoiOrderingSystem.Controllers
 			_userService = userService;
 		}
 		
+		[HttpGet("shippers")]
+        public async Task<IActionResult> GetAllShippersInStorageProvince([FromQuery] Guid storageProvinceId)
+        {
+            if (storageProvinceId == Guid.Empty)
+            {
+                return BadRequest("Invalid storage province ID.");
+            }
 
+            var shippers = await _userService.GetAllShipperInStorageProvince(storageProvinceId);
+            
+            if (shippers == null || shippers.Length == 0)
+            {
+                return NotFound("No shippers found for the specified storage province.");
+            }
+            
+            return Ok(shippers);
+        }
 	}
 }
