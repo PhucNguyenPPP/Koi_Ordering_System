@@ -207,6 +207,11 @@ namespace Service.Services
 
         public async Task<ResponseDTO> GetAllFarmHistoryOrder(Guid farmId)
         {
+            var farm = _unitOfWork.KoiFarm.GetAllByCondition(c => c.KoiFarmId == farmId);
+            if (farm.IsNullOrEmpty())
+            {
+                return new ResponseDTO("Invalid storage province!", 400, false);
+            }
             var order = _unitOfWork.Order
                 .GetAllByCondition(c=> c.Kois.FirstOrDefault().FarmId == farmId)
                 .Include(c=> c.Customer)
@@ -214,7 +219,7 @@ namespace Service.Services
                 .ToList();
             if (order == null || !order.Any()) return new ResponseDTO("Your history order list is empty!", 400, false);
             var list = _mapper.Map<List<GetAllFarmHistoryOrderDTO>>(order);
-            return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
+            return new ResponseDTO("List displayed successfully", 200, true, list);
         }
 
         public async Task<ResponseDTO> GetAllStorageHistoryOrder(Guid storageProvinceId)
