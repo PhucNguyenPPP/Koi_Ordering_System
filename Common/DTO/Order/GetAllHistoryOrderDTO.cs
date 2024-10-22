@@ -13,6 +13,7 @@ namespace Common.DTO.Order
         public Guid OrderId { get; set; }
         public Guid FarmId { get; set; }
         public string FarmName { get; set; } = null!;
+        public DateTime CreatedDate { get; set; }
         public string OrderNumber { get; set; } = null!;
         public List<KoiOrderDTO> Kois { get; set; }
         public decimal TotalPrice { get; set; }

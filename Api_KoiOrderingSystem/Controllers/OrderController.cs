@@ -108,5 +108,21 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(responseDTO.Result);
         }
+
+        [HttpGet("order-detail")]
+        public async Task<IActionResult> GetOrderDetail([Required] Guid orderId)
+        {
+            ResponseDTO responseDTO = await _orderService.GetOrderDetail(orderId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO);
+        }
     }
 }
