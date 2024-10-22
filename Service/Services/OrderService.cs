@@ -219,7 +219,7 @@ namespace Service.Services
                 return new ResponseDTO("Invalid koi farm!", 400, false);
             }
             var order = _unitOfWork.Order
-                .GetAllByCondition(c=> c.Kois.FirstOrDefault().FarmId == farmId)
+                .GetAllByCondition(c=> c.Kois.FirstOrDefault().FarmId == farmId && c.Status != OrderStatusConstant.Unpaid)
                 .Include(c=> c.Customer)
                 .Include(c => c.Kois).ThenInclude(c => c.Farm)
                 .ToList();
@@ -236,13 +236,40 @@ namespace Service.Services
                 return new ResponseDTO("Invalid storage province!", 400, false);
             }
             var order = _unitOfWork.Order
-                .GetAllByCondition(c => c.Kois.FirstOrDefault().Farm.StorageProvinceId == storageProvinceId)
+                .GetAllByCondition(c => c.Kois.FirstOrDefault().Farm.StorageProvinceId == storageProvinceId 
+                && c.Status != OrderStatusConstant.Unpaid
+                && c.Status != OrderStatusConstant.Processing)
                 .Include(c => c.Customer)
                 .Include(c => c.Kois).ThenInclude(c => c.Farm)
                 .ToList();
             if (order == null || !order.Any()) return new ResponseDTO("Your history order list is empty!", 400, false);
             var list = _mapper.Map<List<GetAllFarmHistoryOrderDTO>>(order);
             return new ResponseDTO("List displayed successfully", 200, true, list);
+        }
+
+        public async Task<ResponseDTO> GetOrderDetail(Guid orderId)
+        {
+            var order = _unitOfWork.Order
+            .GetAllByCondition(c => c.OrderId == orderId)
+            .Include(c => c.Customer)
+            .Include(c => c.OrderStorages)
+            .ThenInclude(c => c.StorageProvince)
+            .Include(c => c.Flight)
+            .Include(c => c.Kois)
+            .ThenInclude(c => c.Farm)
+            .ThenInclude(c => c.KoiFarmManager)
+            .FirstOrDefault();
+
+            if (order == null)
+            {
+                return new ResponseDTO("Invalid order id!", 400, false);
+            }
+            var mappedOrder = _mapper.Map<OrderDetailDTO>(order);
+            var provinceName = order.OrderStorages
+                .FirstOrDefault(c => c.StorageProvince.Country != StorageCountryEnum.Japan.ToString())
+                .StorageProvince.ProvinceName;
+            mappedOrder.CustomerProvince = provinceName;
+            return new ResponseDTO("Get order detail successfully", 200, true, mappedOrder);
         }
     }
 }

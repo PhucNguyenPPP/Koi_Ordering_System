@@ -7,6 +7,7 @@ using Common.DTO.KoiFarm;
 using Common.DTO.KoiFish;
 using Common.DTO.Order;
 using Common.DTO.StorageProvince;
+using Common.Enum;
 using DAL.Entities;
 
 namespace Api_KoiOrderingSystem.Profiles
@@ -23,20 +24,20 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ReverseMap();
             CreateMap<Koi, KoiDTO>()
                 .ReverseMap();
-			CreateMap<KoiFarm, FarmDetailDTO>().ReverseMap();
-			CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
-			CreateMap<SignUpFarmRequestDTO, KoiFarm>().ReverseMap();
-			CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
+            CreateMap<KoiFarm, FarmDetailDTO>().ReverseMap();
+            CreateMap<SignUpFarmRequestDTO, User>().ReverseMap();
+            CreateMap<SignUpFarmRequestDTO, KoiFarm>().ReverseMap();
+            CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
             CreateMap<Koi, GetAllKoiDTO>()
-                .ForMember(dest => dest.BreedId, opt => opt.MapFrom(src=> src.KoiBreeds.Select(c=> c.BreedId).ToList()))
-                .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c=> c.Breed.Name).ToList()))
+                .ForMember(dest => dest.BreedId, opt => opt.MapFrom(src => src.KoiBreeds.Select(c => c.BreedId).ToList()))
+                .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c => c.Breed.Name).ToList()))
                 .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Dob)))
                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Order.OrderId.ToString()))
                 .ReverseMap();
 
             CreateMap<SignUpShipperRequestDTO, User>().ReverseMap();
-			
+
             CreateMap<Cart, GetCartDTO>()
             .ForMember(dest => dest.KoiName, opt => opt.MapFrom(src => src.Koi.Name))
             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Koi.Price))
@@ -56,7 +57,7 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId));
             CreateMap<StorageProvince, ProvinceResponseDTO>().ReverseMap();
-            
+
             CreateMap<PolicyDTO, Policy>()
                 .ForMember(dest => dest.PolicyId, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -88,6 +89,14 @@ namespace Api_KoiOrderingSystem.Profiles
             .ForMember(dest => dest.FlightId, opt => opt.Ignore());// Nếu FlightId được tự sin
             CreateMap<UpdateFlightDTO, NewFlightDTO>();
             CreateMap<UpdateFlightDTO, Flight>();
+            CreateMap<Order, OrderDetailDTO>()
+               .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().FarmId))
+               .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmName))
+               .ForMember(dest => dest.FarmAddress, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmAddress))
+               .ForMember(dest => dest.FarmPhone, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.KoiFarmManager.Phone))
+               .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+               .ForMember(dest => dest.FlightName, opt => opt.MapFrom(src => src.Flight.FlightId))
+               .ReverseMap();
             #endregion
         }
 

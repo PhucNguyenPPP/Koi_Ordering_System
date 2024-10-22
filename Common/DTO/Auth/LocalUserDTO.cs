@@ -28,5 +28,6 @@ namespace Common.DTO.Auth
         public bool Status { get; set; }
         public string RoleName { get; set; } = null!;
         public string? FarmId { get; set; }
+        public Guid? StorageProvinceId { get; set; }
     }
 }
