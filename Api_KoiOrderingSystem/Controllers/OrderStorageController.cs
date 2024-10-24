@@ -6,7 +6,7 @@ using Service.Interfaces;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
-    [Route("odata/[controller]")]
+    [Route("odata")]
     [ApiController]
     public class OrderStorageController : ODataController
     {
