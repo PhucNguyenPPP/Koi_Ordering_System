@@ -8,6 +8,6 @@ namespace Common.Constant
 {
     public class FileNameFirebaseStorage
     {
-        public const string UserImage = "user_image";
+        public const string UserImage = "user_image1";
     }
 }
