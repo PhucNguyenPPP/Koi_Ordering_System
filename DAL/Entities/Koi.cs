@@ -17,6 +17,8 @@ public partial class Koi
 
     public string Description { get; set; } = null!;
 
+    public double Weight { get; set; }
+
     public DateTime Dob { get; set; }
 
     public string Gender { get; set; } = null!;
