@@ -14,15 +14,15 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 namespace Api_KoiOrderingSystem.Controllers
 {
     [Route("odata")]
-[ApiController]
-public class FlightController : ODataController
+    [ApiController]
+    public class FlightController : ODataController
     {
-    private readonly IFlightService _flightService;
+        private readonly IFlightService _flightService;
 
-    public FlightController(IFlightService flightService)
-    {
-        _flightService = flightService;
-    }
+        public FlightController(IFlightService flightService)
+        {
+            _flightService = flightService;
+        }
 
         [HttpGet("flights")]
         [EnableQuery]
@@ -38,7 +38,7 @@ public class FlightController : ODataController
                 return BadRequest(responseDTO);
 
             }
-            return Ok(responseDTO);
+            return Ok(responseDTO.Result);
         }
         [HttpPost("new-flight")]
         public async Task<IActionResult> AddFlight([FromBody] NewFlightDTO model)
@@ -56,7 +56,7 @@ public class FlightController : ODataController
 
             var signUpResult = await _flightService.AddFlight(model);
             if (signUpResult)
-            { 
+            {
                 return Created("Success", new ResponseDTO("Add flight sucessfully", 201, true, null));
             }
             else
