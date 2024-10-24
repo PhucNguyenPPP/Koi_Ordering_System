@@ -119,13 +119,13 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseCors("AllowAnyOriginPolicy");
+
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseCors("AllowAnyOriginPolicy");
 
 app.MapControllers();
 
