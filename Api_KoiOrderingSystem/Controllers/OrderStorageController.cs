@@ -1,13 +1,14 @@
 ﻿using Common.DTO.OrderStorage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.Interfaces;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
     [Route("odata/[controller]")]
     [ApiController]
-    public class OrderStorageController : ControllerBase
+    public class OrderStorageController : ODataController
     {
         private readonly IOrderStorageService _orderStorageService;
         public OrderStorageController(IOrderStorageService orderStorageService)

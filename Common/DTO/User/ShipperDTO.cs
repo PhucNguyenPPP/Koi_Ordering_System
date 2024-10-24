@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+
 public class ShipperDto
 {
+    [Key]
     public Guid UserId { get; set; }
     public string FullName { get; set; }
     public string AvatarLink { get; set; }

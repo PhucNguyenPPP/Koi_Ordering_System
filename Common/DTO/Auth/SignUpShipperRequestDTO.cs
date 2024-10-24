@@ -54,5 +54,8 @@ namespace Common.DTO.Auth
 
         [Required(ErrorMessage = "Please input gender")]
         public string Gender { get; set; } = null!;
+
+        [Required(ErrorMessage = "Please input province")]
+        public Guid StorageProvinceId { get; set; }
     }
 }
