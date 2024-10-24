@@ -5,6 +5,7 @@ using Common.DTO.Order;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.Interfaces;
 using Service.Services;
 
@@ -12,7 +13,7 @@ namespace Api_KoiOrderingSystem.Controllers
 {
     [Route("odata")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderController : ODataController
     {
         private readonly IOrderService _orderService;
         public OrderController(IOrderService order)

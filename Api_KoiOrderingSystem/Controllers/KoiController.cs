@@ -5,12 +5,13 @@ using Service.Interfaces;
 using Common.DTO.KoiFish;
 using Microsoft.AspNetCore.OData.Query;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
     [Route("odata")]
     [ApiController]
-    public class KoiController : ControllerBase
+    public class KoiController : ODataController
     {
         private readonly IKoiService _koiService;
         public KoiController(IKoiService koiService)

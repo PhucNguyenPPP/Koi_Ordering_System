@@ -1,14 +1,16 @@
 ﻿using Common.DTO.General;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.Interfaces;
 using Service.Services;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("odata")]
 	[ApiController]
-	public class UserController : ControllerBase
+	public class UserController : ODataController
 	{
 		private readonly IUserService _userService;
 		public UserController(IUserService userService)
@@ -17,6 +19,7 @@ namespace Api_KoiOrderingSystem.Controllers
 		}
 		
 		[HttpGet("shippers")]
+        [EnableQuery]
         public async Task<IActionResult> GetAllShippersInStorageProvince([FromQuery] Guid storageProvinceId)
         {
             if (storageProvinceId == Guid.Empty)
