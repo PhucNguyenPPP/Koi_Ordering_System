@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
-    [Route("odata/[controller]")]
+    [Route("odata")]
 [ApiController]
 public class FlightController : ODataController
     {
