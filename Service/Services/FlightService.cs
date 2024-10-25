@@ -63,8 +63,14 @@ namespace Service.Services
             {
                 return new ResponseDTO("2 airport must be in different country", 400, false);
             }
+            var checkNameExist = await _unitOfWork.Flight.GetByCondition(f => f.FlightCode.Equals(model.FlightCode));
+            if(checkNameExist!=null)
+            {
+                return new ResponseDTO("Flight code is duplicated", 400, false);
+            }    
             return new ResponseDTO("Validate sucessfully", 200, true);
         }
+
 
         public async Task<ResponseDTO> CheckValidationUpdateFlight(UpdateFlightDTO model)
         {
@@ -73,9 +79,34 @@ namespace Service.Services
 
                 return new ResponseDTO("Flight does not exist", 400, false);
 
-            var validateFlight = _mapper.Map<NewFlightDTO>(model);
-            var validate = await CheckValidationCreateFlight(validateFlight);
-            return validate;
+            if (model.DepartureDate < DateTime.Now || model.ArrivalDate < DateTime.Now)
+            {
+                return new ResponseDTO("The flight must be in the future", 400, false);
+            }
+            if (model.DepartureDate > model.ArrivalDate)
+            {
+                return new ResponseDTO("The DepartureDate must be sooner than ArrivalDate", 400, false);
+            }
+            var departureAirport = await _unitOfWork.Airport.GetByCondition(a => a.AirportId.Equals(model.DepartureAirportId));
+            var arrivalAirport = await _unitOfWork.Airport.GetByCondition(a => a.AirportId.Equals(model.ArrivalAirportId));
+            if (departureAirport == null)
+            {
+                return new ResponseDTO("The Departure Airport does not exist", 400, false);
+            }
+            if (arrivalAirport == null)
+            {
+                return new ResponseDTO("The Arrival Airport does not exist", 400, false);
+            }
+            if (arrivalAirport.Country.Equals(departureAirport.Country))
+            {
+                return new ResponseDTO("2 airport must be in different country", 400, false);
+            }
+            var checkNameExist = await _unitOfWork.Flight.GetByCondition(f => f.FlightCode.Equals(model.FlightCode) && !f.FlightId.Equals(model.FlightId));
+            if (checkNameExist != null)
+            {
+                return new ResponseDTO("Flight code is duplicated", 400, false);
+            }
+            return new ResponseDTO("Validate sucessfully", 200, true);
         }
 
         private async Task<bool> CheckFlightExist(Guid flightId)
