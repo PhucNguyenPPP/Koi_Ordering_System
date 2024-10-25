@@ -24,83 +24,79 @@ namespace Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseDTO> AssignShipper(AssignShipperDTO assignShipperDTO)
+        public async Task<ResponseDTO> AssignShipperJapan(AssignShipperDTO assignShipperDTO)
         {
             var update = false;
-            var orderStorage = await CheckOrderStorageExist(assignShipperDTO.OrderStorageId);
-            if (orderStorage.ShipperId != Guid.Empty)
-            {
-                update = true;
-            }
+            var orderStorage = await CheckOrderStorageExist(assignShipperDTO.OrderId);
             if (orderStorage == null)
             {
                 return new ResponseDTO("OrderStorage does not exist", 400, false);
             }
-            if(!orderStorage.Status)
+            var orderStorageJapan = GetOrderStorageJP(orderStorage);
+            if (orderStorageJapan == null)
             {
-                return new ResponseDTO("Status of orderStorage is false", 400, false);
-            }    
-            var checkOrderStatus = await CheckOrderStatusToAssignAsync(orderStorage.OrderId);
+                return new ResponseDTO("OrderStorage is not in Japan", 400, false);
+            }          
+            var checkOrderStatus = await CheckOrderStatusToAssignJP(assignShipperDTO.OrderId);
             if (!checkOrderStatus)
             {
-                return new ResponseDTO("Cannot Assign this order", 400, false);
+                return new ResponseDTO("Cannot Assign order with this status", 400, false);
             }
-            var checkShipperProvince = await CheckShipperProvince(assignShipperDTO.ShipperId, orderStorage.StorageProvinceId, orderStorage.OrderId);
+            var storageProvinceId = orderStorageJapan.Select(o => o.StorageProvinceId).FirstOrDefault();
+            var checkShipperProvince = await CheckShipperProvince(assignShipperDTO.ShipperId, storageProvinceId);
             if (!checkShipperProvince.IsSuccess)
             {
                 return checkShipperProvince;
             }
-            orderStorage.ShipperId = assignShipperDTO.ShipperId;
-            _unitOfWork.OrderStorage.Update(orderStorage);
+            foreach ( var item in orderStorageJapan)
+            {
+                item.ShipperId = assignShipperDTO.ShipperId;
+            }
+            _unitOfWork.OrderStorage.UpdateRange(orderStorageJapan);
             var saveChanges = await _unitOfWork.SaveChangeAsync();
             if (saveChanges)
             {
-                var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == orderStorage.OrderId);
-                order.Status = OrderStatusConstant.ToShip;
-                _unitOfWork.Order.Update(order);
-                if (!update)
-                {
-                    return new ResponseDTO("Assign shipper sucessfully", 200, true);
-                }
-                return new ResponseDTO("Update shipper for order sucessfully", 200, true);
+                 return new ResponseDTO("Assign shipper sucessfully", 200, true);
             }
             return new ResponseDTO("Assign shipper failed", 500, true);
         }
 
-        private async Task<ResponseDTO> CheckShipperProvince(Guid shipperId, Guid storageProvinceId, Guid orderId)
+        private  List<OrderStorage> GetOrderStorageJP(List<OrderStorage> orderStorage)
+        {
+            var storageProvinceJP =  _unitOfWork.StorageProvince.GetAllByCondition(sp => sp.Country.Equals(StorageCountryEnum.Japan.ToString())).ToList();
+            var orderStorageJP = orderStorage.Where(os => storageProvinceJP.Any(sp => sp.StorageProvinceId.Equals(os.StorageProvinceId))).ToList();
+            return orderStorageJP;
+        }
+
+        private async Task<ResponseDTO> CheckShipperProvince(Guid shipperId, Guid storageProvinceId)
         {
             var shipper = await _unitOfWork.User.GetByCondition(u => u.UserId == shipperId);
+            if (shipper == null)
+            {
+                return new ResponseDTO("Shipper does not exist", 400, false);
+            }
             if (!storageProvinceId.Equals(shipper.StorageProvinceId))
             {
                 return new ResponseDTO("Storage Manager cannot assign this shipper", 400, false);
             }
-            var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == orderId);
-            var storageProvince = await _unitOfWork.StorageProvince.GetByCondition(s => s.StorageProvinceId.Equals(storageProvinceId));
-            if (order.Status.Equals(OrderStatusConstant.ArrivalVietNamAirport) || order.Status.Equals(OrderStatusConstant.ArrivalVietnamStorage))
-            {
-                if (storageProvince.Country.Equals(StorageCountryEnum.Japan))
-                {
-                    return new ResponseDTO("Storage in JP cannot assign the order which had arrived VN", 400, false);
-                }
-            }
             return new ResponseDTO("Check Shipper and Province successfully", 200, true);
         }
 
-        private async Task<bool> CheckOrderStatusToAssignAsync(Guid orderId)
+        private async Task<bool> CheckOrderStatusToAssignJP(Guid orderId)
         {
             var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId.Equals(orderId));
-            if (order.Status.Equals(OrderStatusConstant.Processing) || order.Status.Equals(OrderStatusConstant.ArrivalVietNamAirport) || order.Status.Equals(OrderStatusConstant.ArrivalVietnamStorage) || order.Status.Equals(OrderStatusConstant.ArrivalJapanStorage))
+            if (order.Status.Equals(OrderStatusConstant.ToShip))
             {
                 return true;
             }
             return false;
         }
-        private Task<OrderStorage>? CheckOrderStorageExist(Guid orderStorageId)
+        private async Task<List<OrderStorage>>? CheckOrderStorageExist(Guid orderId)
         {
-            var orderStorage = _unitOfWork.OrderStorage.GetByCondition(o => o.OrderStorageId == orderStorageId && o.Status == true);
+            var orderStorage =  _unitOfWork.OrderStorage.GetAllByCondition(o => o.OrderId == orderId).ToList();
             return orderStorage;
         }
-
+/*
         public async Task<ResponseDTO> ConfirmDelivery(ConfirmDeliveryDTO confirmDeliveryDTO)
         {
             var orderStorage = await CheckOrderStorageExist(confirmDeliveryDTO.OrderStorageId);
@@ -165,6 +161,7 @@ namespace Service.Services
             }
             return new ResponseDTO("Confirm completed mission fail", 500, false);
         }
+        */
         public async Task<IEnumerable<OrderShipperDTO>> GetOrdersForShipper(Guid shipperId)
         {
             return await _unitOfWork.OrderStorage.GetAssignedOrdersByShipper(shipperId);

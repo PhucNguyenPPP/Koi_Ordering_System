@@ -8,7 +8,7 @@ namespace Common.DTO.OrderStorage
 {
     public class AssignShipperDTO
     {
-        public required Guid OrderStorageId { get; set; }
+        public required Guid OrderId { get; set; }
         public required Guid ShipperId { get; set; }
     }
 }
