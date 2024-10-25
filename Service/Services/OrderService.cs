@@ -131,20 +131,78 @@ namespace Service.Services
                 }
                 _unitOfWork.Cart.Delete(cart);
             }
-            OrderStorage orderStorage1 = new OrderStorage();
-            orderStorage1.OrderId = orderId;
-            orderStorage1.Status = true;
-            if (jpnStorage != null) orderStorage1.StorageProvinceId = (Guid)jpnStorage;
-            orderStorage1.OrderStorageId = Guid.NewGuid();
+            //OrderStorage orderStorage1 = new OrderStorage();
+            //orderStorage1.OrderId = orderId;
+            //orderStorage1.Status = true;
+            //if (jpnStorage != null) orderStorage1.StorageProvinceId = (Guid)jpnStorage;
+            //orderStorage1.OrderStorageId = Guid.NewGuid();
+            //await _unitOfWork.OrderStorage.AddAsync(orderStorage1);
+            //await _unitOfWork.SaveChangeAsync();
+
+            //OrderStorage orderStorage2 = new OrderStorage();
+            //orderStorage2.OrderId = orderId;
+            //orderStorage2.Status = false;
+            //if (jpnStorage != null) orderStorage2.StorageProvinceId = (Guid)jpnStorage;
+            //orderStorage2.OrderStorageId = Guid.NewGuid();
+            //await _unitOfWork.OrderStorage.AddAsync(orderStorage2);
+            //await _unitOfWork.SaveChangeAsync();
+
+            //OrderStorage orderStorage3 = new OrderStorage();
+            //orderStorage2.OrderId = orderId;
+            //orderStorage2.Status = false;
+            //orderStorage2.StorageProvinceId = createOrderDTO.StorageVietNamId;
+            //orderStorage2.OrderStorageId = Guid.NewGuid();
+            //await _unitOfWork.OrderStorage.AddAsync(orderStorage3);
+            //await _unitOfWork.SaveChangeAsync();
+
+            //OrderStorage orderStorage4 = new OrderStorage();
+            //orderStorage2.OrderId = orderId;
+            //orderStorage2.Status = false;
+            //orderStorage2.StorageProvinceId = createOrderDTO.StorageVietNamId;
+            //orderStorage2.OrderStorageId = Guid.NewGuid();
+            //await _unitOfWork.OrderStorage.AddAsync(orderStorage4);
+
+            OrderStorage orderStorage1 = new OrderStorage
+            {
+                OrderId = orderId,
+                Status = true,
+                StorageProvinceId = jpnStorage != null ? (Guid)jpnStorage : Guid.Empty, // Ensure a valid ID
+                OrderStorageId = Guid.NewGuid()
+            };
             await _unitOfWork.OrderStorage.AddAsync(orderStorage1);
             await _unitOfWork.SaveChangeAsync();
 
-            OrderStorage orderStorage2 = new OrderStorage();
-            orderStorage2.OrderId = orderId;
-            orderStorage2.Status = true;
-            orderStorage2.StorageProvinceId = createOrderDTO.StorageVietNamId;
-            orderStorage2.OrderStorageId = Guid.NewGuid();
+            // Create and add the second OrderStorage
+            OrderStorage orderStorage2 = new OrderStorage
+            {
+                OrderId = orderId,
+                Status = false,
+                StorageProvinceId = jpnStorage != null ? (Guid)jpnStorage : Guid.Empty,
+                OrderStorageId = Guid.NewGuid()
+            };
             await _unitOfWork.OrderStorage.AddAsync(orderStorage2);
+            await _unitOfWork.SaveChangeAsync();
+
+            // Create and add the third OrderStorage
+            OrderStorage orderStorage3 = new OrderStorage
+            {
+                OrderId = orderId,
+                Status = false,
+                StorageProvinceId = createOrderDTO.StorageVietNamId,
+                OrderStorageId = Guid.NewGuid()
+            };
+            await _unitOfWork.OrderStorage.AddAsync(orderStorage3);
+            await _unitOfWork.SaveChangeAsync();
+
+            // Create and add the fourth OrderStorage
+            OrderStorage orderStorage4 = new OrderStorage
+            {
+                OrderId = orderId,
+                Status = false,
+                StorageProvinceId = createOrderDTO.StorageVietNamId,
+                OrderStorageId = Guid.NewGuid()
+            };
+            await _unitOfWork.OrderStorage.AddAsync(orderStorage4);
 
             var result = await _unitOfWork.SaveChangeAsync();
             if (result)
