@@ -1,7 +1,8 @@
 using Common.DTO.General;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 
-[Route("api/[controller]")]
+[Route("odata/[controller]")]
 [ApiController]
 public class PolicyController : ControllerBase
 {
@@ -13,6 +14,7 @@ public class PolicyController : ControllerBase
     }
 
     [HttpGet]
+    [EnableQuery]
     public async Task<IActionResult> GetAllPolicies()
     {
         var policies = await _policyService.GetAllPoliciesAsync();
@@ -20,7 +22,7 @@ public class PolicyController : ControllerBase
         {
             return NotFound(new ResponseDTO("No policies found", 404, false, null));
         }
-        return Ok(new ResponseDTO("Policies retrieved successfully", 200, true, policies));
+        return Ok(policies);
     }
 
     [HttpGet("{policyId}")]
