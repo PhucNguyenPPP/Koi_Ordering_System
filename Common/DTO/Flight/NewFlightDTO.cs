@@ -9,6 +9,8 @@ namespace Common.DTO.Flight
 {
     public class NewFlightDTO
     {
+        [Required(ErrorMessage = "Please input FlightCode")]
+        public string FlightCode { get; set; } = null!;
         [Required(ErrorMessage = "Please input Airline Name")]
         public string Airline { get; set; } = null!;
         [Required(ErrorMessage = "Please input DepartureDate")]
