@@ -89,6 +89,7 @@ builder.Services.AddControllers()
         odataBuilder.EntitySet<GetAllFarmHistoryOrderDTO>("all-storage-history-order");
         odataBuilder.EntitySet<GetAllFlightDTO>("flights");
         odataBuilder.EntitySet<ShipperDto>("shippers");
+        odataBuilder.EntitySet<PolicyDTO>("Policy");
         options.AddRouteComponents("odata", odataBuilder.GetEdmModel());
         options.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100);
     });
