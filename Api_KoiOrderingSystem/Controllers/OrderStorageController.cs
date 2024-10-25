@@ -15,10 +15,10 @@ namespace Api_KoiOrderingSystem.Controllers
         {
             _orderStorageService = orderStorageService;
         }
-        [HttpPut]
-        public async Task<IActionResult> AssignShipper([FromBody] AssignShipperDTO assignShipperDTO)
+        [HttpPut("Japanese-shipper")]
+        public async Task<IActionResult> AssignShipperJapan([FromBody] AssignShipperDTO assignShipperDTO)
         {
-            var result = await _orderStorageService.AssignShipper(assignShipperDTO);
+            var result = await _orderStorageService.AssignShipperJapan(assignShipperDTO);
 
             if (!result.IsSuccess)
             {
@@ -27,6 +27,7 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(result);
         }
+        /*
         [HttpPut("delivery")]
         public async Task<IActionResult> ConfirmDelivery([FromBody] ConfirmDeliveryDTO confirmDeliveryDTO)
         {
@@ -38,6 +39,7 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(result);
         }
+        */
 
         [HttpGet]
         [Route("shipper/{shipperId}")]

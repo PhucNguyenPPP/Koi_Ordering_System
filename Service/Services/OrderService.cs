@@ -202,6 +202,13 @@ namespace Service.Services
                 StorageProvinceId = createOrderDTO.StorageVietNamId,
                 OrderStorageId = Guid.NewGuid()
             };
+            OrderStorage orderStorage5 = new OrderStorage
+            {
+                OrderId = orderId,
+                Status = false,
+                StorageProvinceId = createOrderDTO.StorageVietNamId,
+                OrderStorageId = Guid.NewGuid()
+            };
             await _unitOfWork.OrderStorage.AddAsync(orderStorage4);
 
             var result = await _unitOfWork.SaveChangeAsync();
