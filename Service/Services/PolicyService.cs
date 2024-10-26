@@ -53,10 +53,10 @@ public class PolicyService : IPolicyService
         return await _unitOfWork.SaveChangeAsync();
     }
 
-    public async Task<bool> UpdatePolicyAsync(Guid policyId, PolicyDTO policyDTO)
+    public async Task<bool> UpdatePolicyAsync(PolicyDTO policyDTO)
     {
         // Retrieve the existing policy
-        var policy = await _unitOfWork.Policy.GetByCondition(p => p.PolicyId == policyId);
+        var policy = await _unitOfWork.Policy.GetByCondition(p => p.PolicyId == policyDTO.PolicyId);
         if (policy == null)
         {
             throw new Exception();
