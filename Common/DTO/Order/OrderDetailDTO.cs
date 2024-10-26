@@ -36,6 +36,10 @@ namespace Common.DTO.Order
 
         public int? Length { get; set; }
 
+        public string JapaneseShipper { get; set; }
+
+        public string VietnameseShipper { get; set; }
+
         public string Status { get; set; } = null!;
 
         public string FarmAddress { get; set; }

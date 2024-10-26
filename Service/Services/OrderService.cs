@@ -321,6 +321,8 @@ namespace Service.Services
             .GetAllByCondition(c => c.OrderId == orderId)
             .Include(c => c.Customer)
             .Include(c => c.OrderStorages)
+            .ThenInclude(c => c.Shipper)
+            .Include(c => c.OrderStorages)
             .ThenInclude(c => c.StorageProvince)
             .Include(c => c.Flight)
             .Include(c => c.Kois)
@@ -336,6 +338,17 @@ namespace Service.Services
             var provinceName = order.OrderStorages
                 .FirstOrDefault(c => c.StorageProvince.Country != StorageCountryEnum.Japan.ToString())
                 .StorageProvince.ProvinceName;
+
+            var japaneseShipperName = order.OrderStorages
+                .FirstOrDefault(c => c.StorageProvince.Country == StorageCountryEnum.Japan.ToString())?
+                .Shipper?.FullName;
+
+            var vietnameseShipperName = order.OrderStorages
+               .FirstOrDefault(c => c.StorageProvince.Country == StorageCountryEnum.Vietnam.ToString())?
+               .Shipper?.FullName;
+
+            mappedOrder.JapaneseShipper = japaneseShipperName;
+            mappedOrder.VietnameseShipper = vietnameseShipperName;
             mappedOrder.CustomerProvince = provinceName;
             return new ResponseDTO("Get order detail successfully", 200, true, mappedOrder);
         }
