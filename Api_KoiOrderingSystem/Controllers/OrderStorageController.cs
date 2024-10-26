@@ -1,6 +1,8 @@
-﻿using Common.DTO.OrderStorage;
+﻿using System.ComponentModel.DataAnnotations;
+using Common.DTO.OrderStorage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.Interfaces;
 
@@ -65,9 +67,9 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(deliveries);
         }
-        [HttpGet]
-        [Route("shipper/{shipperId}")]
-        public async Task<IActionResult> GetOrdersByShipper(Guid shipperId)
+        [HttpGet("shipper")]
+        [EnableQuery]
+        public async Task<IActionResult> GetOrdersByShipper([Required]Guid shipperId)
         {
             var orders = await _orderStorageService.GetOrdersForShipper(shipperId);
 
