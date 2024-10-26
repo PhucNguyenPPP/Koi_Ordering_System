@@ -254,6 +254,12 @@ namespace Service.Services
 
         public async Task<ResponseDTO> GetDeliveryOfOrder(Guid orderId)
         {
+            var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId.Equals(orderId));
+            if(order == null)
+            {
+                return new ResponseDTO("Order does not exist", 400, false);
+            }
+            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(order.FlightId));
             List<OrderStorage> orderstorage = _unitOfWork.OrderStorage.GetAllByCondition(os => os.OrderId.Equals(orderId) && !os.Status && os.ArrivalTime != null).OrderBy(os => os.ArrivalTime).ToList();
             if (orderstorage == null)
             {
@@ -275,9 +281,10 @@ namespace Service.Services
             }
             if (temp.Count > 0)
             {
+                var airport = await _unitOfWork.Airport.GetByCondition(a => a.AirportId.Equals(flight.DepartureAirportId));
                 DeliveryOfOrderDTO deliveryOfOrderDTO2 = new()
                 {
-                    Status = OrderStatusConstant.ArrivalJapanAirport,
+                    Status = "Arrive to " + airport.AirportName,
                     ArrivalTime = temp.First().ArrivalTime,
                 };
                 temp.Remove(temp.First());
@@ -285,9 +292,10 @@ namespace Service.Services
             }
             if (temp.Count > 0)
             {
+                var airport = await _unitOfWork.Airport.GetByCondition(a => a.AirportId.Equals(flight.ArrivalAirportId));
                 DeliveryOfOrderDTO deliveryOfOrderDTO3 = new()
                 {
-                    Status = OrderStatusConstant.ArrivalVietNamAirport,
+                    Status = "Arrive to " + airport.AirportName,
                     ArrivalTime = temp.First().ArrivalTime,
                 };
                 temp.Remove(temp.First());
