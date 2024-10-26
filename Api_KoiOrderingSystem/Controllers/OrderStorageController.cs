@@ -51,8 +51,20 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(result);
         }
-        
-
+        [HttpGet("delivery-of-order")]
+        public async Task<IActionResult> GetDeliveryOfOrder(Guid orderId)
+        {
+            var deliveries = await _orderStorageService.GetDeliveryOfOrder(orderId);
+            if (!deliveries.IsSuccess)
+            {
+                if (deliveries.StatusCode == 404)
+                {
+                    return NotFound(deliveries);
+                }
+                return BadRequest(deliveries);
+            }
+            return Ok(deliveries);
+        }
         [HttpGet]
         [Route("shipper/{shipperId}")]
         public async Task<IActionResult> GetOrdersByShipper(Guid shipperId)
