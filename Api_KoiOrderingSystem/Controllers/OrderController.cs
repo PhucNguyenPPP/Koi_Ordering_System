@@ -125,5 +125,20 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(responseDTO);
         }
+        [HttpPut("flight-of-order")]
+        public async Task<IActionResult> AssignFlightToOrder([FromBody] AssignFlightToOrderDTO assignFlightToOrderDTO)
+        {
+            ResponseDTO responseDTO = await _orderService.AssignFlightToOrder(assignFlightToOrderDTO);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO);
+        }
     }
 }
