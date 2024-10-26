@@ -64,10 +64,10 @@ namespace Service.Services
                 return new ResponseDTO("2 airport must be in different country", 400, false);
             }
             var checkNameExist = await _unitOfWork.Flight.GetByCondition(f => f.FlightCode.Equals(model.FlightCode));
-            if(checkNameExist!=null)
+            if (checkNameExist != null)
             {
                 return new ResponseDTO("Flight code is duplicated", 400, false);
-            }    
+            }
             return new ResponseDTO("Validate sucessfully", 200, true);
         }
 
@@ -76,13 +76,10 @@ namespace Service.Services
         {
             var checkExist = await CheckFlightExist(model.FlightId);
             if (checkExist == false)
-
-                return new ResponseDTO("Flight does not exist", 400, false);
-            var checkAssign =  _unitOfWork.Order.GetAllByCondition(o => o.FlightId.Equals(model.FlightId));
-            if(checkAssign.Any())
             {
-                return new ResponseDTO("Cannot update the flight which is assigned", 400, false);
-            }    
+                return new ResponseDTO("Flight does not exist", 400, false);
+            }
+            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(model.FlightId));
             if (model.DepartureDate < DateTime.Now || model.ArrivalDate < DateTime.Now)
             {
                 return new ResponseDTO("The flight must be in the future", 400, false);
@@ -90,6 +87,14 @@ namespace Service.Services
             if (model.DepartureDate > model.ArrivalDate)
             {
                 return new ResponseDTO("The DepartureDate must be sooner than ArrivalDate", 400, false);
+            }
+            if (model.DepartureDate < flight.DepartureDate || (model.ArrivalDate < flight.ArrivalDate))
+            {
+                var checkAssign = _unitOfWork.Order.GetAllByCondition(o => o.FlightId.Equals(model.FlightId));
+                if (checkAssign.Any())
+                {
+                    return new ResponseDTO("Cannot update the flight to be sooner because it was assigned", 400, false);
+                }
             }
             var departureAirport = await _unitOfWork.Airport.GetByCondition(a => a.AirportId.Equals(model.DepartureAirportId));
             var arrivalAirport = await _unitOfWork.Airport.GetByCondition(a => a.AirportId.Equals(model.ArrivalAirportId));
@@ -115,11 +120,11 @@ namespace Service.Services
 
         private async Task<bool> CheckFlightExist(Guid flightId)
         {
-            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(flightId)&&f.Status=="true");
+            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(flightId) && f.Status == "true");
             if (flight != null)
             {
                 return true;
-            }    
+            }
             return false;
         }
 
