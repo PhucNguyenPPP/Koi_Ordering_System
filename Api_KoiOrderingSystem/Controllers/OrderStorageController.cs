@@ -27,6 +27,18 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(result);
         }
+        [HttpPut("Vietnamese-shipper")]
+        public async Task<IActionResult> AssignShipperVietnam([FromBody] AssignShipperDTO assignShipperDTO)
+        {
+            var result = await _orderStorageService.AssignShipperVietnam(assignShipperDTO);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
         /*
         [HttpPut("delivery")]
         public async Task<IActionResult> ConfirmDelivery([FromBody] ConfirmDeliveryDTO confirmDeliveryDTO)
