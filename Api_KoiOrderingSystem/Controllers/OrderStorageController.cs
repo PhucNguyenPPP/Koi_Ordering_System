@@ -39,7 +39,7 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(result);
         }
-        /*
+        
         [HttpPut("delivery")]
         public async Task<IActionResult> ConfirmDelivery([FromBody] ConfirmDeliveryDTO confirmDeliveryDTO)
         {
@@ -51,7 +51,7 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(result);
         }
-        */
+        
 
         [HttpGet]
         [Route("shipper/{shipperId}")]

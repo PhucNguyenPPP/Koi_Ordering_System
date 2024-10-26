@@ -13,7 +13,7 @@ namespace Service.Interfaces
         Task<ResponseDTO> AssignShipperJapan(AssignShipperDTO assignShipperDTO);
         Task<ResponseDTO> AssignShipperVietnam(AssignShipperDTO assignShipperDTO);
 
-        // Task<ResponseDTO> ConfirmDelivery(ConfirmDeliveryDTO confirmDeliveryDTO);
+        Task<ResponseDTO> ConfirmDelivery(ConfirmDeliveryDTO confirmDeliveryDTO);
         public Task<IEnumerable<OrderShipperDTO>> GetOrdersForShipper(Guid shipperId);
     }
 }

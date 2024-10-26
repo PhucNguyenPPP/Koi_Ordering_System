@@ -18,10 +18,12 @@ namespace Service.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public OrderStorageService(IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly IUserService _userService;
+        public OrderStorageService(IMapper mapper, IUnitOfWork unitOfWork, IUserService userService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _userService = userService;
         }
 
         public async Task<ResponseDTO> AssignShipperJapan(AssignShipperDTO assignShipperDTO)
@@ -112,63 +114,91 @@ namespace Service.Services
             var orderStorage =  _unitOfWork.OrderStorage.GetAllByCondition(o => o.OrderId == orderId).ToList();
             return orderStorage;
         }
-/*
+
         public async Task<ResponseDTO> ConfirmDelivery(ConfirmDeliveryDTO confirmDeliveryDTO)
         {
-            var orderStorage = await CheckOrderStorageExist(confirmDeliveryDTO.OrderStorageId);
+            var orderStorage = await CheckOrderStorageExist(confirmDeliveryDTO.OrderId);
             if (orderStorage == null)
             {
                 return new ResponseDTO("OrderStorage does not exist", 400, false);
             }
-            if(!confirmDeliveryDTO.ShipperId.Equals(orderStorage.ShipperId))
+            var orderStorageOfShipper = orderStorage.Where(os => os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && os.Status).FirstOrDefault();
+            if(orderStorageOfShipper == null)
             {
-                return new ResponseDTO("You are not the shipper of this order storage", 400, false);
-            } 
-            var shipper = await _unitOfWork.User.GetByCondition(u => u.UserId == confirmDeliveryDTO.ShipperId);
-            var shipperProvince = await _unitOfWork.StorageProvince.GetByCondition(s => s.StorageProvinceId.Equals(shipper.StorageProvinceId));
-            var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == orderStorage.OrderId);
-            if (order.Status.Equals(OrderStatusConstant.ArrivalJapanAirport) || order.Status.Equals(OrderStatusConstant.ToShip) || order.Status.Equals(OrderStatusConstant.ArrivalJapanStorage))
-            {   
-                if (shipperProvince.Country.Equals(StorageCountryEnum.Vietnam))
-                {
-                    return new ResponseDTO("Storage in VN cannot confirm the order which is in JP", 400, false);
-                }
-            }
+                return new ResponseDTO("Shipper cannot confirm this orderStorage", 400, false);
+            }                  
+            var shipperRole = await _userService.GetShipperRole();
+            var shipper = await _unitOfWork.User.GetByCondition(u => u.UserId == confirmDeliveryDTO.ShipperId||u.RoleId == shipperRole.RoleId);
+            if(shipper == null)
+            {
+                return new ResponseDTO("Shipper does not exist", 400, false);
+            }              
+            var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == confirmDeliveryDTO.OrderId);
             if(order.Status.Equals(OrderStatusConstant.ToShip))
             {
                 order.Status = OrderStatusConstant.ArrivalJapanStorage;
+                var orderStorageOfShipperFuture = orderStorage.Where(os => os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && !os.Status && os.ArrivalTime==null).FirstOrDefault();
+                if (orderStorageOfShipperFuture == null)
+                {
+                    return new ResponseDTO("Next OrderStorage does not exist", 400, false);
+                }
+                orderStorageOfShipper.Status = false;
+                orderStorageOfShipperFuture.Status = true;
+                orderStorageOfShipper.ArrivalTime = DateTime.Now;
+                _unitOfWork.OrderStorage.Update(orderStorageOfShipperFuture);
                 _unitOfWork.Order.Update(order);
             } else
             if (order.Status.Equals(OrderStatusConstant.ArrivalJapanStorage))
             {
                 order.Status = OrderStatusConstant.ArrivalJapanAirport;
+                orderStorageOfShipper.ArrivalTime = DateTime.Now;
+                var orderStorageOfShipperFuture = orderStorage.Where(os => !os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && !os.Status && os.ArrivalTime == null).FirstOrDefault();             
+                if (orderStorageOfShipperFuture == null)
+                {
+                    return new ResponseDTO("Next OrderStorage does not exist", 400, false);
+                }
+                orderStorageOfShipper.Status = false;
+                orderStorageOfShipperFuture.Status = true;
+                _unitOfWork.OrderStorage.Update(orderStorageOfShipper);
                 _unitOfWork.Order.Update(order);
-                orderStorage.ArrivalTime = DateTime.Now;
-                orderStorage.Status = false;
-                _unitOfWork.OrderStorage.Update(orderStorage);
             }
             else
             if (order.Status.Equals(OrderStatusConstant.ArrivalJapanAirport))
             {
-                order.Status = OrderStatusConstant.ArrivalVietnamStorage;
+                order.Status = OrderStatusConstant.ArrivalVietNamAirport;
+                orderStorageOfShipper.ArrivalTime = DateTime.Now;
+                var orderStorageOfShipperFuture = orderStorage.Where(os => os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && !os.Status && os.ArrivalTime == null).FirstOrDefault();
+                if (orderStorageOfShipperFuture == null)
+                {
+                    return new ResponseDTO("Next OrderStorage does not exist", 400, false);
+                }
+                orderStorageOfShipper.Status = false;
+                orderStorageOfShipperFuture.Status = true;
+                _unitOfWork.OrderStorage.Update(orderStorageOfShipper);
                 _unitOfWork.Order.Update(order);
             }
             else
-            if (order.Status.Equals(OrderStatusConstant.ArrivalVietnamStorage))
+            if (order.Status.Equals(OrderStatusConstant.ArrivalVietNamAirport))
             {
-                order.Status = OrderStatusConstant.ToReceive;
+                order.Status = OrderStatusConstant.ArrivalVietnamStorage;
+                orderStorageOfShipper.ArrivalTime = DateTime.Now;
+                var orderStorageOfShipperFuture = orderStorage.Where(os => os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && !os.Status && os.ArrivalTime == null).FirstOrDefault();
+                if (orderStorageOfShipperFuture == null)
+                {
+                    return new ResponseDTO("Next OrderStorage does not exist", 400, false);
+                }
+                orderStorageOfShipper.Status = false;
+                orderStorageOfShipperFuture.Status = true;
+                _unitOfWork.OrderStorage.Update(orderStorageOfShipper);
                 _unitOfWork.Order.Update(order);
-                orderStorage.ArrivalTime = DateTime.Now;
-                orderStorage.Status = false;
-                _unitOfWork.OrderStorage.Update(orderStorage);
             }
-            else if (order.Status.Equals(OrderStatusConstant.ToReceive))
+            else if (order.Status.Equals(OrderStatusConstant.ArrivalVietnamStorage))
             {
-                order.Status = OrderStatusConstant.Completed;
+                order.Status = OrderStatusConstant.ToReceive;               
+                orderStorageOfShipper.ArrivalTime = DateTime.Now;
+                orderStorageOfShipper.Status = false;
+                _unitOfWork.OrderStorage.Update(orderStorageOfShipper);
                 _unitOfWork.Order.Update(order);
-                orderStorage.ArrivalTime = DateTime.Now;
-                orderStorage.Status = false;
-                _unitOfWork.OrderStorage.Update(orderStorage);
             }
             var saveChanges = await _unitOfWork.SaveChangeAsync();  
             if(saveChanges)
@@ -177,7 +207,6 @@ namespace Service.Services
             }
             return new ResponseDTO("Confirm completed mission fail", 500, false);
         }
-        */
         public async Task<IEnumerable<OrderShipperDTO>> GetOrdersForShipper(Guid shipperId)
         {
             return await _unitOfWork.OrderStorage.GetAssignedOrdersByShipper(shipperId);
