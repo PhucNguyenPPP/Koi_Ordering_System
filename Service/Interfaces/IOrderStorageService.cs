@@ -10,8 +10,11 @@ namespace Service.Interfaces
 {
     public interface IOrderStorageService
     {
-        Task<ResponseDTO> AssignShipper(AssignShipperDTO assignShipperDTO);
+        Task<ResponseDTO> AssignShipperJapan(AssignShipperDTO assignShipperDTO);
+        Task<ResponseDTO> AssignShipperVietnam(AssignShipperDTO assignShipperDTO);
+
         Task<ResponseDTO> ConfirmDelivery(ConfirmDeliveryDTO confirmDeliveryDTO);
+        Task<ResponseDTO> GetDeliveryOfOrder(Guid orderId);
         public Task<IEnumerable<OrderShipperDTO>> GetOrdersForShipper(Guid shipperId);
     }
 }

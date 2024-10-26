@@ -15,10 +15,10 @@ namespace Api_KoiOrderingSystem.Controllers
         {
             _orderStorageService = orderStorageService;
         }
-        [HttpPut]
-        public async Task<IActionResult> AssignShipper([FromBody] AssignShipperDTO assignShipperDTO)
+        [HttpPut("Japanese-shipper")]
+        public async Task<IActionResult> AssignShipperJapan([FromBody] AssignShipperDTO assignShipperDTO)
         {
-            var result = await _orderStorageService.AssignShipper(assignShipperDTO);
+            var result = await _orderStorageService.AssignShipperJapan(assignShipperDTO);
 
             if (!result.IsSuccess)
             {
@@ -27,6 +27,19 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(result);
         }
+        [HttpPut("Vietnamese-shipper")]
+        public async Task<IActionResult> AssignShipperVietnam([FromBody] AssignShipperDTO assignShipperDTO)
+        {
+            var result = await _orderStorageService.AssignShipperVietnam(assignShipperDTO);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+        
         [HttpPut("delivery")]
         public async Task<IActionResult> ConfirmDelivery([FromBody] ConfirmDeliveryDTO confirmDeliveryDTO)
         {
@@ -38,7 +51,20 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(result);
         }
-
+        [HttpGet("delivery-of-order")]
+        public async Task<IActionResult> GetDeliveryOfOrder(Guid orderId)
+        {
+            var deliveries = await _orderStorageService.GetDeliveryOfOrder(orderId);
+            if (!deliveries.IsSuccess)
+            {
+                if (deliveries.StatusCode == 404)
+                {
+                    return NotFound(deliveries);
+                }
+                return BadRequest(deliveries);
+            }
+            return Ok(deliveries);
+        }
         [HttpGet]
         [Route("shipper/{shipperId}")]
         public async Task<IActionResult> GetOrdersByShipper(Guid shipperId)

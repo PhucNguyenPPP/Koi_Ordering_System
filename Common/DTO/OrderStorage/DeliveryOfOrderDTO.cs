@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Common.DTO.OrderStorage
 {
-    public class ConfirmDeliveryDTO
+    public class DeliveryOfOrderDTO
     {
-        public required Guid OrderId { get; set; }
-        public required Guid ShipperId { get; set; }
+        public required string Status { get; set; }
+        public DateTime? ArrivalTime { get; set; }
     }
 }
