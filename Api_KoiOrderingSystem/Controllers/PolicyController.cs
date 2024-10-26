@@ -52,10 +52,10 @@ public class PolicyController : ControllerBase
         return BadRequest(new ResponseDTO("Failed to add policy", 400, false, null));
     }
 
-    [HttpPut("{policyId}")]
-    public async Task<IActionResult> UpdatePolicy(Guid policyId, [FromBody] PolicyDTO policyDTO)
+    [HttpPut]
+    public async Task<IActionResult> UpdatePolicy([FromBody] PolicyDTO policyDTO)
     {
-        var result = await _policyService.UpdatePolicyAsync(policyId, policyDTO);
+        var result = await _policyService.UpdatePolicyAsync(policyDTO);
         if (result)
         {
             return Ok(new ResponseDTO("Policy updated successfully", 200, true, null));
