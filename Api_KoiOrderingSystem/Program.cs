@@ -2,6 +2,7 @@ using Api_KoiOrderingSystem.MiddleWares;
 using Common.DTO.Flight;
 using Common.DTO.KoiFish;
 using Common.DTO.Order;
+using DAL.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.IdentityModel.Tokens;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IShippingFeeService, ShippingFeeService>();
 builder.Services.AddScoped<IOrderStorageService, OrderStorageService>();
 builder.Services.AddScoped<IFlightService, FlightService>();
+builder.Services.AddScoped<IAirportService , AirportService>();
 
 builder.Services.AddApplicationServices(builder.Configuration);
 
@@ -90,6 +92,7 @@ builder.Services.AddControllers()
         odataBuilder.EntitySet<GetAllFlightDTO>("flights");
         odataBuilder.EntitySet<ShipperDto>("shippers");
         odataBuilder.EntitySet<PolicyDTO>("Policy");
+        odataBuilder.EntitySet<Airport>("all-airports");
         options.AddRouteComponents("odata", odataBuilder.GetEdmModel());
         options.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100);
     });
