@@ -78,7 +78,11 @@ namespace Service.Services
             if (checkExist == false)
 
                 return new ResponseDTO("Flight does not exist", 400, false);
-
+            var checkAssign =  _unitOfWork.Order.GetAllByCondition(o => o.FlightId.Equals(model.FlightId));
+            if(checkAssign.Any())
+            {
+                return new ResponseDTO("Cannot update the flight which is assigned", 400, false);
+            }    
             if (model.DepartureDate < DateTime.Now || model.ArrivalDate < DateTime.Now)
             {
                 return new ResponseDTO("The flight must be in the future", 400, false);
@@ -111,7 +115,7 @@ namespace Service.Services
 
         private async Task<bool> CheckFlightExist(Guid flightId)
         {
-            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(flightId));
+            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(flightId)&&f.Status=="true");
             if (flight != null)
             {
                 return true;
