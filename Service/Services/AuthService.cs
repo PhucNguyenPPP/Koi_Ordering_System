@@ -384,7 +384,7 @@ namespace Service.Services
                 return new ResponseDTO("Token is invalid", 400, false);
             }
             var user = await _unitOfWork.User.GetAllByCondition(c => c.UserId.ToString() == userId
-            && c.Status == true).Include(c => c.Role).Include(c => c.KoiFarm).FirstOrDefaultAsync();
+            && c.Status == true).Include(c => c.Role).Include(c => c.KoiFarm).Include(c => c.StorageProvince).FirstOrDefaultAsync();
             if (user == null)
             {
                 return new ResponseDTO("User not found", 400, false);

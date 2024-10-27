@@ -18,9 +18,10 @@ namespace Api_KoiOrderingSystem.Profiles
         {
             #region
             CreateMap<SignUpCustomerRequestDTO, User>().ReverseMap();
-            CreateMap<User, LocalUserDTO>()
+            CreateMap<User, LocalUserDTO>()`
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
                 .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.KoiFarm.KoiFarmId.ToString()))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.StorageProvince.Country.ToString()))
                 .ReverseMap();
             CreateMap<Koi, KoiDTO>()
                 .ReverseMap();

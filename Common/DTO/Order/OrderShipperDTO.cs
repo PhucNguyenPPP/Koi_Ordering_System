@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+
 public class OrderShipperDTO
 {
+    [Key]
     public Guid OrderId { get; set; }
     public string OrderNumber { get; set; } = null!;
     public Guid FarmId { get; set; }
