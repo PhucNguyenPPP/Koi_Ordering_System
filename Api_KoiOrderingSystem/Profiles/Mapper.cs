@@ -21,6 +21,7 @@ namespace Api_KoiOrderingSystem.Profiles
             CreateMap<User, LocalUserDTO>()
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
                 .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.KoiFarm.KoiFarmId.ToString()))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.StorageProvince.Country.ToString()))
                 .ReverseMap();
             CreateMap<Koi, KoiDTO>()
                 .ReverseMap();
@@ -67,7 +68,7 @@ namespace Api_KoiOrderingSystem.Profiles
 
             CreateMap<UpdateOrderPackagingRequest, Order>()
                 .ForMember(dest => dest.OrderId, opt => opt.Ignore())
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => OrderStatusConstant.ToShip))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => OrderStatusConstant.Packaged))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Order, GetAllHistoryOrderDTO>()
@@ -95,7 +96,8 @@ namespace Api_KoiOrderingSystem.Profiles
                .ForMember(dest => dest.FarmAddress, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmAddress))
                .ForMember(dest => dest.FarmPhone, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.KoiFarmManager.Phone))
                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
-               .ForMember(dest => dest.FlightName, opt => opt.MapFrom(src => src.Flight.FlightId))
+               .ForMember(dest => dest.DepartureAirport, opt => opt.MapFrom(src => src.Flight.DepartureAirport.AirportName))
+               .ForMember(dest => dest.ArrivalAirport, opt => opt.MapFrom(src => src.Flight.ArrivalAirport.AirportName))
                .ReverseMap();
             #endregion
         }

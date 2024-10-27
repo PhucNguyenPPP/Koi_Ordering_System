@@ -36,11 +36,19 @@ namespace Common.DTO.Order
 
         public int? Length { get; set; }
 
+        public string JapaneseShipper { get; set; }
+
+        public string VietnameseShipper { get; set; }
+
         public string Status { get; set; } = null!;
 
         public string FarmAddress { get; set; }
 
         public string FarmPhone { get; set; }
+
+        public Guid FarmProvinceId { get; set; }
+
+        public Guid CustomerProvinceId { get; set; }
 
         public string CustomerProvince { get; set; }
 
@@ -50,6 +58,17 @@ namespace Common.DTO.Order
 
         public Guid? FlightId { get; set; }
 
-        public string? FlightName { get; set; }
+        public string? FlightCode { get; set; }
+
+        public string? Airline { get; set; }
+
+        public string? DepartureDate { get; set; }
+
+        public string? ArrivalDate { get; set; }
+
+        public string? DepartureAirport { get; set; }
+
+        public string? ArrivalAirport { get; set; }
+
     }
 }

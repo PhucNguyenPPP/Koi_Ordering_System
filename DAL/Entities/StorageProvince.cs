@@ -25,6 +25,8 @@ public partial class StorageProvince
 
     public virtual ICollection<OrderStorage> OrderStorages { get; set; } = new List<OrderStorage>();
 
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
     public virtual ICollection<ShippingFee> ShippingFeeStorageProvinceJps { get; set; } = new List<ShippingFee>();
 
     public virtual ICollection<ShippingFee> ShippingFeeStorageProvinceVns { get; set; } = new List<ShippingFee>();
