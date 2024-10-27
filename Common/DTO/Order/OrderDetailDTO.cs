@@ -46,6 +46,10 @@ namespace Common.DTO.Order
 
         public string FarmPhone { get; set; }
 
+        public Guid FarmProvinceId { get; set; }
+
+        public Guid CustomerProvinceId { get; set; }
+
         public string CustomerProvince { get; set; }
 
         public Guid CustomerId { get; set; }
@@ -54,6 +58,17 @@ namespace Common.DTO.Order
 
         public Guid? FlightId { get; set; }
 
-        public string? FlightName { get; set; }
+        public string? FlightCode { get; set; }
+
+        public string? Airline { get; set; }
+
+        public string? DepartureDate { get; set; }
+
+        public string? ArrivalDate { get; set; }
+
+        public string? DepartureAirport { get; set; }
+
+        public string? ArrivalAirport { get; set; }
+
     }
 }

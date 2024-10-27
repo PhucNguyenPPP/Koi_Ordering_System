@@ -10,6 +10,8 @@ using System;
 using System.Threading.Tasks;
 using Service.Services;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
@@ -100,6 +102,22 @@ namespace Api_KoiOrderingSystem.Controllers
 
             // Return 200 OK if the flight was successfully deleted
             return Ok("Flight deleted successfully.");
+        }
+
+        [HttpGet("flights-by-provinceId")]
+        public async Task<IActionResult> GetAllFlightByStorageProvinceId([Required] Guid departureStorageProvinceId, [Required] Guid arrivalStorageProvinceId)
+        {
+            var responseDTO = await _flightService.GetAllFlightByStorageProvinceId(departureStorageProvinceId, arrivalStorageProvinceId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO);
         }
     }
 }

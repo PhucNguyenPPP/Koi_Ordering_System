@@ -18,5 +18,6 @@ namespace Service.Interfaces
         Task<ResponseDTO> GetAll();
         Task<bool> UpdateFlight(UpdateFlightDTO model);
         public Task<bool> DeleteFlight(Guid flightId);
+        Task<ResponseDTO> GetAllFlightByStorageProvinceId(Guid departureStorageProvinceId, Guid arrivalStorageProvinceId);
     }
 }

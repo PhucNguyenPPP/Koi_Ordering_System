@@ -89,6 +89,7 @@ namespace Service.Services
                 order.OrderNumber = num;
             } while (orderNum.Any(c => c.OrderNumber == num));
 
+            order.StorageProvinceVietnamId = createOrderDTO.StorageVietNamId;
             //OrderCreateDate
             order.CreatedDate = DateTime.Now;
 
@@ -304,8 +305,9 @@ namespace Service.Services
             {
                 return new ResponseDTO("Invalid storage province!", 400, false);
             }
+
             var order = _unitOfWork.Order
-                .GetAllByCondition(c => c.Kois.FirstOrDefault().Farm.StorageProvinceId == storageProvinceId 
+                .GetAllByCondition(c => (c.Kois.FirstOrDefault().Farm.StorageProvinceId == storageProvinceId || c.StorageProvinceVietnamId == storageProvinceId)
                 && c.Status != OrderStatusConstant.Unpaid
                 && c.Status != OrderStatusConstant.Processing)
                 .Include(c => c.Customer)
@@ -326,6 +328,9 @@ namespace Service.Services
             .Include(c => c.OrderStorages)
             .ThenInclude(c => c.StorageProvince)
             .Include(c => c.Flight)
+            .ThenInclude(c => c.DepartureAirport)
+            .Include(c => c.Flight)
+            .ThenInclude(c => c.ArrivalAirport)
             .Include(c => c.Kois)
             .ThenInclude(c => c.Farm)
             .ThenInclude(c => c.KoiFarmManager)
@@ -340,16 +345,16 @@ namespace Service.Services
                 .FirstOrDefault(c => c.StorageProvince.Country != StorageCountryEnum.Japan.ToString())
                 .StorageProvince.ProvinceName;
 
-            var japaneseShipperName = order.OrderStorages
-                .FirstOrDefault(c => c.StorageProvince.Country == StorageCountryEnum.Japan.ToString())?
-                .Shipper?.FullName;
+            var japaneseOrderStorage = order.OrderStorages
+                .FirstOrDefault(c => c.StorageProvince.Country == StorageCountryEnum.Japan.ToString());
 
-            var vietnameseShipperName = order.OrderStorages
-               .FirstOrDefault(c => c.StorageProvince.Country == StorageCountryEnum.Vietnam.ToString())?
-               .Shipper?.FullName;
+            var vietnameseOrderStorage = order.OrderStorages
+               .FirstOrDefault(c => c.StorageProvince.Country == StorageCountryEnum.Vietnam.ToString());
 
-            mappedOrder.JapaneseShipper = japaneseShipperName;
-            mappedOrder.VietnameseShipper = vietnameseShipperName;
+            mappedOrder.CustomerProvinceId = order.StorageProvinceVietnamId;
+            mappedOrder.FarmProvinceId = japaneseOrderStorage.StorageProvinceId;
+            mappedOrder.JapaneseShipper = japaneseOrderStorage.Shipper?.FullName;
+            mappedOrder.VietnameseShipper = vietnameseOrderStorage.Shipper?.FullName;
             mappedOrder.CustomerProvince = provinceName;
             return new ResponseDTO("Get order detail successfully", 200, true, mappedOrder);
         }

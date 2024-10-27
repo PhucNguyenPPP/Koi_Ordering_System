@@ -29,7 +29,7 @@ namespace Service.Services
         {
             var newFlight = _mapper.Map<Flight>(model);
             newFlight.FlightId = Guid.NewGuid();
-            newFlight.Status = "true";
+            newFlight.Status = true;
             await _unitOfWork.Flight.AddAsync(newFlight);
             var saveChanges = await _unitOfWork.SaveChangeAsync();
             if (saveChanges)
@@ -120,7 +120,7 @@ namespace Service.Services
 
         private async Task<bool> CheckFlightExist(Guid flightId)
         {
-            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(flightId) && f.Status == "true");
+            var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(flightId) && f.Status == true);
             if (flight != null)
             {
                 return true;
@@ -131,7 +131,7 @@ namespace Service.Services
         public async Task<ResponseDTO> GetAll()
         {
             var flights = _unitOfWork.Flight
-                .GetAllByCondition(f => f.Status.Equals("true"))
+                .GetAllByCondition(f => f.Status == true)
                 .Include(c => c.ArrivalAirport)
                 .Include(c => c.DepartureAirport)
                 .ToList();
@@ -151,7 +151,7 @@ namespace Service.Services
             flight.Airline = model.Airline;
             flight.ArrivalDate = model.ArrivalDate;
             flight.DepartureDate = model.DepartureDate;
-            flight.Status = "true";
+            flight.Status = true;
             _unitOfWork.Flight.Update(flight);
             var saveChanges = await _unitOfWork.SaveChangeAsync();
             if (saveChanges)
@@ -169,12 +169,38 @@ namespace Service.Services
             if (order == null)
             {
                 Flight flight = await _unitOfWork.Flight.GetByCondition(o => o.FlightId == flightId);
-                _unitOfWork.Flight.Delete(flight);
+                flight.Status = false;
+                _unitOfWork.Flight.Update(flight);
                 await _unitOfWork.SaveChangeAsync();
                 return true;
             }
 
             return false;
+        }
+
+        public async Task<ResponseDTO> GetAllFlightByStorageProvinceId(Guid departureStorageProvinceId, Guid arrivalStorageProvinceId)
+        {
+            var departureStorageProvince = await _unitOfWork
+                .StorageProvince.GetByCondition(c => c.StorageProvinceId == departureStorageProvinceId);
+
+            var arrivalStorageProvince = await _unitOfWork
+                .StorageProvince.GetByCondition(c => c.StorageProvinceId == arrivalStorageProvinceId);
+
+            if (departureStorageProvince == null || arrivalStorageProvince == null)
+            {
+                return new ResponseDTO("Storage does not exist", 400, false);
+            }
+
+            var departureAirportId = departureStorageProvince.AirportId;
+            var arrivalAirportId = arrivalStorageProvince.AirportId;
+
+            var flights = _unitOfWork.Flight
+                .GetAllByCondition(c => c.DepartureAirportId == departureAirportId
+                && c.ArrivalAirportId == arrivalAirportId
+                && c.DepartureDate > DateTime.Now);
+
+            var list = _mapper.Map<List<GetAllFlightDTO>>(flights);
+            return new ResponseDTO("Get Flights Sucessfully", 200, true, list);
         }
     }
 }

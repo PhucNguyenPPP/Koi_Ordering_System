@@ -33,6 +33,8 @@ public partial class Order
 
     public string Status { get; set; } = null!;
 
+    public Guid StorageProvinceVietnamId { get; set; }
+
     public Guid CustomerId { get; set; }
 
     public Guid? FlightId { get; set; }
@@ -46,6 +48,8 @@ public partial class Order
     public virtual ICollection<OrderStorage> OrderStorages { get; set; } = new List<OrderStorage>();
 
     public virtual ICollection<RefundRequest> RefundRequests { get; set; } = new List<RefundRequest>();
+
+    public virtual StorageProvince StorageProvinceVietnam { get; set; } = null!;
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }
