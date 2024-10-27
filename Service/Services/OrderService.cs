@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -351,6 +352,38 @@ namespace Service.Services
             mappedOrder.VietnameseShipper = vietnameseShipperName;
             mappedOrder.CustomerProvince = provinceName;
             return new ResponseDTO("Get order detail successfully", 200, true, mappedOrder);
+        }
+
+        public async Task<ResponseDTO> AssignFlightToOrder(AssignFlightToOrderDTO assignFlightToOrderDTO)
+        {
+            var checkOrder = await CheckOrderExist(assignFlightToOrderDTO.OrderId);
+            if (!checkOrder)
+            {
+                return new ResponseDTO("Order does not exist",400,false);
+            }
+            var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId.Equals(assignFlightToOrderDTO.OrderId));
+            if(order.Status!=OrderStatusConstant.Processing&&order.Status!=OrderStatusConstant.ToShip)
+            {
+                return new ResponseDTO("Cannot assign the order with this status", 400, false);
+            }
+            var flight = await _unitOfWork.Flight.GetByCondition(f=>f.FlightId.Equals(assignFlightToOrderDTO.FlightId));    
+            if(flight==null)
+            {
+                return new ResponseDTO("Flight does not exist", 400, false);
+            }
+            var departureAirport = await _unitOfWork.Airport.GetByCondition(a => a.AirportId.Equals(flight.DepartureAirportId));
+            if(departureAirport.Country.Equals(AirportCountryEnum.Vietnam))
+            {
+                return new ResponseDTO("Flight's departure airport must be in Japin", 400, false);
+            }
+            order.FlightId = assignFlightToOrderDTO.FlightId;
+            _unitOfWork.Order.Update(order);
+            var saveChanges = await _unitOfWork.SaveChangeAsync();    
+            if(!saveChanges)
+            {
+                return new ResponseDTO("Assign flight to order failed", 500, false);
+            }    
+            return new ResponseDTO("Assign flight to order sucessfully", 200, true);
         }
     }
 }
