@@ -12,6 +12,7 @@ using Common.DTO.Order;
 using Common.Enum;
 using DAL.Entities;
 using DAL.UnitOfWork;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
@@ -22,10 +23,12 @@ namespace Service.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public OrderService(IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly IFlightService _flightService;
+        public OrderService(IMapper mapper, IUnitOfWork unitOfWork, IFlightService flightService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _flightService = flightService;
         }
 
         public async Task<ResponseDTO> CheckValidationCreateOrder(CreateOrderDTO createOrderDTO)
@@ -367,7 +370,7 @@ namespace Service.Services
                 return new ResponseDTO("Order does not exist",400,false);
             }
             var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId.Equals(assignFlightToOrderDTO.OrderId));
-            if(order.Status!=OrderStatusConstant.Processing&&order.Status!=OrderStatusConstant.ToShip)
+            if(order.Status!=OrderStatusConstant.Packaged)
             {
                 return new ResponseDTO("Cannot assign the order with this status", 400, false);
             }
@@ -376,10 +379,22 @@ namespace Service.Services
             {
                 return new ResponseDTO("Flight does not exist", 400, false);
             }
-            var departureAirport = await _unitOfWork.Airport.GetByCondition(a => a.AirportId.Equals(flight.DepartureAirportId));
-            if(departureAirport.Country.Equals(AirportCountryEnum.Vietnam))
+            var storageVietnamId = order.StorageProvinceVietnamId;
+            var airportVN = await _unitOfWork.StorageProvince.GetByCondition(s=> s.StorageProvinceId.Equals(storageVietnamId));
+            var storageJapan = await _unitOfWork.OrderStorage.GetByCondition(os => !os.StorageProvinceId.Equals(storageVietnamId) && os.OrderId.Equals(assignFlightToOrderDTO.OrderId));
+            var airporJP = await _unitOfWork.StorageProvince.GetByCondition(s => s.StorageProvinceId.Equals(storageJapan.StorageProvinceId));
+            var finalFlight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(assignFlightToOrderDTO.FlightId) && f.DepartureAirportId.Equals(airporJP.AirportId) && f.ArrivalAirportId.Equals(airportVN.AirportId));
+            if (finalFlight == null)
             {
-                return new ResponseDTO("Flight's departure airport must be in Japin", 400, false);
+                return new ResponseDTO("Flight are not suitable for Departure Province and Arrival Province", 400, false);
+            }
+            var departureDateTime = flight.DepartureDate;
+            TimeSpan timeRemaining = departureDateTime - DateTime.Now;
+
+            // Kiểm tra nếu thời gian còn lại nhỏ hơn 3 giờ
+            if (timeRemaining.TotalHours < 3)
+            {
+                return new ResponseDTO("Please assign a flight that departs at least 3 hours from now", 400, false);
             }
             order.FlightId = assignFlightToOrderDTO.FlightId;
             _unitOfWork.Order.Update(order);

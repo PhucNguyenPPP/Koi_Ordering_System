@@ -45,7 +45,7 @@ namespace Service.Services
             var checkOrderStatus = await CheckOrderStatusToAssignJP(assignShipperDTO.OrderId);
             if (!checkOrderStatus)
             {
-                return new ResponseDTO("Cannot Assign order with this status", 400, false);
+                return new ResponseDTO("A shipper can only be assigned to an order after it has reached the 'packaged' status and a flight has been assigned.", 400, false);
             }
             var storageProvinceId = orderStorageJapan.Select(o => o.StorageProvinceId).FirstOrDefault();
             var checkShipperProvince = await CheckShipperProvince(assignShipperDTO.ShipperId, storageProvinceId);
@@ -58,6 +58,9 @@ namespace Service.Services
                 item.ShipperId = assignShipperDTO.ShipperId;
             }
             _unitOfWork.OrderStorage.UpdateRange(orderStorageJapan);
+            var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == assignShipperDTO.OrderId);
+            order.Status = OrderStatusConstant.ToShip;
+            _unitOfWork.Order.Update(order);
             var saveChanges = await _unitOfWork.SaveChangeAsync();
             if (saveChanges)
             {
@@ -97,7 +100,7 @@ namespace Service.Services
         private async Task<bool> CheckOrderStatusToAssignJP(Guid orderId)
         {
             var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId.Equals(orderId));
-            if (order.Status.Equals(OrderStatusConstant.ToShip))
+            if (order.Status.Equals(OrderStatusConstant.Packaged) && order.FlightId != null)
             {
                 return true;
             }
@@ -138,13 +141,22 @@ namespace Service.Services
             }
             var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == confirmDeliveryDTO.OrderId);
             if (order.Status.Equals(OrderStatusConstant.ToShip))
-            {
-                order.Status = OrderStatusConstant.ArrivalJapanStorage;
+            {               
                 var orderStorageOfShipperFuture = orderStorage.Where(os => os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && !os.Status && os.ArrivalTime == null).FirstOrDefault();
                 if (orderStorageOfShipperFuture == null)
                 {
                     return new ResponseDTO("Next OrderStorage does not exist", 400, false);
                 }
+                var departureDateTime = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(order.FlightId));
+                TimeSpan timeRemaining = departureDateTime.DepartureDate - DateTime.Now;
+
+                // Kiểm tra nếu thời gian còn lại nhỏ hơn 2 giờ
+                if (timeRemaining.TotalHours < 2)
+                {
+                    return new ResponseDTO("The shipment is late. Please contact the manager to resolve the delay.", 400, false); 
+                    //nếu được khoá nút confirm lại
+                }
+                order.Status = OrderStatusConstant.ArrivalJapanStorage;
                 orderStorageOfShipper.Status = false;
                 orderStorageOfShipperFuture.Status = true;
                 orderStorageOfShipper.ArrivalTime = DateTime.Now;
@@ -154,6 +166,14 @@ namespace Service.Services
             else
             if (order.Status.Equals(OrderStatusConstant.ArrivalJapanStorage))
             {
+                var departureDateTime = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(order.FlightId));
+                var arrvial = DateTime.Now; 
+
+                // Kiểm tra nếu thời gian bị trễ
+                if (arrvial>departureDateTime.DepartureDate)
+                {
+                    return new ResponseDTO("The shipment is late. Please contact the manager to resolve the delay.", 400, false); 
+                }
                 order.Status = OrderStatusConstant.ArrivalJapanAirport;
                 orderStorageOfShipper.ArrivalTime = DateTime.Now;
                 var orderStorageOfShipperFuture = orderStorage.Where(os => !os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && !os.Status && os.ArrivalTime == null).FirstOrDefault();
@@ -169,6 +189,14 @@ namespace Service.Services
             else
             if (order.Status.Equals(OrderStatusConstant.ArrivalJapanAirport))
             {
+                var departureDateTime = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(order.FlightId));
+                var arrvial = DateTime.Now;
+
+                // Kiểm tra nếu thời gian bị trễ
+                if (arrvial < departureDateTime.DepartureDate)
+                {
+                    return new ResponseDTO("The flight will depart later", 400, false);
+                }
                 order.Status = OrderStatusConstant.ArrivalVietNamAirport;
                 orderStorageOfShipper.ArrivalTime = DateTime.Now;
                 var orderStorageOfShipperFuture = orderStorage.Where(os => os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && !os.Status && os.ArrivalTime == null).FirstOrDefault();
@@ -204,6 +232,11 @@ namespace Service.Services
                 _unitOfWork.OrderStorage.Update(orderStorageOfShipper);
                 _unitOfWork.Order.Update(order);
             }
+            else
+            {
+                return new ResponseDTO("Cannot confirm the order with this status", 400, false);
+            }
+        
             var saveChanges = await _unitOfWork.SaveChangeAsync();
             if (saveChanges)
             {
