@@ -102,12 +102,27 @@ namespace Api_KoiOrderingSystem.Profiles
             #endregion
         }
 
-        private int CalculateAge(DateTime dob)
+        private string CalculateAge(DateTime dob)
         {
-            var today = DateTime.Today;
-            var age = today.Year - dob.Year;
-            if (dob.Date > today.AddYears(-age)) age--;
+            var age = "";
+            if (DateTime.Now.Year - dob.Year == 1)
+            {
+                age = DateTime.Now.Year - dob.Year + " Year";
+            }
+            else if (DateTime.Now.Year - dob.Year > 1)
+            {
+                age = DateTime.Now.Year - dob.Year + " Years";
+            }
+            else if (DateTime.Now.Year - dob.Year == 0 && DateTime.Now.Month - dob.Month == 1)
+            {
+                age = DateTime.Now.Month - dob.Month + " Month";
+            }
+            else if (DateTime.Now.Year - dob.Year == 0 && DateTime.Now.Month - dob.Month > 1)
+            {
+                age = DateTime.Now.Month - dob.Month + " Months";
+            }
             return age;
+
         }
     }
 }

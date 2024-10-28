@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Net.WebSockets;
+using AutoMapper;
 using Common.DTO.General;
 using Common.DTO.KoiFish;
 using Common.Enum;
 using DAL.Entities;
 using DAL.UnitOfWork;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
@@ -23,9 +25,10 @@ namespace Service.Services
         }
         public async Task<ResponseDTO> GetAll()
         {
+
             var koi = _unitOfWork.Koi
                 .GetAllByCondition(c => c.Status == true)
-                .Include(c => c.KoiBreeds).ThenInclude(c=> c.Breed)
+                .Include(c => c.KoiBreeds).ThenInclude(c => c.Breed)
                 .Include(c => c.Farm)
                 .Include(c => c.Order)
                 .ToList();
@@ -35,6 +38,10 @@ namespace Service.Services
             }
             var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
             return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
+
+           
+            
+            
         }
 
         public async Task<bool> AddKoi(KoiDTO koiDTO)
@@ -47,6 +54,7 @@ namespace Service.Services
             koi.CertificationLink = certificationLink;
             koi.AvatarLink = avatarLink;
             koi.FarmId = koiDTO.FarmId;
+            koi.Weight = koiDTO.Weight;
             koi.Status = true;
             await _unitOfWork.Koi.AddAsync(koi);
             KoiBreed koiBreed = new KoiBreed();
@@ -166,6 +174,7 @@ namespace Service.Services
             koi.Dob = updateKoiDTO.Dob;
             koi.Gender = updateKoiDTO.Gender;
             koi.Price = updateKoiDTO.Price;
+            koi.Weight = updateKoiDTO.Weight;
             
             //koi.BreedId = updateKoiDTO.BreedId;
             await DeleteKoi(updateKoiDTO.KoiId);
