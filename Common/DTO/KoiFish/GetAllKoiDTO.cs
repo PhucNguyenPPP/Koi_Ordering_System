@@ -25,6 +25,8 @@ namespace Common.DTO.KoiFish
 
         public string Gender { get; set; } = null!;
 
+        public double Weight { get; set; }
+
         public decimal Price { get; set; } 
 
         public  List<Guid> BreedId { get; set; }

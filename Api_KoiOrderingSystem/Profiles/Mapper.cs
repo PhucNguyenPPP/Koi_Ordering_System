@@ -33,7 +33,7 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.BreedId, opt => opt.MapFrom(src => src.KoiBreeds.Select(c => c.BreedId).ToList()))
                 .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c => c.Breed.Name).ToList()))
                 .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
-                //.ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Dob)))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Dob)))
                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Order.OrderId.ToString()))
                 .ReverseMap();
 
@@ -102,12 +102,27 @@ namespace Api_KoiOrderingSystem.Profiles
             #endregion
         }
 
-        private int CalculateAge(DateTime dob)
+        private string CalculateAge(DateTime dob)
         {
-            var today = DateTime.Today;
-            var age = today.Year - dob.Year;
-            if (dob.Date > today.AddYears(-age)) age--;
+            var age = "";
+            if (DateTime.Now.Year - dob.Year == 1)
+            {
+                age = DateTime.Now.Year - dob.Year + " Year";
+            }
+            else if (DateTime.Now.Year - dob.Year > 1)
+            {
+                age = DateTime.Now.Year - dob.Year + " Years";
+            }
+            else if (DateTime.Now.Year - dob.Year == 0 && DateTime.Now.Month - dob.Month == 1)
+            {
+                age = DateTime.Now.Month - dob.Month + " Month";
+            }
+            else if (DateTime.Now.Year - dob.Year == 0 && DateTime.Now.Month - dob.Month > 1)
+            {
+                age = DateTime.Now.Month - dob.Month + " Months";
+            }
             return age;
+
         }
     }
 }
