@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Net.WebSockets;
+using AutoMapper;
 using Common.DTO.General;
 using Common.DTO.KoiFish;
 using Common.Enum;
 using DAL.Entities;
 using DAL.UnitOfWork;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
@@ -29,12 +31,65 @@ namespace Service.Services
                 .Include(c => c.Farm)
                 .Include(c => c.Order)
                 .ToList();
+            List<GetAllKoiDTO> koi1 = new List<GetAllKoiDTO>();
+            for (int i = 0; i< koi.Count(); i++)
+            {
+                koi1[i].KoiId = koi[i].KoiId;
+                koi1[i].Name = koi[i].Name;
+                koi1[i].AvatarLink = koi[i].AvatarLink;
+                koi1[i].CertificationLink = koi[i].CertificationLink;
+                koi1[i].Description = koi[i].Description;
+                koi1[i].Dob = koi[i].Dob;
+                koi1[i].Gender = koi[i].Gender;
+                koi1[i].Price = koi[i].Price;
+                koi1[i].FarmId = koi[i].FarmId;
+                koi1[i].FarmName = _unitOfWork.KoiFarm.GetAllByCondition(c => c.KoiFarmId == koi[i].FarmId).Select(c => c.FarmName).FirstOrDefault();
+                koi1[i].Status = koi[i].Status;
+                koi1[i].OrderId = koi[i].OrderId;
+                List<KoiBreed> koibreed = _unitOfWork.KoiBreed.GetAllByCondition(c => c.KoiId == koi[i].KoiId).ToList();
+
+                for (int j = 0; i< koibreed.Count(); i++)
+                {
+                    koi1[i].BreedId[j] = koibreed[j].BreedId;
+                    koi1[i].BreedName[j] = _unitOfWork.Breed.GetAllByCondition(c => c.BreedId == koibreed[j].BreedId).Select(c=> c.Name).FirstOrDefault();
+                }
+                
+                var dob = koi[i].Dob;
+                if(DateTime.Now.Year - dob.Year == 1)
+                {
+                    koi1[i].Age = DateTime.Now.Year - dob.Year + "Year";
+                }
+                else if (DateTime.Now.Year - dob.Year > 1)
+                {
+                    koi1[i].Age = DateTime.Now.Year - dob.Year + "Years";
+                }
+                else if(DateTime.Now.Year - dob.Year == 0 && DateTime.Now.Month - dob.Month == 1)
+                {
+                    koi1[i].Age = DateTime.Now.Month - dob.Month + "Month";
+                }
+                else if (DateTime.Now.Year - dob.Year == 0 && DateTime.Now.Month - dob.Month > 1)
+                {
+                    koi1[i].Age = DateTime.Now.Month - dob.Month + "Months";
+                }
+
+
+            }
+            
+            //for(int i = 0; i < koi.Count(); i++)
+            //{
+            //    var dob = koi[i].Dob;
+            //    DateTime now = DateTime.Now;
+            //    if (now.Year - dob.Year > 1)
+            //    {
+            //        koi[i].age
+            //    }
+            //}
             if (koi == null)
             {
                 return new ResponseDTO("Danh sách trống!", 400, false);
             }
-            var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
-            return new ResponseDTO("Hiển thị danh sách thành công", 200, true, list);
+            //var list = _mapper.Map<List<GetAllKoiDTO>>(koi);
+            return new ResponseDTO("Hiển thị danh sách thành công", 200, true, koi1);
         }
 
         public async Task<bool> AddKoi(KoiDTO koiDTO)
@@ -47,6 +102,7 @@ namespace Service.Services
             koi.CertificationLink = certificationLink;
             koi.AvatarLink = avatarLink;
             koi.FarmId = koiDTO.FarmId;
+            koi.Weight = koiDTO.Weight;
             koi.Status = true;
             await _unitOfWork.Koi.AddAsync(koi);
             KoiBreed koiBreed = new KoiBreed();
@@ -166,6 +222,7 @@ namespace Service.Services
             koi.Dob = updateKoiDTO.Dob;
             koi.Gender = updateKoiDTO.Gender;
             koi.Price = updateKoiDTO.Price;
+            koi.Weight = updateKoiDTO.Weight;
             
             //koi.BreedId = updateKoiDTO.BreedId;
             await DeleteKoi(updateKoiDTO.KoiId);
