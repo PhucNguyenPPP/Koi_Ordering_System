@@ -33,7 +33,7 @@ namespace Api_KoiOrderingSystem.Profiles
                 .ForMember(dest => dest.BreedId, opt => opt.MapFrom(src => src.KoiBreeds.Select(c => c.BreedId).ToList()))
                 .ForMember(dest => dest.BreedName, opt => opt.MapFrom(src => src.KoiBreeds.Select(c => c.Breed.Name).ToList()))
                 .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Farm.FarmName))
-                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Dob)))
+                //.ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Dob)))
                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Order.OrderId.ToString()))
                 .ReverseMap();
 
