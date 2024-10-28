@@ -167,7 +167,6 @@ namespace Service.Services
             if (order.Status.Equals(OrderStatusConstant.ArrivalJapanStorage))
             {
                 var departureDateTime = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(order.FlightId));
-                TimeSpan timeRemaining = departureDateTime.DepartureDate - DateTime.Now;
                 var arrvial = DateTime.Now; 
 
                 // Kiểm tra nếu thời gian bị trễ
@@ -190,6 +189,14 @@ namespace Service.Services
             else
             if (order.Status.Equals(OrderStatusConstant.ArrivalJapanAirport))
             {
+                var departureDateTime = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(order.FlightId));
+                var arrvial = DateTime.Now;
+
+                // Kiểm tra nếu thời gian bị trễ
+                if (arrvial < departureDateTime.DepartureDate)
+                {
+                    return new ResponseDTO("The flight will depart later", 400, false);
+                }
                 order.Status = OrderStatusConstant.ArrivalVietNamAirport;
                 orderStorageOfShipper.ArrivalTime = DateTime.Now;
                 var orderStorageOfShipperFuture = orderStorage.Where(os => os.ShipperId.Equals(confirmDeliveryDTO.ShipperId) && !os.Status && os.ArrivalTime == null).FirstOrDefault();
