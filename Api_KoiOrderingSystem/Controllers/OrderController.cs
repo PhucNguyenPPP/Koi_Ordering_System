@@ -59,6 +59,19 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok("Order updated successfully.");
         }
 
+        [HttpPut("completed/{orderId}")]
+        public async Task<IActionResult> UpdateOrderCompleted(Guid orderId)
+        {
+            var result = await _orderService.UpdateOrderCompleted(orderId);
+            
+            if (!result)
+            {
+                return NotFound("Order not found.");
+            }
+
+            return Ok("Order updated successfully.");
+        }
+
         [HttpGet("all-customer-history-order")]
         [EnableQuery]
         public async Task<IActionResult> GetAllHistoryOrder([Required]Guid customerId)

@@ -267,6 +267,32 @@ namespace Service.Services
             return saveResult;
         }
 
+        public async Task<bool> UpdateOrderCompleted(Guid orderId)
+        {
+            // Find order
+            Order? order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == orderId);
+            if (order == null)
+            {
+                return false;
+            }
+
+            // Check status order is different processing
+            if (order.Status != OrderStatusConstant.ToReceive)
+            {
+                return false;
+            }
+
+            order.Status = OrderStatusConstant.Completed;
+
+            // Update order using UnitOfWork
+            _unitOfWork.Order.Update(order);
+
+            // Save changes
+            bool saveResult = await _unitOfWork.SaveChangeAsync();
+
+            return saveResult;
+        }
+
         public async Task<ResponseDTO> GetAllHistoryOrder(Guid customerId)
         {
             var customer = _unitOfWork.User.GetAllByCondition(c => c.UserId == customerId && c.Role.RoleName == RoleEnum.Customer.ToString());
