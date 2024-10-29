@@ -18,7 +18,9 @@ namespace Common.DTO.KoiFish
 
         public string Description { get; set; } = null!;
 
-        public int Age { get; set; }
+        public string Age { get; set; }
+
+        public double Weight { get; set; }
 
         public string Gender { get; set; } = null!;
 
