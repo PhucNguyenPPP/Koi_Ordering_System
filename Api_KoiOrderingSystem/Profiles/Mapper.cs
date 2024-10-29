@@ -96,6 +96,10 @@ namespace Api_KoiOrderingSystem.Profiles
                .ForMember(dest => dest.FarmAddress, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmAddress))
                .ForMember(dest => dest.FarmPhone, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.KoiFarmManager.Phone))
                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+               .ForMember(dest => dest.FlightCode, opt => opt.MapFrom(src => src.Flight.FlightCode))
+               .ForMember(dest => dest.Airline, opt => opt.MapFrom(src => src.Flight.Airline))
+               .ForMember(dest => dest.DepartureDate, opt => opt.MapFrom(src => src.Flight.DepartureDate))
+               .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(src => src.Flight.ArrivalDate))
                .ForMember(dest => dest.DepartureAirport, opt => opt.MapFrom(src => src.Flight.DepartureAirport.AirportName))
                .ForMember(dest => dest.ArrivalAirport, opt => opt.MapFrom(src => src.Flight.ArrivalAirport.AirportName))
                .ReverseMap();
