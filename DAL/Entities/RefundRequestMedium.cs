@@ -9,7 +9,7 @@ public partial class RefundRequestMedium
 
     public string Link { get; set; } = null!;
 
-    public Guid RefundRequestId { get; set; }
+    public Guid OrderId { get; set; }
 
-    public virtual RefundRequest RefundRequest { get; set; } = null!;
+    public virtual Order Order { get; set; } = null!;
 }

@@ -13,9 +13,11 @@ public partial class Policy
 
     public int PercentageRefund { get; set; }
 
+    public bool IsBackToFarm { get; set; }
+
     public Guid FarmId { get; set; }
 
     public virtual KoiFarm Farm { get; set; } = null!;
 
-    public virtual ICollection<RefundRequest> RefundRequests { get; set; } = new List<RefundRequest>();
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

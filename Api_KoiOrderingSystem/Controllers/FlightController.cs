@@ -12,6 +12,7 @@ using Service.Services;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
@@ -105,6 +106,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("flights-by-provinceId")]
+        [Authorize(Roles = "StorageManager")]
         public async Task<IActionResult> GetAllFlightByStorageProvinceId([Required] Guid departureStorageProvinceId, [Required] Guid arrivalStorageProvinceId)
         {
             var responseDTO = await _flightService.GetAllFlightByStorageProvinceId(departureStorageProvinceId, arrivalStorageProvinceId);

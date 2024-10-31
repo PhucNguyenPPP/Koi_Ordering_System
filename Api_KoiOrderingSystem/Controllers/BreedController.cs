@@ -1,4 +1,5 @@
 ﻿using Common.DTO.General;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -16,6 +17,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-breeds")]
+        [Authorize(Roles = "KoiFarmManager,Admin")]
         public IActionResult GetAllBreed()
         {
             var list = _breedService.GetAllBreeds();

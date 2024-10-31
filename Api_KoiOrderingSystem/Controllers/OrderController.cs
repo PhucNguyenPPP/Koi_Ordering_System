@@ -2,6 +2,7 @@
 using Common.DTO.General;
 using Common.DTO.KoiFish;
 using Common.DTO.Order;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -124,6 +125,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("order-detail")]
+        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
         public async Task<IActionResult> GetOrderDetail([Required] Guid orderId)
         {
             ResponseDTO responseDTO = await _orderService.GetOrderDetail(orderId);

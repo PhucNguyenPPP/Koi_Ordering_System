@@ -10,4 +10,8 @@ public static class OrderStatusConstant
     public const string ArrivalVietnamStorage = "Arrive Vietnam Storage";
     public const string ToReceive = "To Receive";
     public const string Completed = "Completed";
+    public const string ProcessingRefund  = "Processing Refund";
+    public const string AcceptedRefund = "Accepted Refund";
+    public const string DeniedRefund = "Denied Refund";
+    public const string CompletedRefund = "Completed Refund";
 }

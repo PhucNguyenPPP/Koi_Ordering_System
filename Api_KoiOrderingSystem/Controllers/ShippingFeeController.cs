@@ -1,4 +1,5 @@
 ﻿using Common.DTO.General;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -17,6 +18,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("shipping-fee-province-ids")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetShippingFeeByProvinceIds(Guid storageProvinceJapanId, Guid storageProvinceVietNamId)
         {
             var result = await _shippingFeeService.GetShippingFeeByStorageProvinceId(storageProvinceJapanId, storageProvinceVietNamId);

@@ -1,5 +1,6 @@
 ﻿using Common.DTO.Auth;
 using Common.DTO.General;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -111,6 +112,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("refresh-token")]
+        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
         public async Task<IActionResult> GetNewTokenFromRefreshToken([FromBody] RequestTokenDTO model)
         {
             if (!ModelState.IsValid)
@@ -128,6 +130,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("/user/access-token/{accessToken}")]
+        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
         public async Task<IActionResult> GetUserByToken(string accessToken)
         {
             var result = await _authService.GetUserByAccessToken(accessToken);
@@ -142,6 +145,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("logout")]
+        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
         public async Task<IActionResult> Logout([Required] string rfToken)
         {
 
