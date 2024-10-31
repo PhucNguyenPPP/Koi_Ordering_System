@@ -31,6 +31,24 @@ public partial class Order
 
     public int? Length { get; set; }
 
+    public DateTime? PackagedDate { get; set; }
+
+    public DateTime? ToShipDate { get; set; }
+
+    public string? RefundDescription { get; set; }
+
+    public string? RefundResponse { get; set; }
+
+    public DateTime? RefundCreatedDate { get; set; }
+
+    public DateTime? RefundConfirmedDate { get; set; }
+
+    public DateTime? RefundCompletedDate { get; set; }
+
+    public int? RefundPercentage { get; set; }
+
+    public string? BankAccount { get; set; }
+
     public string Status { get; set; } = null!;
 
     public Guid StorageProvinceVietnamId { get; set; }
@@ -38,6 +56,8 @@ public partial class Order
     public Guid CustomerId { get; set; }
 
     public Guid? FlightId { get; set; }
+
+    public Guid? RefundPolicyId { get; set; }
 
     public virtual User Customer { get; set; } = null!;
 
@@ -47,7 +67,9 @@ public partial class Order
 
     public virtual ICollection<OrderStorage> OrderStorages { get; set; } = new List<OrderStorage>();
 
-    public virtual ICollection<RefundRequest> RefundRequests { get; set; } = new List<RefundRequest>();
+    public virtual Policy? RefundPolicy { get; set; }
+
+    public virtual ICollection<RefundRequestMedium> RefundRequestMedia { get; set; } = new List<RefundRequestMedium>();
 
     public virtual StorageProvince StorageProvinceVietnam { get; set; } = null!;
 

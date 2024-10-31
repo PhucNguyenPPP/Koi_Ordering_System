@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Common.Enum;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -19,6 +21,7 @@ namespace Api_KoiOrderingSystem.Controllers
 
         [HttpGet("all-airports")]
         [EnableQuery]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetAllAirports()
         {
             var list = _airportService.GetAllAirports();

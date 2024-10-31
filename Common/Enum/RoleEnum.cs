@@ -10,6 +10,7 @@ namespace Common.Enum
     {
         Customer,
         KoiFarmManager,
+        StorageManager,
         Shipper,
         Staff,
         Admin

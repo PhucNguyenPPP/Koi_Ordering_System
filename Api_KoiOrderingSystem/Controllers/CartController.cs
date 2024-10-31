@@ -1,5 +1,6 @@
 ﻿using Common.DTO.Cart;
 using Common.DTO.General;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -21,6 +22,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("cart-user")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetCartOfUser(Guid userId)
         {
             var userExist = await _userService.CheckUserExist(userId);
@@ -37,6 +39,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("cart-user")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> AddCart(CartDTO model)
         {
             var check = await _cartService.CheckValidationCart(model);
@@ -58,6 +61,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpDelete("cart-user")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> DeleteCartUser(Guid cartId)
         {
             var result = await _cartService.DeleteCart(cartId);

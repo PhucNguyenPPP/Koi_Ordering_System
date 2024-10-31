@@ -1,5 +1,6 @@
 ﻿using Common.DTO.General;
 using Common.DTO.Payment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +23,7 @@ namespace Api_Ace.Controllers
             _paymentService = paymentService;
         }
         [HttpPost("vnpay-payment")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreatePaymentUrl(Guid orderId)
         {
             var checkExist = await _orderService.CheckOrderExist(orderId);
@@ -41,6 +43,7 @@ namespace Api_Ace.Controllers
         }
 
         [HttpPut("response-payment")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> HandleResponseVnPay([FromBody] VnPayResponseDTO responseInfo)
         {
             if (!ModelState.IsValid)
