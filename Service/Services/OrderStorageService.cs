@@ -295,12 +295,35 @@ namespace Service.Services
             }
             var flight = await _unitOfWork.Flight.GetByCondition(f => f.FlightId.Equals(order.FlightId));
             List<OrderStorage> orderstorage = _unitOfWork.OrderStorage.GetAllByCondition(os => os.OrderId.Equals(orderId) && !os.Status && os.ArrivalTime != null).OrderBy(os => os.ArrivalTime).ToList();
-            if (orderstorage == null)
-            {
-                return new ResponseDTO("Order does not have delivery history", 400, false);
-            }
             var temp = orderstorage;
+            var status = order.Status;
             List<DeliveryOfOrderDTO> deliveryOfOrderDTOs = new List<DeliveryOfOrderDTO>();
+            DeliveryOfOrderDTO deliveryOfOrderDTO0 = new()
+            {
+                Status = "Order is created",
+                ArrivalTime = order.CreatedDate,
+            };
+            deliveryOfOrderDTOs.Add(deliveryOfOrderDTO0);
+            if(status!=OrderStatusConstant.Unpaid.ToString() && order.PackagedDate!=null && status != OrderStatusConstant.Processing.ToString())
+            {
+                DeliveryOfOrderDTO deliveryOfOrderDTO00 = new()
+                {
+                    Status = "Order is packaged",
+                    ArrivalTime = order.PackagedDate,
+                };
+                deliveryOfOrderDTOs.Add(deliveryOfOrderDTO00);
+                if (status != OrderStatusConstant.Packaged)
+                {
+                    DeliveryOfOrderDTO deliveryOfOrderDTO000 = new()
+                    {
+                        Status = "Order is ready to ship",
+                        ArrivalTime = order.ToShipDate,
+                    };
+                    deliveryOfOrderDTOs.Add(deliveryOfOrderDTO000);
+
+                }
+
+            }
             if (temp.Count > 0)
             {    
                 var storageJP = await _unitOfWork.StorageProvince.GetByCondition(sp => sp.StorageProvinceId.Equals(temp.First().StorageProvinceId));
@@ -355,6 +378,33 @@ namespace Service.Services
                 };
                 temp.Remove(temp.First());
                 deliveryOfOrderDTOs.Add(deliveryOfOrderDTO5);
+            }
+            if (order.RefundCreatedDate != null)
+            {
+                DeliveryOfOrderDTO deliveryOfOrderDT06 = new()
+                {
+                    Status = "Refund request is created",
+                    ArrivalTime = order.RefundCreatedDate,
+                };
+                deliveryOfOrderDTOs.Add(deliveryOfOrderDT06);
+            }
+            if (order.RefundConfirmedDate != null)
+            {
+                DeliveryOfOrderDTO deliveryOfOrderDT07 = new()
+                {
+                    Status = "Refund request is confirmed",
+                    ArrivalTime = order.RefundConfirmedDate,
+                };
+                deliveryOfOrderDTOs.Add(deliveryOfOrderDT07);
+            }
+            if (order.RefundCompletedDate != null)
+            {
+                DeliveryOfOrderDTO deliveryOfOrderDT08 = new()
+                {
+                    Status = "Refund request is completed",
+                    ArrivalTime = order.RefundConfirmedDate,
+                };
+                deliveryOfOrderDTOs.Add(deliveryOfOrderDT08);
             }
             return new ResponseDTO("Get delivery of order sucessfully!", 200, true, deliveryOfOrderDTOs);
         }
