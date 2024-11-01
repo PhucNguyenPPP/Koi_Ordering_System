@@ -257,6 +257,7 @@ namespace Service.Services
 
             // Map non-null properties from request to entity
             _mapper.Map(request, order);
+            order.PackagedDate = DateTime.Now;
 
             // Update order using UnitOfWork
             _unitOfWork.Order.Update(order);
@@ -283,7 +284,6 @@ namespace Service.Services
             }
 
             order.Status = OrderStatusConstant.Completed;
-            order.PackagedDate =  DateTime.Now;
 
             // Update order using UnitOfWork
             _unitOfWork.Order.Update(order);
