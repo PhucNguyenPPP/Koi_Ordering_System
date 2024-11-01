@@ -23,6 +23,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("order")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderDTO model)
         {
             if (!ModelState.IsValid)
@@ -74,6 +75,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-customer-history-order")]
+        [Authorize(Roles = "Customer")]
         [EnableQuery]
         public async Task<IActionResult> GetAllHistoryOrder([Required]Guid customerId)
         {
@@ -91,6 +93,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-farm-history-order")]
+        [Authorize(Roles = "KoiFarmManager")]
         [EnableQuery]
         public async Task<IActionResult> GetAllFarmHistoryOrder([Required] Guid farmId)
         {
@@ -108,6 +111,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-storage-history-order")]
+        [Authorize(Roles = "StorageManager")]
         [EnableQuery]
         public async Task<IActionResult> GetAllStorageHistoryOrder([Required] Guid storageProvinceId)
         {
