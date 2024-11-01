@@ -23,6 +23,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("order")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderDTO model)
         {
             if (!ModelState.IsValid)
@@ -74,6 +75,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-customer-history-order")]
+        [Authorize(Roles = "Customer")]
         [EnableQuery]
         public async Task<IActionResult> GetAllHistoryOrder([Required]Guid customerId)
         {
@@ -91,6 +93,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-farm-history-order")]
+        [Authorize(Roles = "KoiFarmManager")]
         [EnableQuery]
         public async Task<IActionResult> GetAllFarmHistoryOrder([Required] Guid farmId)
         {
@@ -108,6 +111,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-storage-history-order")]
+        [Authorize(Roles = "StorageManager")]
         [EnableQuery]
         public async Task<IActionResult> GetAllStorageHistoryOrder([Required] Guid storageProvinceId)
         {
@@ -144,6 +148,24 @@ namespace Api_KoiOrderingSystem.Controllers
         public async Task<IActionResult> AssignFlightToOrder([FromBody] AssignFlightToOrderDTO assignFlightToOrderDTO)
         {
             ResponseDTO responseDTO = await _orderService.AssignFlightToOrder(assignFlightToOrderDTO);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO);
+        }
+
+        [HttpGet("order-refund")]
+        [EnableQuery]
+        //[Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
+        public async Task<IActionResult> GetRefundOrder()
+        {
+            ResponseDTO responseDTO = await _orderService.GetAllRefundOrder();
             if (responseDTO.IsSuccess == false)
             {
                 if (responseDTO.StatusCode == 404)
