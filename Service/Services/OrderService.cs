@@ -136,37 +136,6 @@ namespace Service.Services
                 }
                 _unitOfWork.Cart.Delete(cart);
             }
-            //OrderStorage orderStorage1 = new OrderStorage();
-            //orderStorage1.OrderId = orderId;
-            //orderStorage1.Status = true;
-            //if (jpnStorage != null) orderStorage1.StorageProvinceId = (Guid)jpnStorage;
-            //orderStorage1.OrderStorageId = Guid.NewGuid();
-            //await _unitOfWork.OrderStorage.AddAsync(orderStorage1);
-            //await _unitOfWork.SaveChangeAsync();
-
-            //OrderStorage orderStorage2 = new OrderStorage();
-            //orderStorage2.OrderId = orderId;
-            //orderStorage2.Status = false;
-            //if (jpnStorage != null) orderStorage2.StorageProvinceId = (Guid)jpnStorage;
-            //orderStorage2.OrderStorageId = Guid.NewGuid();
-            //await _unitOfWork.OrderStorage.AddAsync(orderStorage2);
-            //await _unitOfWork.SaveChangeAsync();
-
-            //OrderStorage orderStorage3 = new OrderStorage();
-            //orderStorage2.OrderId = orderId;
-            //orderStorage2.Status = false;
-            //orderStorage2.StorageProvinceId = createOrderDTO.StorageVietNamId;
-            //orderStorage2.OrderStorageId = Guid.NewGuid();
-            //await _unitOfWork.OrderStorage.AddAsync(orderStorage3);
-            //await _unitOfWork.SaveChangeAsync();
-
-            //OrderStorage orderStorage4 = new OrderStorage();
-            //orderStorage2.OrderId = orderId;
-            //orderStorage2.Status = false;
-            //orderStorage2.StorageProvinceId = createOrderDTO.StorageVietNamId;
-            //orderStorage2.OrderStorageId = Guid.NewGuid();
-            //await _unitOfWork.OrderStorage.AddAsync(orderStorage4);
-
             OrderStorage orderStorage1 = new OrderStorage
             {
                 OrderId = orderId,
