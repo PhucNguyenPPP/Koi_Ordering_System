@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Common.DTO.OrderStorage;
+using Common.Enum;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -17,7 +20,9 @@ namespace Api_KoiOrderingSystem.Controllers
         {
             _orderStorageService = orderStorageService;
         }
+
         [HttpPut("Japanese-shipper")]
+        [Authorize(Roles = "StorageManager")]
         public async Task<IActionResult> AssignShipperJapan([FromBody] AssignShipperDTO assignShipperDTO)
         {
             var result = await _orderStorageService.AssignShipperJapan(assignShipperDTO);
@@ -30,6 +35,7 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(result);
         }
         [HttpPut("Vietnamese-shipper")]
+        [Authorize(Roles = "StorageManager")]
         public async Task<IActionResult> AssignShipperVietnam([FromBody] AssignShipperDTO assignShipperDTO)
         {
             var result = await _orderStorageService.AssignShipperVietnam(assignShipperDTO);
@@ -41,8 +47,9 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(result);
         }
-        
         [HttpPut("delivery")]
+        [Authorize(Roles = "Shipper")]
+
         public async Task<IActionResult> ConfirmDelivery([FromBody] ConfirmDeliveryDTO confirmDeliveryDTO)
         {
             var result = await _orderStorageService.ConfirmDelivery(confirmDeliveryDTO);
@@ -54,6 +61,8 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(result);
         }
         [HttpGet("delivery-of-order")]
+        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
+
         public async Task<IActionResult> GetDeliveryOfOrder(Guid orderId)
         {
             var deliveries = await _orderStorageService.GetDeliveryOfOrder(orderId);
@@ -67,7 +76,9 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(deliveries);
         }
+
         [HttpGet("shipper")]
+        [Authorize(Roles = "Shipper")]
         [EnableQuery]
         public async Task<IActionResult> GetOrdersByShipper([Required]Guid shipperId)
         {

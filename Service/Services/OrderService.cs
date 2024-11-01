@@ -136,37 +136,6 @@ namespace Service.Services
                 }
                 _unitOfWork.Cart.Delete(cart);
             }
-            //OrderStorage orderStorage1 = new OrderStorage();
-            //orderStorage1.OrderId = orderId;
-            //orderStorage1.Status = true;
-            //if (jpnStorage != null) orderStorage1.StorageProvinceId = (Guid)jpnStorage;
-            //orderStorage1.OrderStorageId = Guid.NewGuid();
-            //await _unitOfWork.OrderStorage.AddAsync(orderStorage1);
-            //await _unitOfWork.SaveChangeAsync();
-
-            //OrderStorage orderStorage2 = new OrderStorage();
-            //orderStorage2.OrderId = orderId;
-            //orderStorage2.Status = false;
-            //if (jpnStorage != null) orderStorage2.StorageProvinceId = (Guid)jpnStorage;
-            //orderStorage2.OrderStorageId = Guid.NewGuid();
-            //await _unitOfWork.OrderStorage.AddAsync(orderStorage2);
-            //await _unitOfWork.SaveChangeAsync();
-
-            //OrderStorage orderStorage3 = new OrderStorage();
-            //orderStorage2.OrderId = orderId;
-            //orderStorage2.Status = false;
-            //orderStorage2.StorageProvinceId = createOrderDTO.StorageVietNamId;
-            //orderStorage2.OrderStorageId = Guid.NewGuid();
-            //await _unitOfWork.OrderStorage.AddAsync(orderStorage3);
-            //await _unitOfWork.SaveChangeAsync();
-
-            //OrderStorage orderStorage4 = new OrderStorage();
-            //orderStorage2.OrderId = orderId;
-            //orderStorage2.Status = false;
-            //orderStorage2.StorageProvinceId = createOrderDTO.StorageVietNamId;
-            //orderStorage2.OrderStorageId = Guid.NewGuid();
-            //await _unitOfWork.OrderStorage.AddAsync(orderStorage4);
-
             OrderStorage orderStorage1 = new OrderStorage
             {
                 OrderId = orderId,
@@ -296,7 +265,9 @@ namespace Service.Services
 
         public async Task<ResponseDTO> GetAllHistoryOrder(Guid customerId)
         {
-            var customer = _unitOfWork.User.GetAllByCondition(c => c.UserId == customerId && c.Role.RoleName == RoleEnum.Customer.ToString());
+            var customer = _unitOfWork.User
+                .GetAllByCondition(c => c.UserId == customerId && 
+                c.Role.RoleName == RoleEnum.Customer.ToString());
             if (customer.IsNullOrEmpty())
             {
                 return new ResponseDTO("Invalid customer!", 400, false);
@@ -305,6 +276,7 @@ namespace Service.Services
                 var order = _unitOfWork.Order
                 .GetAllByCondition(c=> c.CustomerId == customerId)
                 .Include(c=> c.Kois).ThenInclude(c=> c.Farm)
+                .Include(c=> c.Kois).ThenInclude(c=> c.KoiBreeds).ThenInclude(c=> c.Breed)
                 .ToList();
             if (order == null || !order.Any())  return new ResponseDTO("Your history order list is empty!", 400, false);
             var list = _mapper.Map<List<GetAllHistoryOrderDTO>>(order);
@@ -431,6 +403,18 @@ namespace Service.Services
                 return new ResponseDTO("Assign flight to order failed", 500, false);
             }    
             return new ResponseDTO("Assign flight to order sucessfully", 200, true);
+        }
+
+        public async Task<ResponseDTO> GetAllRefundOrder()
+        {
+            var order = _unitOfWork.Order
+                .GetAllByCondition(c =>
+                c.Status == OrderStatusConstant.ProcessingRefund ||
+                c.Status == OrderStatusConstant.AcceptedRefund ||
+                c.Status == OrderStatusConstant.DeniedRefund ||
+                c.Status == OrderStatusConstant.CompletedRefund).ToList();
+            if (order == null || !order.Any()) return new ResponseDTO("No refund order list!", 400, false);
+            return new ResponseDTO("List displayed successfully", 200, true, order);
         }
     }
 }

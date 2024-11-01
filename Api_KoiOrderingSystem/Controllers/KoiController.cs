@@ -6,6 +6,8 @@ using Common.DTO.KoiFish;
 using Microsoft.AspNetCore.OData.Query;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.AspNetCore.Authorization;
+using Common.Enum;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
@@ -37,6 +39,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("koi")]
+        [Authorize(Roles = "KoiFarmManager")]
         public async Task<IActionResult> AddKoi([FromForm] KoiDTO model)
         {
             if (!ModelState.IsValid)
@@ -62,6 +65,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpDelete("koi")]
+        [Authorize(Roles = "KoiFarmManager")]
         public async Task<IActionResult> DeleteKoi(Guid koiId)
         {
 
@@ -79,6 +83,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPut("koi")]
+        [Authorize(Roles = "KoiFarmManager")]
         public async Task<IActionResult> UpdateKoi([FromForm] UpdateKoiDTO updateKoiDTO)
         {
             var checkValid = await _koiService.CheckValidationUpdateKoi(updateKoiDTO);
@@ -119,6 +124,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-koi-koifarm")]
+        [Authorize(Roles = "KoiFarmManager")]
         [EnableQuery]
         public async Task<IActionResult> GetAllKoiOfFarm([Required] Guid farmId)
         {

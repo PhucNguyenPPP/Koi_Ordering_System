@@ -21,5 +21,6 @@ namespace Service.Interfaces
         Task<ResponseDTO> GetAllStorageHistoryOrder(Guid storageProvinceId);
         Task<ResponseDTO> GetOrderDetail(Guid orderId);
         Task<ResponseDTO> AssignFlightToOrder(AssignFlightToOrderDTO assignFlightToOrderDTO);
+        Task<ResponseDTO> GetAllRefundOrder();
     }
 }

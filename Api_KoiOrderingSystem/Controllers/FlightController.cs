@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using Common.Enum;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
@@ -29,6 +30,7 @@ namespace Api_KoiOrderingSystem.Controllers
 
         [HttpGet("flights")]
         [EnableQuery]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllFlight()
         {
             ResponseDTO responseDTO = await _flightService.GetAll();
@@ -44,6 +46,7 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(responseDTO.Result);
         }
         [HttpPost("new-flight")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddFlight([FromBody] NewFlightDTO model)
         {
             if (!ModelState.IsValid)
@@ -69,6 +72,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPut("flight")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateFlight([FromBody] UpdateFlightDTO model)
         {
             if (!ModelState.IsValid)
@@ -91,6 +95,7 @@ namespace Api_KoiOrderingSystem.Controllers
             }
         }
         [HttpDelete("{flightId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteFlight(Guid flightId)
         {
             bool success = await _flightService.DeleteFlight(flightId);
