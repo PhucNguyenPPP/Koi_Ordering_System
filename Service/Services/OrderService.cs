@@ -404,5 +404,17 @@ namespace Service.Services
             }    
             return new ResponseDTO("Assign flight to order sucessfully", 200, true);
         }
+
+        public async Task<ResponseDTO> GetAllRefundOrder()
+        {
+            var order = _unitOfWork.Order
+                .GetAllByCondition(c =>
+                c.Status == OrderStatusConstant.ProcessingRefund ||
+                c.Status == OrderStatusConstant.AcceptedRefund ||
+                c.Status == OrderStatusConstant.DeniedRefund ||
+                c.Status == OrderStatusConstant.CompletedRefund).ToList();
+            if (order == null || !order.Any()) return new ResponseDTO("No refund order list!", 400, false);
+            return new ResponseDTO("List displayed successfully", 200, true, order);
+        }
     }
 }

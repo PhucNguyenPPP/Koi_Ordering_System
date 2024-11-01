@@ -159,5 +159,23 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(responseDTO);
         }
+
+        [HttpGet("order-refund")]
+        [EnableQuery]
+        //[Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
+        public async Task<IActionResult> GetRefundOrder()
+        {
+            ResponseDTO responseDTO = await _orderService.GetAllRefundOrder();
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+
+            }
+            return Ok(responseDTO);
+        }
     }
 }
