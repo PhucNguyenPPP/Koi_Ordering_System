@@ -265,7 +265,9 @@ namespace Service.Services
 
         public async Task<ResponseDTO> GetAllHistoryOrder(Guid customerId)
         {
-            var customer = _unitOfWork.User.GetAllByCondition(c => c.UserId == customerId && c.Role.RoleName == RoleEnum.Customer.ToString());
+            var customer = _unitOfWork.User
+                .GetAllByCondition(c => c.UserId == customerId && 
+                c.Role.RoleName == RoleEnum.Customer.ToString());
             if (customer.IsNullOrEmpty())
             {
                 return new ResponseDTO("Invalid customer!", 400, false);
@@ -274,6 +276,7 @@ namespace Service.Services
                 var order = _unitOfWork.Order
                 .GetAllByCondition(c=> c.CustomerId == customerId)
                 .Include(c=> c.Kois).ThenInclude(c=> c.Farm)
+                .Include(c=> c.Kois).ThenInclude(c=> c.KoiBreeds).ThenInclude(c=> c.Breed)
                 .ToList();
             if (order == null || !order.Any())  return new ResponseDTO("Your history order list is empty!", 400, false);
             var list = _mapper.Map<List<GetAllHistoryOrderDTO>>(order);
