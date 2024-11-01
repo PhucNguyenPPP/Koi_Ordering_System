@@ -59,6 +59,7 @@ namespace Service.Services
             }
             _unitOfWork.OrderStorage.UpdateRange(orderStorageJapan);
             var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == assignShipperDTO.OrderId);
+            order.ToShipDate = DateTime.Now;
             order.Status = OrderStatusConstant.ToShip;
             _unitOfWork.Order.Update(order);
             var saveChanges = await _unitOfWork.SaveChangeAsync();

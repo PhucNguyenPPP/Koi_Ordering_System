@@ -283,6 +283,7 @@ namespace Service.Services
             }
 
             order.Status = OrderStatusConstant.Completed;
+            order.PackagedDate =  DateTime.Now;
 
             // Update order using UnitOfWork
             _unitOfWork.Order.Update(order);
