@@ -75,7 +75,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("all-customer-history-order")]
-        //[Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer")]
         [EnableQuery]
         public async Task<IActionResult> GetAllHistoryOrder([Required]Guid customerId)
         {
