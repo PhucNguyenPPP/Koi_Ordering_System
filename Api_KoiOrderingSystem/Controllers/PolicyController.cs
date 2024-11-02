@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.OData.Query;
 
 [Route("odata/[controller]")]
 [ApiController]
-[Authorize(Roles = "KoiFarmManager,Admin")]
+[Authorize(Roles = "KoiFarmManager")]
 public class PolicyController : ControllerBase
 {
     private readonly IPolicyService _policyService;
