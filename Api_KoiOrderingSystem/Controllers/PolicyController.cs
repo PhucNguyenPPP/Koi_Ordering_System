@@ -1,4 +1,5 @@
 using Common.DTO.General;
+using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 
@@ -72,5 +73,15 @@ public class PolicyController : ControllerBase
             return Ok(new ResponseDTO("Policy deleted successfully", 200, true, null));
         }
         return NotFound(new ResponseDTO("Policy not found", 404, false, null));
+    }
+    [HttpGet("policies-of-farm")]
+    public async Task<IActionResult> GetPolicyByFarm(Guid farmId)
+    {
+        var policies = await _policyService.GetPolicyByFarm(farmId);
+        if (policies == null)
+        {
+            return NotFound(new ResponseDTO("Policy not found", 404, false, null));
+        }
+        return Ok(new ResponseDTO("Policy retrieved successfully", 200, true, policies));
     }
 }
