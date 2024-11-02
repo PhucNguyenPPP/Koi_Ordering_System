@@ -35,6 +35,7 @@ builder.Services.AddScoped<IShippingFeeService, ShippingFeeService>();
 builder.Services.AddScoped<IOrderStorageService, OrderStorageService>();
 builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<IAirportService , AirportService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 builder.Services.AddApplicationServices(builder.Configuration);
 
