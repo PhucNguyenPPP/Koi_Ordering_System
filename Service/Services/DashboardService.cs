@@ -24,6 +24,7 @@ namespace Service.Services
             _userService = userService;
         }
 
+
         public async Task<ResponseDTO> GetRevenueByAdmin(DateOnly startdate, DateOnly enddate)
         {
             var orderList = _unitOfWork.Order
@@ -34,6 +35,7 @@ namespace Service.Services
             var sum = CalculateRevenue(startdate, enddate, orderList);
             return new ResponseDTO("Get revenue by time period successfully", 200, true, sum);
         }
+
 
         public async Task<ResponseDTO> GetRevenueByFarm(DateOnly startdate, DateOnly enddate, Guid farmId)
         {
@@ -51,7 +53,26 @@ namespace Service.Services
             return new ResponseDTO("Get revenue by time period successfully", 200, true, sum);
         }
 
-        public decimal ? CalculateRevenue (DateOnly startdate, DateOnly enddate, List<Order> orderList)
+        
+        public async Task<ResponseDTO> GetProfitByAdmin(DateOnly startdate, DateOnly enddate)
+        {
+            ResponseDTO ? revenue = await GetRevenueByAdmin(startdate, enddate);
+            decimal ? revenueSum = 0;
+            if (revenue.IsSuccess)
+            {
+                revenueSum = (decimal)revenue.Result;
+            }
+            else
+            {
+                return revenue;
+            }
+            decimal? profit;
+            profit = revenueSum * 30 / 100;
+            
+            return new ResponseDTO("Get profit by time range successfully", 200, true, profit);
+        }
+
+        public decimal? CalculateRevenue(DateOnly startdate, DateOnly enddate, List<Order> orderList)
         {
             DateOnly? endDate = DateOnly.MinValue;
             decimal? sum = 0;
@@ -76,7 +97,7 @@ namespace Service.Services
                         sum += totalPrice;
                     }
                 }
-                else if(orderList[i].Status == OrderStatusConstant.CompletedRefund)
+                else if (orderList[i].Status == OrderStatusConstant.CompletedRefund)
                 {
                     endDate = orderList[i].RefundCompletedDate.HasValue ?
                         DateOnly.FromDateTime(orderList[i].RefundCompletedDate.Value) :
@@ -90,23 +111,6 @@ namespace Service.Services
                 }
             }
             return sum;
-        }
-        public async Task<ResponseDTO> GetProfitByAdmin(DateOnly startdate, DateOnly enddate)
-        {
-            ResponseDTO ? revenue = await GetRevenueByAdmin(startdate, enddate);
-            decimal ? revenueSum = 0;
-            if (revenue.IsSuccess)
-            {
-                revenueSum = (decimal)revenue.Result;
-            }
-            else
-            {
-                return revenue;
-            }
-            decimal? profit;
-            profit = revenueSum * 30 / 100;
-            
-            return new ResponseDTO("Lấy thông tin lợi nhuận thành công", 200, true, profit);
         }
     }
 }
