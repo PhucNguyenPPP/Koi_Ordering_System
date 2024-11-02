@@ -1,9 +1,11 @@
 using Common.DTO.General;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 
 [Route("odata/[controller]")]
 [ApiController]
+[Authorize(Roles = "KoiFarmManager,Admin")]
 public class PolicyController : ControllerBase
 {
     private readonly IPolicyService _policyService;
