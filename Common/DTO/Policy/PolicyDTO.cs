@@ -9,5 +9,6 @@ public class PolicyDTO
     public bool IsBackToFarm { get; set; }
 
     public int PercentageRefund { get; set; }
+    public bool Status { get; set; }
     public Guid FarmId { get; set; }
 }
