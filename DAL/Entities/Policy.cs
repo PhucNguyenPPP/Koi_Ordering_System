@@ -15,6 +15,8 @@ public partial class Policy
 
     public bool IsBackToFarm { get; set; }
 
+    public bool Status { get; set; }
+
     public Guid FarmId { get; set; }
 
     public virtual KoiFarm Farm { get; set; } = null!;
