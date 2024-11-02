@@ -1,4 +1,5 @@
 ﻿using Common.DTO.General;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -19,6 +20,7 @@ namespace Api_KoiOrderingSystem.Controllers
 		}
 		
 		[HttpGet("shippers")]
+        [Authorize(Roles = "StorageManager,Admin")]
         [EnableQuery]
         public async Task<IActionResult> GetAllShippersInStorageProvince([FromQuery] Guid storageProvinceId)
         {
