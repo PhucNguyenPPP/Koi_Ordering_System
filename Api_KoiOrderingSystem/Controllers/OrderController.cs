@@ -177,5 +177,52 @@ namespace Api_KoiOrderingSystem.Controllers
             }
             return Ok(responseDTO.Result);
         }
+
+        [HttpPost("create-refund")]
+        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
+        public async Task<IActionResult> CreateRefundRequestOrder([FromForm] CreateRefundRequestDTO createRefundRequestDTO)
+        {
+            ResponseDTO responseDTO = await _orderService.CreateRefundRequestOrder(createRefundRequestDTO);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+            }
+            return Ok(responseDTO);
+        }
+
+        [HttpPost("process-refund")]
+        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
+        public async Task<IActionResult> ProcessRefundRequestOrder([FromBody] ProcessRefundRequestDTO processRefundRequestDTO)
+        {
+            ResponseDTO responseDTO = await _orderService.ProcessRefundRequestOrder(processRefundRequestDTO);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+            }
+            return Ok(responseDTO);
+        }
+
+        [HttpPost("complete-refund")]
+        public async Task<IActionResult> CompleteRefundRequestOrder([FromBody] CompleteRefundRequestDTO completeRefundRequestDTO)
+        {
+            ResponseDTO responseDTO = await _orderService.CompleteRefundRequestOrder(completeRefundRequestDTO.OrderId);
+            if (!responseDTO.IsSuccess)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+            }
+            return Ok(responseDTO);
+        }
     }
 }

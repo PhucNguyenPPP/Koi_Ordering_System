@@ -27,5 +27,6 @@ namespace DAL.UnitOfWork
         ITransactionRepository Transaction {  get; }
         IFlightRepository Flight{ get; }
         IAirportRepository Airport { get; }
+        IRefundRequestMediumRepository RefundRequestMedium { get; }
 	}
 }
