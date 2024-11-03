@@ -74,5 +74,23 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(responseDTO);
         }
+        [HttpGet("profit-of-admin")]
+        public async Task<IActionResult> GetProfitOfAdminByYear([Required] int year)
+        {
+            ResponseDTO responseDTO = await _dashboardService.GetProfitOfAdminByYear(year);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                else
+                {
+                    return BadRequest(responseDTO);
+                }
+            }
+
+            return Ok(responseDTO);
+        }
     }
 }

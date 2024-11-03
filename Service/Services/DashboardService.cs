@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.DTO.Dashboard;
 using Common.DTO.General;
 using Common.Enum;
 using DAL.Entities;
@@ -111,6 +112,42 @@ namespace Service.Services
                 }
             }
             return sum;
+        }
+
+        public async Task<ResponseDTO> GetProfitOfAdminByYear(int year)
+        {
+            List<ProfitByMonthDTO> list = new List<ProfitByMonthDTO>();
+            for (int i = 1; i <= 12; i++)
+            {
+                ProfitByMonthDTO profitByMonth = new ProfitByMonthDTO();
+                profitByMonth.Month = i;
+                list.Add(profitByMonth);
+            }
+            foreach (var item in list)
+            {
+                var lastDayOfMonth = new DateOnly();
+                var firstDayOfNextMonth = new DateOnly();
+                if (item.Month == 12)
+                {
+                    lastDayOfMonth = new DateOnly(year, 12, 31);
+                }
+                else
+                {
+                    firstDayOfNextMonth = new DateOnly(year, item.Month + 1, 1);
+                    lastDayOfMonth = firstDayOfNextMonth.AddDays(-1);
+                }
+                var firstDayOfMonth = new DateOnly(year, item.Month, 1);
+                ResponseDTO result = await GetProfitByAdmin(firstDayOfMonth, lastDayOfMonth);
+                if (result != null)
+                {
+                    item.Profit = (decimal)result.Result;
+                } else
+                {
+                    item.Profit = 0;    
+                }    
+
+            }
+            return new ResponseDTO("Lấy thông tin lợi nhuận theo năm thành công", 200, true, list);
         }
     }
 }
