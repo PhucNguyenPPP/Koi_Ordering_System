@@ -457,5 +457,41 @@ namespace Service.Services
 
             return new ResponseDTO("Create refund request successfully", 200, true);
         }
+
+        public async Task<ResponseDTO> ProcessRefundRequestOrder(ProcessRefundRequestDTO processRefundRequestDTO)
+        {
+            var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == processRefundRequestDTO.OrderId);
+            if (order == null)
+            {
+                return new ResponseDTO("Order not found", 400, false);
+            }
+
+            if (order.Status != OrderStatusConstant.ProcessingRefund)
+            {
+                return new ResponseDTO("Order status must be 'Processing Refund' to process a refund request", 400, false);
+            }
+
+            if (processRefundRequestDTO.Action.ToLower() == "accept")
+            {
+                order.Status = OrderStatusConstant.AcceptedRefund;
+            }
+            else if (processRefundRequestDTO.Action.ToLower() == "deny")
+            {
+                order.Status = OrderStatusConstant.DeniedRefund;
+            }
+            else
+            {
+                return new ResponseDTO("Invalid action. Use 'accept' or 'deny'.", 400, false);
+            }
+
+            order.RefundResponse = processRefundRequestDTO.RefundResponse;
+            order.RefundConfirmedDate = DateTime.Now;
+
+            _unitOfWork.Order.Update(order);
+            await _unitOfWork.SaveChangeAsync();
+
+            return new ResponseDTO($"Refund request {processRefundRequestDTO.Action}ed successfully", 200, true);
+        }
+
     }
 }

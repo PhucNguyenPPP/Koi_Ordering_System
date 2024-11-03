@@ -23,5 +23,6 @@ namespace Service.Interfaces
         Task<ResponseDTO> AssignFlightToOrder(AssignFlightToOrderDTO assignFlightToOrderDTO);
         Task<ResponseDTO> GetAllRefundOrder();
         Task<ResponseDTO> CreateRefundRequestOrder(CreateRefundRequestDTO createRefundRequestDTO);
+        Task<ResponseDTO> ProcessRefundRequestOrder(ProcessRefundRequestDTO processRefundRequestDTO);
     }
 }
