@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.DTO.RefundImage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,5 +71,23 @@ namespace Common.DTO.Order
 
         public string? ArrivalAirport { get; set; }
 
+        public string? RefundDescription { get; set; }
+
+        public string? RefundResponse { get; set; }
+
+        public DateTime? RefundCreatedDate { get; set; }
+
+        public DateTime? RefundConfirmedDate { get; set; }
+
+        public DateTime? RefundCompletedDate { get; set; }
+
+        public int? RefundPercentage { get; set; }
+
+        public string? BankAccount { get; set; }
+
+        public Guid? RefundPolicyId { get; set; }
+
+        public PolicyDTO? RefundPolicy { get; set; }
+        public List<RefundImageDTO>? RefundRequestMedia { get; set; }
     }
 }

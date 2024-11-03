@@ -336,6 +336,11 @@ namespace Service.Services
             .Include(c => c.Kois)
             .ThenInclude(c => c.Farm)
             .ThenInclude(c => c.KoiFarmManager)
+            .Include(c => c.Kois)
+            .ThenInclude(c => c.KoiBreeds)
+            .ThenInclude(c => c.Breed)
+            .Include(c => c.RefundPolicy)
+            .Include(c => c.RefundRequestMedia)
             .FirstOrDefault();
 
             if (order == null)
@@ -412,9 +417,13 @@ namespace Service.Services
                 c.Status == OrderStatusConstant.ProcessingRefund ||
                 c.Status == OrderStatusConstant.AcceptedRefund ||
                 c.Status == OrderStatusConstant.DeniedRefund ||
-                c.Status == OrderStatusConstant.CompletedRefund).ToList();
+                c.Status == OrderStatusConstant.CompletedRefund)
+                .Include(c => c.Customer)
+                .Include(c => c.Kois).ThenInclude(c => c.Farm)
+                .ToList();
             if (order == null || !order.Any()) return new ResponseDTO("No refund order list!", 400, false);
-            return new ResponseDTO("List displayed successfully", 200, true, order);
+            var list = _mapper.Map<List<GetAllRefundOrderDTO>>(order);
+            return new ResponseDTO("List displayed successfully", 200, true, list);
         }
     }
 }
