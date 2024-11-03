@@ -175,7 +175,7 @@ namespace Api_KoiOrderingSystem.Controllers
                 return BadRequest(responseDTO);
 
             }
-            return Ok(responseDTO);
+            return Ok(responseDTO.Result);
         }
     }
 }
