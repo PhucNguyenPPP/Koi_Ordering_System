@@ -1,9 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-
-public class PolicyDTO
+public class CreatePolicyRequest
 {
-    [Key]
-    public Guid PolicyId { get; set; }
     public string PolicyName { get; set; } = null!;
     public string Description { get; set; } = null!;
     public int PercentageRefund { get; set; }

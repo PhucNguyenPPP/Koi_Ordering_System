@@ -36,7 +36,7 @@ public class PolicyService : IPolicyService
         return _mapper.Map<PolicyDTO>(policy);
     }
 
-    public async Task<bool> AddPolicyAsync(PolicyDTO policyDTO)
+    public async Task<bool> AddPolicyAsync(CreatePolicyRequest policyDTO)
     {
         if (policyDTO == null)
         {
