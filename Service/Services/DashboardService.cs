@@ -40,25 +40,25 @@ namespace Service.Services
 
         public async Task<ResponseDTO> GetRevenueByFarm(DateOnly startdate, DateOnly enddate, Guid farmId)
         {
-            var farm = _unitOfWork.KoiFarm.GetAllByCondition(c=> c.KoiFarmId == farmId);
+            var farm = _unitOfWork.KoiFarm.GetAllByCondition(c => c.KoiFarmId == farmId);
             if (!farm.Any())
             {
                 return new ResponseDTO("Invalid koi farm!", 400, false);
             }
             var orderList = _unitOfWork.Order
-                .GetAllByCondition(c=> 
-                c.Kois.FirstOrDefault().FarmId == farmId && 
-                c.Status == OrderStatusConstant.Completed || 
+                .GetAllByCondition(c =>
+                c.Kois.FirstOrDefault().FarmId == farmId &&
+                c.Status == OrderStatusConstant.Completed ||
                 c.Status == OrderStatusConstant.CompletedRefund).ToList();
             var sum = CalculateRevenue(startdate, enddate, orderList);
             return new ResponseDTO("Get revenue by time period successfully", 200, true, sum);
         }
 
-        
+
         public async Task<ResponseDTO> GetProfitByAdmin(DateOnly startdate, DateOnly enddate)
         {
-            ResponseDTO ? revenue = await GetRevenueByAdmin(startdate, enddate);
-            decimal ? revenueSum = 0;
+            ResponseDTO? revenue = await GetRevenueByAdmin(startdate, enddate);
+            decimal? revenueSum = 0;
             if (revenue.IsSuccess)
             {
                 revenueSum = (decimal)revenue.Result;
@@ -69,7 +69,7 @@ namespace Service.Services
             }
             decimal? profit;
             profit = revenueSum * 30 / 100;
-            
+
             return new ResponseDTO("Get profit by time range successfully", 200, true, profit);
         }
 
@@ -142,13 +142,55 @@ namespace Service.Services
                 if (result != null)
                 {
                     item.Profit = (decimal)result.Result;
-                } else
+                }
+                else
                 {
-                    item.Profit = 0;    
-                }    
+                    item.Profit = 0;
+                }
 
             }
-            return new ResponseDTO("Lấy thông tin lợi nhuận theo năm thành công", 200, true, list);
+            return new ResponseDTO("Get profit by month of year sucessfully!", 200, true, list);
+        }
+
+        public async Task<ResponseDTO> GetProfitOfFarmByYear(int year, Guid farmId)
+        {
+            var farm = await _unitOfWork.KoiFarm.GetByCondition(f => f.KoiFarmId.Equals(farmId));
+            if(farm == null)
+            {
+                return new ResponseDTO("Farm does not exist",400, false);
+            }    
+            List<ProfitByMonthDTO> list = new List<ProfitByMonthDTO>();
+            for (int i = 1; i <= 12; i++)
+            {
+                ProfitByMonthDTO profitByMonth = new ProfitByMonthDTO();
+                profitByMonth.Month = i;
+                list.Add(profitByMonth);
+            }
+            foreach (var item in list)
+            {
+                var lastDayOfMonth = new DateOnly();
+                var firstDayOfNextMonth = new DateOnly();
+                if (item.Month == 12)
+                {
+                    lastDayOfMonth = new DateOnly(year, 12, 31);
+                }
+                else
+                {
+                    firstDayOfNextMonth = new DateOnly(year, item.Month + 1, 1);
+                    lastDayOfMonth = firstDayOfNextMonth.AddDays(-1);
+                }
+                var firstDayOfMonth = new DateOnly(year, item.Month, 1);
+                ResponseDTO result = await GetRevenueByFarm(firstDayOfMonth, lastDayOfMonth, farmId);
+                if (result != null)
+                {
+                    item.Profit = ((decimal)result.Result * 70 / 100);
+                }
+                else
+                {
+                    item.Profit = 0;
+                }
+            }
+            return new ResponseDTO("Get profit by month of year sucessfully!", 200, true, list);
         }
     }
 }

@@ -92,5 +92,23 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(responseDTO);
         }
+        [HttpGet("profit-of-farm")]
+        public async Task<IActionResult> GetProfitOfFarmByYear([Required] int year, [Required] Guid farmId)
+        {
+            ResponseDTO responseDTO = await _dashboardService.GetProfitOfFarmByYear(year,farmId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                else
+                {
+                    return BadRequest(responseDTO);
+                }
+            }
+
+            return Ok(responseDTO);
+        }
     }
 }
