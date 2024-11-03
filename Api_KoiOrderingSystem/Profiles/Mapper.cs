@@ -6,6 +6,8 @@ using Common.DTO.Flight;
 using Common.DTO.KoiFarm;
 using Common.DTO.KoiFish;
 using Common.DTO.Order;
+using Common.DTO.Policy;
+using Common.DTO.RefundImage;
 using Common.DTO.StorageProvince;
 using Common.Enum;
 using DAL.Entities;
@@ -106,6 +108,13 @@ namespace Api_KoiOrderingSystem.Profiles
                .ForMember(dest => dest.DepartureAirport, opt => opt.MapFrom(src => src.Flight.DepartureAirport.AirportName))
                .ForMember(dest => dest.ArrivalAirport, opt => opt.MapFrom(src => src.Flight.ArrivalAirport.AirportName))
                .ReverseMap();
+            CreateMap<Order, GetAllRefundOrderDTO>()
+                 .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().FarmId))
+                .ForMember(dest => dest.FarmName, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.FarmName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ReverseMap();
+
+            CreateMap<RefundRequestMedium, RefundImageDTO>().ReverseMap();
             #endregion
         }
 
