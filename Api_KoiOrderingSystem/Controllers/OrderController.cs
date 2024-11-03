@@ -196,10 +196,25 @@ namespace Api_KoiOrderingSystem.Controllers
 
         [HttpPost("process-refund")]
         [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
-        public async Task<IActionResult> ProcessRefundRequestOrder([FromForm] ProcessRefundRequestDTO processRefundRequestDTO)
+        public async Task<IActionResult> ProcessRefundRequestOrder([FromBody] ProcessRefundRequestDTO processRefundRequestDTO)
         {
             ResponseDTO responseDTO = await _orderService.ProcessRefundRequestOrder(processRefundRequestDTO);
             if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                return BadRequest(responseDTO);
+            }
+            return Ok(responseDTO);
+        }
+
+        [HttpPost("complete-refund")]
+        public async Task<IActionResult> CompleteRefundRequestOrder([FromBody] CompleteRefundRequestDTO completeRefundRequestDTO)
+        {
+            ResponseDTO responseDTO = await _orderService.CompleteRefundRequestOrder(completeRefundRequestDTO.OrderId);
+            if (!responseDTO.IsSuccess)
             {
                 if (responseDTO.StatusCode == 404)
                 {

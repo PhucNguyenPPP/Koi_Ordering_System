@@ -493,5 +493,26 @@ namespace Service.Services
             return new ResponseDTO($"Refund request {processRefundRequestDTO.Action}ed successfully", 200, true);
         }
 
+        public async Task<ResponseDTO> CompleteRefundRequestOrder(Guid orderId)
+        {
+            var order = await _unitOfWork.Order.GetByCondition(o => o.OrderId == orderId);
+            if (order == null)
+            {
+                return new ResponseDTO("Order not found", 400, false);
+            }
+
+            if (order.Status != OrderStatusConstant.AcceptedRefund)
+            {
+                return new ResponseDTO("Order status must be 'Accepted Refund' to complete the refund process", 400, false);
+            }
+
+            order.Status = OrderStatusConstant.CompletedRefund;
+            order.RefundCompletedDate = DateTime.Now;
+
+            _unitOfWork.Order.Update(order);
+            await _unitOfWork.SaveChangeAsync();
+
+            return new ResponseDTO("Refund request completed successfully", 200, true);
+        }
     }
 }
