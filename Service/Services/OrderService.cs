@@ -13,6 +13,7 @@ using Common.Enum;
 using DAL.Entities;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
@@ -24,11 +25,13 @@ namespace Service.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFlightService _flightService;
-        public OrderService(IMapper mapper, IUnitOfWork unitOfWork, IFlightService flightService)
+        private readonly IImageService _imageService;
+        public OrderService(IMapper mapper, IUnitOfWork unitOfWork, IFlightService flightService, IImageService imageService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _flightService = flightService;
+            _imageService = imageService;
         }
 
         public async Task<ResponseDTO> CheckValidationCreateOrder(CreateOrderDTO createOrderDTO)
@@ -415,6 +418,44 @@ namespace Service.Services
                 c.Status == OrderStatusConstant.CompletedRefund).ToList();
             if (order == null || !order.Any()) return new ResponseDTO("No refund order list!", 400, false);
             return new ResponseDTO("List displayed successfully", 200, true, order);
+        }
+
+        public async Task<ResponseDTO> CreateRefundRequestOrder(CreateRefundRequestDTO createRefundRequestDTO)
+        {
+            var policy = await _unitOfWork.Policy.GetByCondition(p => p.PolicyId == createRefundRequestDTO.PolicyId);
+            if (policy == null) {
+                return new ResponseDTO("Policy not found", 400, true);
+            }
+
+            var order = await _unitOfWork.Order.GetByCondition(p => p.OrderId == createRefundRequestDTO.OrderId);
+            if (order == null) {
+                return new ResponseDTO("Order not found", 400, true);
+            }
+
+            order.RefundPolicyId = policy.PolicyId;
+            order.RefundCreatedDate = DateTime.Now;
+            order.RefundDescription = createRefundRequestDTO.RefundDescription;
+            order.RefundPercentage = policy.PercentageRefund;
+            order.Status = OrderStatusConstant.ProcessingRefund;
+            order.BankAccount = createRefundRequestDTO.BankAccount;
+
+            _unitOfWork.Order.Update(order);
+
+            foreach (var image in createRefundRequestDTO.Images)
+            {
+                var refundMediaLink = await _imageService.StoreImageAndGetLink(image, "refundMedia_img");
+                RefundRequestMedium refundRequestMedium = new RefundRequestMedium
+                {
+                    RefundRequestMediaId = Guid.NewGuid(), // Generating a new Guid
+                    Link = refundMediaLink,
+                    OrderId = order.OrderId
+                };
+                
+                await _unitOfWork.RefundRequestMedium.AddAsync(refundRequestMedium); // Use refundRequestMedium instead of refundMediaLink
+            }
+            await _unitOfWork.SaveChangeAsync();
+
+            return new ResponseDTO("Create refund request successfully", 200, true);
         }
     }
 }
