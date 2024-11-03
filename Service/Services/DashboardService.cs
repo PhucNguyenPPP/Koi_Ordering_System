@@ -95,6 +95,7 @@ namespace Service.Services
                     if (endDate >= startdate && endDate <= enddate)
                     {
                         totalPrice = orderList[i].TotalPrice;
+                        totalPrice -= decimal.Parse(orderList[i].ShippingFee);
                         sum += totalPrice;
                     }
                 }
@@ -106,7 +107,7 @@ namespace Service.Services
                     if (endDate >= startdate && endDate <= enddate)
                     {
                         totalPrice = orderList[i].TotalPrice;
-                        finalPrice = totalPrice - (totalPrice * orderList[i].RefundPercentage / 100);
+                        finalPrice = totalPrice - (totalPrice * orderList[i].RefundPercentage / 100) - decimal.Parse(orderList[i].ShippingFee);
                         sum += finalPrice;
                     }
                 }
