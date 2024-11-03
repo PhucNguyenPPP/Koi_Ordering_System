@@ -17,7 +17,7 @@ public class PolicyService : IPolicyService
     public async Task<List<PolicyDTO>> GetAllPoliciesAsync()
     {
         // Use the UnitOfWork to get the Policy repository
-        var policies = await _unitOfWork.Policy.GetAll().ToListAsync();
+        var policies = await _unitOfWork.Policy.GetAllByCondition(p => p.Status == true).ToListAsync();
 
         // Map the entities to DTOs
         return _mapper.Map<List<PolicyDTO>>(policies);
@@ -96,7 +96,7 @@ public class PolicyService : IPolicyService
     {
 
         // Use the UnitOfWork to get the Policy repository
-        var policies = await _unitOfWork.Policy.GetAllByCondition(p => p.FarmId.Equals(farmId)).ToListAsync();
+        var policies = await _unitOfWork.Policy.GetAllByCondition(p => p.FarmId.Equals(farmId) && p.Status == true).ToListAsync();
 
         // Map the entities to DTOs
         return _mapper.Map<List<PolicyDTO>>(policies);
