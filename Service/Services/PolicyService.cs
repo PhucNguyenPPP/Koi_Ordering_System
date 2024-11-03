@@ -83,10 +83,22 @@ public class PolicyService : IPolicyService
             return false;
         }
 
-        // Delete the policy using UnitOfWork
-        _unitOfWork.Policy.Delete(policy);
+        policy.Status = false;
+
+        // Update policy using UnitOfWork
+        _unitOfWork.Policy.Update(policy);
 
         // Save changes
         return await _unitOfWork.SaveChangeAsync();
+    }
+
+    public async Task<List<PolicyDTO>> GetPolicyByFarm(Guid farmId)
+    {
+
+        // Use the UnitOfWork to get the Policy repository
+        var policies = await _unitOfWork.Policy.GetAllByCondition(p => p.FarmId.Equals(farmId)).ToListAsync();
+
+        // Map the entities to DTOs
+        return _mapper.Map<List<PolicyDTO>>(policies);
     }
 }

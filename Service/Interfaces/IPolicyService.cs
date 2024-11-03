@@ -5,4 +5,5 @@ public interface IPolicyService
     Task<bool> AddPolicyAsync(CreatePolicyRequest policyDTO);
     Task<bool> UpdatePolicyAsync(PolicyDTO policyDTO);
     Task<bool> DeletePolicyAsync(Guid policyId);
+    Task<List<PolicyDTO>> GetPolicyByFarm(Guid farmId);
 }
