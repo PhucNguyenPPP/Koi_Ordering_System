@@ -26,6 +26,7 @@ namespace DAL.UnitOfWork
             Transaction = new TransactionRepository(_context);
             Flight = new FlightRepository(_context);
             Airport = new AirportRepository(_context);
+            RefundRequestMedium = new RefundRequestMediumRepository(_context);
         }
 
 
@@ -57,5 +58,7 @@ namespace DAL.UnitOfWork
         public IFlightRepository Flight { get; private set; }
 
         public IAirportRepository Airport { get; private set; }
+
+        public IRefundRequestMediumRepository RefundRequestMedium { get; private set; }
     }
 }
