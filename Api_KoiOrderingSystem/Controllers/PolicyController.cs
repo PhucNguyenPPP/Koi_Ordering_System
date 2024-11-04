@@ -3,11 +3,11 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 
-[Route("odata/[controller]")]
+[Route("odata")]
 [ApiController]
-[Authorize(Roles = "KoiFarmManager")]
-public class PolicyController : ControllerBase
+public class PolicyController : ODataController
 {
     private readonly IPolicyService _policyService;
 
@@ -16,8 +16,9 @@ public class PolicyController : ControllerBase
         _policyService = policyService;
     }
 
-    [HttpGet]
+    [HttpGet("all-policies")]
     [EnableQuery]
+    [Authorize(Roles = "KoiFarmManager")]
     public async Task<IActionResult> GetAllPolicies()
     {
         var policies = await _policyService.GetAllPoliciesAsync();
@@ -29,6 +30,7 @@ public class PolicyController : ControllerBase
     }
 
     [HttpGet("{policyId}")]
+    [Authorize(Roles = "KoiFarmManager")]
     public async Task<IActionResult> GetPolicyById(Guid policyId)
     {
         var policy = await _policyService.GetPolicyByIdAsync(policyId);
@@ -39,7 +41,8 @@ public class PolicyController : ControllerBase
         return Ok(new ResponseDTO("Policy retrieved successfully", 200, true, policy));
     }
 
-    [HttpPost]
+    [HttpPost("policy")]
+    [Authorize(Roles = "KoiFarmManager")]
     public async Task<IActionResult> AddPolicy([FromBody] CreatePolicyRequest createPolicyRequest)
     {
         if (!ModelState.IsValid)
@@ -55,7 +58,8 @@ public class PolicyController : ControllerBase
         return BadRequest(new ResponseDTO("Failed to add policy", 400, false, null));
     }
 
-    [HttpPut]
+    [HttpPut("policy")]
+    [Authorize(Roles = "KoiFarmManager")]
     public async Task<IActionResult> UpdatePolicy([FromBody] PolicyDTO policyDTO)
     {
         var result = await _policyService.UpdatePolicyAsync(policyDTO);
@@ -66,7 +70,8 @@ public class PolicyController : ControllerBase
         return BadRequest(new ResponseDTO("Failed to update policy", 400, false, null));
     }
 
-    [HttpDelete("{policyId}")]
+    [HttpDelete("delete/{policyId}")]
+    [Authorize(Roles = "KoiFarmManager")]
     public async Task<IActionResult> DeletePolicy(Guid policyId)
     {
         var result = await _policyService.DeletePolicyAsync(policyId);
@@ -77,6 +82,8 @@ public class PolicyController : ControllerBase
         return NotFound(new ResponseDTO("Policy not found", 404, false, null));
     }
     [HttpGet("policies-of-farm")]
+    [EnableQuery]
+    [Authorize(Roles = "KoiFarmManager,Customer")]
     public async Task<IActionResult> GetPolicyByFarm(Guid farmId)
     {
         var policies = await _policyService.GetPolicyByFarm(farmId);
@@ -84,6 +91,6 @@ public class PolicyController : ControllerBase
         {
             return NotFound(new ResponseDTO("Policy not found", 404, false, null));
         }
-        return Ok(new ResponseDTO("Policy retrieved successfully", 200, true, policies));
+        return Ok(policies);
     }
 }

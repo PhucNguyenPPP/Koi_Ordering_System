@@ -5,4 +5,5 @@ public class CreatePolicyRequest
     public int PercentageRefund { get; set; }
     public bool IsBackToFarm { get; set; } = false;
     public Guid FarmId { get; set; }
+    public bool Status { get; set; } = false;
 }

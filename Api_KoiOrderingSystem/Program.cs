@@ -96,6 +96,7 @@ builder.Services.AddControllers()
         odataBuilder.EntitySet<Airport>("all-airports");
         odataBuilder.EntitySet<OrderShipperDTO>("shipper");
         odataBuilder.EntitySet<GetAllRefundOrderDTO>("order-refund");
+        odataBuilder.EntitySet<PolicyDTO>("policies-of-farm");
         options.AddRouteComponents("odata", odataBuilder.GetEdmModel());
         options.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100);
     });
