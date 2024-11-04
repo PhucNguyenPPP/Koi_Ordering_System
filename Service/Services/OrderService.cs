@@ -336,11 +336,15 @@ namespace Service.Services
             .Include(c => c.Kois)
             .ThenInclude(c => c.Farm)
             .ThenInclude(c => c.KoiFarmManager)
+            .ThenInclude(c => c.StorageProvince)
+            .ThenInclude(c => c.Airport)
             .Include(c => c.Kois)
             .ThenInclude(c => c.KoiBreeds)
             .ThenInclude(c => c.Breed)
             .Include(c => c.RefundPolicy)
             .Include(c => c.RefundRequestMedia)
+            .Include(c => c.StorageProvinceVietnam)
+            .ThenInclude(c => c.Airport)
             .FirstOrDefault();
 
             if (order == null)

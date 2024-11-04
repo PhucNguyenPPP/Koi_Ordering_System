@@ -30,7 +30,7 @@ namespace Api_KoiOrderingSystem.Controllers
 
         [HttpGet("flights")]
         [EnableQuery]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "StorageManager,Admin")]
         public async Task<IActionResult> GetAllFlight()
         {
             ResponseDTO responseDTO = await _flightService.GetAll();
@@ -46,7 +46,7 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(responseDTO.Result);
         }
         [HttpPost("new-flight")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "StorageManager,Admin")]
         public async Task<IActionResult> AddFlight([FromBody] NewFlightDTO model)
         {
             if (!ModelState.IsValid)
@@ -61,9 +61,9 @@ namespace Api_KoiOrderingSystem.Controllers
             }
 
             var signUpResult = await _flightService.AddFlight(model);
-            if (signUpResult)
+            if (signUpResult.IsSuccess)
             {
-                return Created("Success", new ResponseDTO("Add flight sucessfully", 201, true, null));
+                return Created("Success", signUpResult);
             }
             else
             {
@@ -72,7 +72,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPut("flight")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "StorageManager,Admin")]
         public async Task<IActionResult> UpdateFlight([FromBody] UpdateFlightDTO model)
         {
             if (!ModelState.IsValid)
@@ -95,7 +95,7 @@ namespace Api_KoiOrderingSystem.Controllers
             }
         }
         [HttpDelete("{flightId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "StorageManager,Admin")]
         public async Task<IActionResult> DeleteFlight(Guid flightId)
         {
             bool success = await _flightService.DeleteFlight(flightId);

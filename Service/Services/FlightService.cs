@@ -25,18 +25,19 @@ namespace Service.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> AddFlight(NewFlightDTO model)
+        public async Task<ResponseDTO> AddFlight(NewFlightDTO model)
         {
             var newFlight = _mapper.Map<Flight>(model);
-            newFlight.FlightId = Guid.NewGuid();
+            var flightId = Guid.NewGuid();
+            newFlight.FlightId = flightId;
             newFlight.Status = true;
             await _unitOfWork.Flight.AddAsync(newFlight);
             var saveChanges = await _unitOfWork.SaveChangeAsync();
             if (saveChanges)
             {
-                return true;
+                return new ResponseDTO("Add flight successfully", 201, true, flightId);
             }
-            return false;
+            return new ResponseDTO("Add flight failed", 201, false, null);
         }
 
         public async Task<ResponseDTO> CheckValidationCreateFlight(NewFlightDTO model)

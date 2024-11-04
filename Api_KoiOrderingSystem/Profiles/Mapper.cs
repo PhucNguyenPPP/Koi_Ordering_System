@@ -107,6 +107,8 @@ namespace Api_KoiOrderingSystem.Profiles
                .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(src => src.Flight.ArrivalDate.ToString() ?? null))
                .ForMember(dest => dest.DepartureAirport, opt => opt.MapFrom(src => src.Flight.DepartureAirport.AirportName))
                .ForMember(dest => dest.ArrivalAirport, opt => opt.MapFrom(src => src.Flight.ArrivalAirport.AirportName))
+               .ForMember(dest => dest.dpAirportId, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().Farm.StorageProvince.AirportId))
+               .ForMember(dest => dest.arrAirportId, opt => opt.MapFrom(src => src.StorageProvinceVietnam.AirportId))
                .ReverseMap();
             CreateMap<Order, GetAllRefundOrderDTO>()
                  .ForMember(dest => dest.FarmId, opt => opt.MapFrom(src => src.Kois.FirstOrDefault().FarmId))

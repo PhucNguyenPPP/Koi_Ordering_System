@@ -89,5 +89,8 @@ namespace Common.DTO.Order
 
         public PolicyDTO? RefundPolicy { get; set; }
         public List<RefundImageDTO>? RefundRequestMedia { get; set; }
+
+        public Guid? dpAirportId { get; set; }
+        public Guid? arrAirportId { get; set; } 
     }
 }

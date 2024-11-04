@@ -12,7 +12,7 @@ namespace Service.Interfaces
 {
     public interface IFlightService
     {
-        Task<bool> AddFlight(NewFlightDTO model);
+        Task<ResponseDTO> AddFlight(NewFlightDTO model);
         Task<ResponseDTO> CheckValidationCreateFlight(NewFlightDTO model);
         Task<ResponseDTO> CheckValidationUpdateFlight(UpdateFlightDTO model);
         Task<ResponseDTO> GetAll();
