@@ -40,14 +40,14 @@ public class PolicyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPolicy([FromBody] PolicyDTO policyDTO)
+    public async Task<IActionResult> AddPolicy([FromBody] CreatePolicyRequest createPolicyRequest)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(new ResponseDTO("Invalid input", 400, false, ModelState));
         }
 
-        var result = await _policyService.AddPolicyAsync(policyDTO);
+        var result = await _policyService.AddPolicyAsync(createPolicyRequest);
         if (result)
         {
             return Ok(new ResponseDTO("Policy added successfully", 200, true, null));

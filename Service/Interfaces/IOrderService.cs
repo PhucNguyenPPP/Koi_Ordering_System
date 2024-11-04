@@ -22,5 +22,8 @@ namespace Service.Interfaces
         Task<ResponseDTO> GetOrderDetail(Guid orderId);
         Task<ResponseDTO> AssignFlightToOrder(AssignFlightToOrderDTO assignFlightToOrderDTO);
         Task<ResponseDTO> GetAllRefundOrder();
+        Task<ResponseDTO> CreateRefundRequestOrder(CreateRefundRequestDTO createRefundRequestDTO);
+        Task<ResponseDTO> ProcessRefundRequestOrder(ProcessRefundRequestDTO processRefundRequestDTO);
+        Task<ResponseDTO> CompleteRefundRequestOrder(Guid orderId);
     }
 }
