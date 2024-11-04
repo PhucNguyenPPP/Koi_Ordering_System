@@ -147,7 +147,7 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(responseDTO);
         }
         [HttpPut("flight-of-order")]
-        [Authorize(Roles = "KoiFarmManager")]
+        [Authorize(Roles = "StorageManager")]
         public async Task<IActionResult> AssignFlightToOrder([FromBody] AssignFlightToOrderDTO assignFlightToOrderDTO)
         {
             ResponseDTO responseDTO = await _orderService.AssignFlightToOrder(assignFlightToOrderDTO);
