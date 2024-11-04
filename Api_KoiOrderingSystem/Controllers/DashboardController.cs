@@ -110,5 +110,24 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(responseDTO);
         }
+        [HttpGet("profit-of-farm-by-time-range")]
+        public async Task<IActionResult> GetProfitOfFarmByTimeRange([Required] DateOnly startdate,
+                                                          [Required] DateOnly enddate, [Required] Guid farmId)
+        {
+            ResponseDTO responseDTO = await _dashboardService.GetProfitOfFarmByTimeRange(startdate,enddate, farmId);
+            if (responseDTO.IsSuccess == false)
+            {
+                if (responseDTO.StatusCode == 404)
+                {
+                    return NotFound(responseDTO);
+                }
+                else
+                {
+                    return BadRequest(responseDTO);
+                }
+            }
+
+            return Ok(responseDTO);
+        }
     }
 }

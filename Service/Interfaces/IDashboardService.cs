@@ -14,5 +14,6 @@ namespace Service.Interfaces
         Task<ResponseDTO> GetProfitByAdmin(DateOnly startdate, DateOnly enddate);
         Task<ResponseDTO> GetProfitOfAdminByYear(int year);
         Task<ResponseDTO> GetProfitOfFarmByYear(int year, Guid farmId);
+        Task<ResponseDTO> GetProfitOfFarmByTimeRange(DateOnly startdate, DateOnly enddate, Guid farmId);
     }
 }
