@@ -192,5 +192,28 @@ namespace Service.Services
             }
             return new ResponseDTO("Get profit by month of year sucessfully!", 200, true, list);
         }
+
+        public async Task<ResponseDTO> GetProfitOfFarmByTimeRange(DateOnly startdate, DateOnly enddate, Guid farmId)
+        {
+            var farm = await _unitOfWork.KoiFarm.GetByCondition(f => f.KoiFarmId.Equals(farmId));
+            if (farm == null)
+            {
+                return new ResponseDTO("Farm does not exist", 400, false);
+            }
+            ResponseDTO? revenue = await GetRevenueByFarm(startdate, enddate,farmId);
+            decimal? revenueSum = 0;
+            if (revenue.IsSuccess)
+            {
+                revenueSum = (decimal)revenue.Result ;
+            }
+            else
+            {
+                return revenue;
+            }
+            decimal? profit;
+            profit = revenueSum * 70 / 100;
+
+            return new ResponseDTO("Get profit by time range successfully", 200, true, profit);
+        }
     }
 }
