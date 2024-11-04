@@ -96,7 +96,7 @@ public class PolicyService : IPolicyService
     {
 
         // Use the UnitOfWork to get the Policy repository
-        var policies = await _unitOfWork.Policy.GetAllByCondition(p => p.FarmId.Equals(farmId) && p.Status == true).ToListAsync();
+        var policies = await _unitOfWork.Policy.GetAllByCondition(p => p.FarmId.Equals(farmId)).ToListAsync();
 
         // Map the entities to DTOs
         return _mapper.Map<List<PolicyDTO>>(policies);

@@ -49,6 +49,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPut("packaging/{orderId}")]
+        [Authorize(Roles = "KoiFarmManager")]
         public async Task<IActionResult> UpdateOrderPackaging(Guid orderId, [FromBody] UpdateOrderPackagingRequest request)
         {
             var result = await _orderService.UpdateOrderPackaging(orderId, request);
@@ -62,6 +63,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPut("completed/{orderId}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UpdateOrderCompleted(Guid orderId)
         {
             var result = await _orderService.UpdateOrderCompleted(orderId);
@@ -145,6 +147,7 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(responseDTO);
         }
         [HttpPut("flight-of-order")]
+        [Authorize(Roles = "KoiFarmManager")]
         public async Task<IActionResult> AssignFlightToOrder([FromBody] AssignFlightToOrderDTO assignFlightToOrderDTO)
         {
             ResponseDTO responseDTO = await _orderService.AssignFlightToOrder(assignFlightToOrderDTO);
@@ -179,7 +182,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("create-refund")]
-        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateRefundRequestOrder([FromForm] CreateRefundRequestDTO createRefundRequestDTO)
         {
             ResponseDTO responseDTO = await _orderService.CreateRefundRequestOrder(createRefundRequestDTO);
@@ -195,7 +198,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("process-refund")]
-        [Authorize(Roles = "Customer,KoiFarmManager,StorageManager,Shipper,Staff,Admin")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> ProcessRefundRequestOrder([FromBody] ProcessRefundRequestDTO processRefundRequestDTO)
         {
             ResponseDTO responseDTO = await _orderService.ProcessRefundRequestOrder(processRefundRequestDTO);
@@ -211,6 +214,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpPost("complete-refund")]
+        [Authorize(Roles = "Staff")]
         public async Task<IActionResult> CompleteRefundRequestOrder([FromBody] CompleteRefundRequestDTO completeRefundRequestDTO)
         {
             ResponseDTO responseDTO = await _orderService.CompleteRefundRequestOrder(completeRefundRequestDTO.OrderId);
