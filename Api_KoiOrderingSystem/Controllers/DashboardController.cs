@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api_KoiOrderingSystem.Controllers
 {
@@ -74,6 +75,7 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(responseDTO);
         }
+        [Authorize(Roles ="Admin")]
         [HttpGet("profit-of-admin")]
         public async Task<IActionResult> GetProfitOfAdminByYear([Required] int year)
         {
@@ -92,6 +94,7 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(responseDTO);
         }
+        [Authorize(Roles = "KoiFarmManager")]
         [HttpGet("profit-of-farm")]
         public async Task<IActionResult> GetProfitOfFarmByYear([Required] int year, [Required] Guid farmId)
         {
@@ -110,6 +113,7 @@ namespace Api_KoiOrderingSystem.Controllers
 
             return Ok(responseDTO);
         }
+        [Authorize(Roles = "KoiFarmManager")]
         [HttpGet("profit-of-farm-by-time-range")]
         public async Task<IActionResult> GetProfitOfFarmByTimeRange([Required] DateOnly startdate,
                                                           [Required] DateOnly enddate, [Required] Guid farmId)
