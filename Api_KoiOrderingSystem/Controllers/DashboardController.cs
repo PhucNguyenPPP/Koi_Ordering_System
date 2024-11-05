@@ -17,6 +17,7 @@ namespace Api_KoiOrderingSystem.Controllers
             _dashboardService = dashboardService;
         }
         [HttpGet("revenue-admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetRevenueByAdmin([Required] DateOnly startdate,
                                                            [Required] DateOnly enddate)
         {
@@ -37,6 +38,7 @@ namespace Api_KoiOrderingSystem.Controllers
         }
 
         [HttpGet("revenue-farm")]
+        [Authorize(Roles = "KoiFarmManager")]
         public async Task<IActionResult> GetRevenueByFarm([Required] DateOnly startdate,
                                                           [Required] DateOnly enddate,
                                                           [Required] Guid farmId)
@@ -57,6 +59,7 @@ namespace Api_KoiOrderingSystem.Controllers
             return Ok(responseDTO);
         }
         [HttpGet("profit")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetProfitByAdmin([Required] DateOnly startdate,
                                                           [Required] DateOnly enddate)
         {
